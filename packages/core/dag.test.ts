@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type DagError, type DagFailure, type DagResult, type DagSuccess, resolve } from "./dag.js";
+import { resolve } from "./dag.js";
 import type { Step } from "./types.js";
 
 // =============================================================================
