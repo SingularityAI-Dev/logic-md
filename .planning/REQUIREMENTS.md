@@ -22,12 +22,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Parser
 
-- [ ] **PARS-01**: Extract YAML frontmatter from .md files using gray-matter
+- [x] **PARS-01**: Extract YAML frontmatter from .md files using gray-matter
 - [x] **PARS-02**: Return fully typed LogicSpec TypeScript object from parsed YAML
 - [ ] **PARS-03**: Validate parsed YAML against embedded JSON Schema using ajv
 - [ ] **PARS-04**: Report validation errors with line numbers and clear messages
 - [ ] **PARS-05**: Support multiple errors per file (don't bail on first error)
-- [ ] **PARS-06**: Handle edge cases: empty frontmatter, missing delimiters, invalid YAML
+- [x] **PARS-06**: Handle edge cases: empty frontmatter, missing delimiters, invalid YAML
 
 ### Expression Engine
 
@@ -121,12 +121,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCAF-08 | Phase 1 | Pending |
 | SCAF-09 | Phase 1 | Pending |
 | SCAF-10 | Phase 1 | Pending |
-| PARS-01 | Phase 3 | Pending |
+| PARS-01 | Phase 3 | Complete |
 | PARS-02 | Phase 2 | Complete |
 | PARS-03 | Phase 4 | Pending |
 | PARS-04 | Phase 4 | Pending |
 | PARS-05 | Phase 4 | Pending |
-| PARS-06 | Phase 3 | Pending |
+| PARS-06 | Phase 3 | Complete |
 | EXPR-01 | Phase 5 | Pending |
 | EXPR-02 | Phase 5 | Pending |
 | EXPR-03 | Phase 5 | Pending |
