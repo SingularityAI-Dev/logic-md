@@ -5,35 +5,35 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 1: Project Scaffolding
+**Current focus:** Phase 2: Type System & JSON Schema
 
 ## Current Position
 
-Phase: 1 of 9 (Project Scaffolding)
-Plan: 0 of 5 in current phase
-Status: Ready to plan
-Last activity: 2026-03-31 -- Roadmap created with 9 phases covering 42 requirements
+Phase: 2 of 9 (Type System & JSON Schema)
+Plan: 1 of 2 in current phase
+Status: Executing
+Last activity: 2026-03-31 -- Completed 02-01 type hierarchy plan
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 15%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 10min
+- Total execution time: 0.2 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 02 | 1 | 10min | 10min |
 
 **Recent Trend:**
-- Last 5 plans: -
-- Trend: -
+- Last 5 plans: 10min
+- Trend: baseline
 
-*Updated after each plan completion*
+| Phase 02 P01 | 10min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -42,7 +42,9 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- None yet
+- Single flat types.ts file per project constraint (no src/ directory)
+- Expression type is plain string alias -- parsing deferred to Phase 5
+- Disabled Biome noThenProperty rule globally (then is a valid spec field)
 
 ### Pending Todos
 
@@ -55,5 +57,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Roadmap created, ready to plan Phase 1
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
