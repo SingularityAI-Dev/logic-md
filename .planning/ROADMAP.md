@@ -136,14 +136,11 @@ Plans:
   3. `logic-md compile example.logic.md` outputs the compiled reasoning scaffold
   4. Exit codes are correct: 0 for success, 1 for validation errors, 2 for file not found
   5. Terminal output is colorized with distinct error/warning/info levels
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
-- [ ] 08-04: TBD
-- [ ] 08-05: TBD
+- [ ] 08-01-PLAN.md — CLI entry point, format utility, and validate/lint/compile command handlers
+- [ ] 08-02-PLAN.md — CLI integration tests with test fixtures and end-to-end verification
 
 ### Phase 9: Test Coverage & Integration
 **Goal**: All core modules have 90%+ test coverage and end-to-end integration tests prove the full pipeline works
@@ -177,5 +174,5 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 | 5. Expression Engine | 3/3 | Complete    | 2026-04-01 |
 | 6. DAG Resolver | 0/1 | Complete    | 2026-04-01 |
 | 7. Import Resolver | 0/2 | Complete    | 2026-04-01 |
-| 8. CLI | 0/5 | Not started | - |
+| 8. CLI | 0/2 | Not started | - |
 | 9. Test Coverage & Integration | 0/5 | Not started | - |
