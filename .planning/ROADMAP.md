@@ -177,7 +177,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 | 2. Type System & JSON Schema | 0/2 | Complete    | 2026-04-01 |
 | 3. Parser | 0/1 | Complete    | 2026-04-01 |
 | 4. Schema Validator | 0/2 | Complete    | 2026-04-01 |
-| 5. Expression Engine | 0/3 | Not started | - |
+| 5. Expression Engine | 1/3 | In Progress|  |
 | 6. DAG Resolver | 0/3 | Not started | - |
 | 7. Import Resolver | 0/3 | Not started | - |
 | 8. CLI | 0/5 | Not started | - |

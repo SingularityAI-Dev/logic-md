@@ -31,14 +31,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Expression Engine
 
-- [ ] **EXPR-01**: Parse and evaluate `{{ }}` template expressions
-- [ ] **EXPR-02**: Support dot notation for nested property access (e.g., `output.findings.length`)
+- [x] **EXPR-01**: Parse and evaluate `{{ }}` template expressions
+- [x] **EXPR-02**: Support dot notation for nested property access (e.g., `output.findings.length`)
 - [ ] **EXPR-03**: Support comparison operators (==, !=, <, >, <=, >=)
 - [ ] **EXPR-04**: Support logical operators (&&, ||, !)
 - [ ] **EXPR-05**: Support array methods (.length, .every(), .some(), .contains())
 - [ ] **EXPR-06**: Support ternary expressions (condition ? a : b)
 - [ ] **EXPR-07**: Inject context variables (steps, input, output) into expression scope
-- [ ] **EXPR-08**: Custom parser only — no eval(), no Function constructor
+- [x] **EXPR-08**: Custom parser only — no eval(), no Function constructor
 
 ### DAG Resolver
 
@@ -127,14 +127,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PARS-04 | Phase 4 | Complete |
 | PARS-05 | Phase 4 | Complete |
 | PARS-06 | Phase 3 | Complete |
-| EXPR-01 | Phase 5 | Pending |
-| EXPR-02 | Phase 5 | Pending |
+| EXPR-01 | Phase 5 | Complete |
+| EXPR-02 | Phase 5 | Complete |
 | EXPR-03 | Phase 5 | Pending |
 | EXPR-04 | Phase 5 | Pending |
 | EXPR-05 | Phase 5 | Pending |
 | EXPR-06 | Phase 5 | Pending |
 | EXPR-07 | Phase 5 | Pending |
-| EXPR-08 | Phase 5 | Pending |
+| EXPR-08 | Phase 5 | Complete |
 | DAG-01 | Phase 6 | Pending |
 | DAG-02 | Phase 6 | Pending |
 | DAG-03 | Phase 6 | Pending |
