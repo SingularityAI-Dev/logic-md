@@ -133,7 +133,7 @@ export function validate(fileContent: string): ValidationResult {
 	// Build source position map from raw YAML.
 	// gray-matter's `.matter` starts with a leading newline — strip it
 	// so that YAML line numbers align correctly with FRONTMATTER_OFFSET.
-	const yamlSource = result.matter.replace(/^\n/, "");
+	const yamlSource = (result.matter ?? "").replace(/^\n/, "");
 	const lineCounter = new LineCounter();
 	const doc = parseDocument(yamlSource, { lineCounter });
 
