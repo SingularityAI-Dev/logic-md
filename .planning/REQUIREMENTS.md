@@ -68,7 +68,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **TEST-02**: 90%+ test coverage on validator module
 - [x] **TEST-03**: 90%+ test coverage on expression engine
 - [x] **TEST-04**: 90%+ test coverage on DAG resolver
-- [ ] **TEST-05**: Integration tests: parse → validate → resolve full LOGIC.md files
+- [x] **TEST-05**: Integration tests: parse → validate → resolve full LOGIC.md files
 
 ## v2 Requirements
 
@@ -152,7 +152,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-02 | Phase 9 | Complete |
 | TEST-03 | Phase 9 | Complete |
 | TEST-04 | Phase 9 | Complete |
-| TEST-05 | Phase 9 | Pending |
+| TEST-05 | Phase 9 | Complete |
 
 **Coverage:**
 - v1 requirements: 42 total
