@@ -413,7 +413,7 @@ steps:
 		expect(mergedSteps).toBeDefined();
 		expect(mergedSteps!["child.analyze"]).toBeDefined();
 		expect(mergedSteps!["child.report"]).toBeDefined();
-		expect(mergedSteps!["orchestrate"]).toBeDefined();
+		expect(mergedSteps!.orchestrate).toBeDefined();
 
 		// Verify namespaced needs are updated
 		expect(mergedSteps!["child.report"]!.needs).toEqual(["child.analyze"]);
@@ -465,7 +465,7 @@ steps:
 
 		const steps = importResult.data.steps;
 		expect(steps).toBeDefined();
-		expect(steps!["top"]).toBeDefined();
+		expect(steps!.top).toBeDefined();
 		expect(steps!["c.middle"]).toBeDefined();
 		// Transitive grandchild is namespaced under child's namespace
 		expect(steps!["c.gc.leaf"]).toBeDefined();
@@ -589,8 +589,8 @@ quality_gates:
 		// Verify merged steps
 		const mergedSteps = importResult.data.steps;
 		expect(mergedSteps).toBeDefined();
-		expect(mergedSteps!["gather"]).toBeDefined();
-		expect(mergedSteps!["analyze"]).toBeDefined();
+		expect(mergedSteps!.gather).toBeDefined();
+		expect(mergedSteps!.analyze).toBeDefined();
 		expect(mergedSteps!["scorer.score"]).toBeDefined();
 
 		// 4. Resolve DAG on merged steps

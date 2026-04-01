@@ -5,14 +5,7 @@ export default defineConfig({
 		include: ["**/*.test.ts"],
 		coverage: {
 			provider: "v8",
-			include: [
-				"parser.ts",
-				"validator.ts",
-				"expression.ts",
-				"dag.ts",
-				"imports.ts",
-				"schema.ts",
-			],
+			include: ["parser.ts", "validator.ts", "expression.ts", "dag.ts", "imports.ts", "schema.ts"],
 			reporter: ["text", "json-summary"],
 			thresholds: {
 				lines: 90,

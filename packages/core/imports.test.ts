@@ -161,7 +161,7 @@ describe("resolveImports", () => {
 	});
 
 	it("namespaces needs, parallel_steps, and branch.then references", () => {
-		const spec = loadFixture("with-branches.logic.md");
+		const _spec = loadFixture("with-branches.logic.md");
 		// Import the spec that has branches, parallel_steps, and needs
 		const wrapper: LogicSpec = {
 			spec_version: "1.0",
@@ -202,7 +202,7 @@ describe("resolveImports", () => {
 			const trees = result.data.decision_trees ?? {};
 			expect(trees["sec.route"]).toBeDefined();
 			// Original key should not exist
-			expect(trees["route"]).toBeUndefined();
+			expect(trees.route).toBeUndefined();
 		}
 	});
 
