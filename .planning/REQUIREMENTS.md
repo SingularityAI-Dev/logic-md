@@ -25,7 +25,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PARS-01**: Extract YAML frontmatter from .md files using gray-matter
 - [x] **PARS-02**: Return fully typed LogicSpec TypeScript object from parsed YAML
 - [x] **PARS-03**: Validate parsed YAML against embedded JSON Schema using ajv
-- [ ] **PARS-04**: Report validation errors with line numbers and clear messages
+- [x] **PARS-04**: Report validation errors with line numbers and clear messages
 - [x] **PARS-05**: Support multiple errors per file (don't bail on first error)
 - [x] **PARS-06**: Handle edge cases: empty frontmatter, missing delimiters, invalid YAML
 
@@ -124,7 +124,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PARS-01 | Phase 3 | Complete |
 | PARS-02 | Phase 2 | Complete |
 | PARS-03 | Phase 4 | Complete |
-| PARS-04 | Phase 4 | Pending |
+| PARS-04 | Phase 4 | Complete |
 | PARS-05 | Phase 4 | Complete |
 | PARS-06 | Phase 3 | Complete |
 | EXPR-01 | Phase 5 | Pending |
