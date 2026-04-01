@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 5 of 9 (Expression Engine)
-Plan: 2 of ? in current phase
+Plan: 3 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-31 -- Completed 05-01 expression lexer and Pratt parser
+Last activity: 2026-03-31 -- Completed 05-02 expression evaluator
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 6min
-- Total execution time: 0.65 hours
+- Total execution time: 0.68 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [█████░░░░░] 50%
 | 02 | 2 | 23min | 11.5min |
 | 03 | 1 | 6min | 6min |
 | 04 | 2 | 6min | 3min |
-| 05 | 1 | 3min | 3min |
+| 05 | 2 | 5min | 2.5min |
 
 **Recent Trend:**
-- Last 5 plans: 13min, 6min, 3min, 3min, 3min
+- Last 5 plans: 6min, 3min, 3min, 3min, 2min
 - Trend: improving
 
 | Phase 02 P01 | 10min | 2 tasks | 4 files |
@@ -42,6 +42,7 @@ Progress: [█████░░░░░] 50%
 | Phase 04 P01 | 3min | 2 tasks | 5 files |
 | Phase 04 P02 | 3min | 2 tasks | 2 files |
 | Phase 05 P01 | 3min | 2 tasks | 2 files |
+| Phase 05 P02 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,7 @@ Recent decisions affecting current work:
 - [Phase 04]: Strip leading newline from gray-matter .matter for correct line number mapping
 - [Phase 05]: Pratt parser with 8 precedence levels; CallExpression models method calls (callee.property(args))
 - [Phase 05]: Regular enum for TokenType (not const enum) to preserve runtime string values
+- [Phase 05]: Loose equality (==) for expression comparisons; safe navigation returns undefined for missing intermediates
 
 ### Pending Todos
 
@@ -73,5 +75,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-01-PLAN.md
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
