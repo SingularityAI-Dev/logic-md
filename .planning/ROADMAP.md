@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Project Scaffolding** - Monorepo structure, tooling, CI, and repo hygiene (completed 2026-03-31)
 - [x] **Phase 2: Type System & JSON Schema** - LogicSpec types and embedded validation schema (completed 2026-04-01)
-- [ ] **Phase 3: Parser** - Extract and parse YAML frontmatter into typed LogicSpec objects
+- [x] **Phase 3: Parser** - Extract and parse YAML frontmatter into typed LogicSpec objects (completed 2026-04-01)
 - [ ] **Phase 4: Schema Validator** - Validate parsed specs against JSON Schema with rich error reporting
 - [ ] **Phase 5: Expression Engine** - Parse and evaluate template expressions with context injection
 - [ ] **Phase 6: DAG Resolver** - Topological sorting, cycle detection, and parallel group resolution
@@ -178,7 +178,7 @@ Note: Phases 5 and 6 depend only on Phase 2 and can theoretically run in paralle
 |-------|----------------|--------|-----------|
 | 1. Project Scaffolding | 0/2 | Complete    | 2026-03-31 |
 | 2. Type System & JSON Schema | 0/2 | Complete    | 2026-04-01 |
-| 3. Parser | 0/1 | Not started | - |
+| 3. Parser | 0/1 | Complete    | 2026-04-01 |
 | 4. Schema Validator | 0/3 | Not started | - |
 | 5. Expression Engine | 0/5 | Not started | - |
 | 6. DAG Resolver | 0/3 | Not started | - |
