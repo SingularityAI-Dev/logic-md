@@ -624,6 +624,62 @@ describe("integration -- LOGIC.md expressions", () => {
 // Security: No eval() or Function constructor
 // =============================================================================
 
+// =============================================================================
+// Coverage Gap Tests
+// =============================================================================
+
+describe("coverage gap tests", () => {
+	it("ExpressionError stores position parameter", () => {
+		const err = new ExpressionError("test error", 42);
+		expect(err.position).toBe(42);
+		expect(err.message).toBe("test error");
+		expect(err.name).toBe("ExpressionError");
+	});
+
+	it("ExpressionError without position has undefined position", () => {
+		const err = new ExpressionError("test error");
+		expect(err.position).toBeUndefined();
+	});
+
+	it("tokenize throws on unterminated double-quoted string literal", () => {
+		expect(() => tokenize('"unterminated')).toThrow(ExpressionError);
+		expect(() => tokenize('"unterminated')).toThrow(/Unterminated string/);
+	});
+
+	it("tokenize throws on unterminated single-quoted string literal", () => {
+		expect(() => tokenize("'unterminated")).toThrow(ExpressionError);
+		expect(() => tokenize("'unterminated")).toThrow(/Unterminated string/);
+	});
+
+	it("parse throws on unexpected infix token", () => {
+		// Create a scenario where parseInfix hits the default case.
+		// A comma token after an identifier is not a valid infix operator.
+		expect(() => parse(tokenize("a,b"))).toThrow(ExpressionError);
+		expect(() => parse(tokenize("a,b"))).toThrow(/Unexpected/);
+	});
+
+	it("parse throws on trailing tokens after complete expression", () => {
+		// Two identifiers in a row: "a b" -- after parsing "a", "b" is unexpected.
+		expect(() => parse(tokenize("a b"))).toThrow(ExpressionError);
+		expect(() => parse(tokenize("a b"))).toThrow(/Unexpected token after expression/);
+	});
+
+	it("evaluate throws on unknown method call", () => {
+		expect(() => evaluate("{{ items.map() }}", { items: [1, 2, 3] })).toThrow(ExpressionError);
+		expect(() => evaluate("{{ items.map() }}", { items: [1, 2, 3] })).toThrow(/Unknown method/);
+	});
+
+	it("evaluate throws on calling method on non-array (contains)", () => {
+		expect(() => evaluate('{{ x.contains("a") }}', { x: "string" })).toThrow(ExpressionError);
+		expect(() => evaluate('{{ x.contains("a") }}', { x: "string" })).toThrow(/non-array/);
+	});
+
+	it("evaluate handles safe navigation returning undefined for null member access", () => {
+		expect(evaluate("{{ x.y }}", { x: null })).toBeUndefined();
+		expect(evaluate("{{ x.y }}", { x: undefined })).toBeUndefined();
+	});
+});
+
 describe("security -- no eval or Function constructor", () => {
 	it("expression.ts does not contain eval() or new Function", () => {
 		const source = readFileSync(new URL("./expression.ts", import.meta.url), "utf-8");

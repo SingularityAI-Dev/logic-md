@@ -145,4 +145,216 @@ describe("resolveImports", () => {
 			expect(stepKeys).toContain("b.synthesize");
 		}
 	});
+
+	it("reports parse_error when imported file has invalid YAML", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "bad-import",
+			imports: [{ ref: "./invalid-yaml.logic.md", as: "bad" }],
+		};
+		const result = resolveImports(spec, fixturesDir);
+		expect(result.ok).toBe(false);
+		if (!result.ok) {
+			expect(result.errors[0]!.type).toBe("parse_error");
+			expect(result.errors[0]!.message).toContain("Failed to parse import");
+		}
+	});
+
+	it("namespaces needs, parallel_steps, and branch.then references", () => {
+		const spec = loadFixture("with-branches.logic.md");
+		// Import the spec that has branches, parallel_steps, and needs
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-branches.logic.md", as: "br" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			const steps = result.data.steps ?? {};
+			// Check namespaced step keys
+			expect(steps["br.check"]).toBeDefined();
+			expect(steps["br.process"]).toBeDefined();
+			expect(steps["br.fallback"]).toBeDefined();
+
+			// Check needs namespaced
+			expect(steps["br.process"]!.needs).toEqual(["br.check"]);
+
+			// Check parallel_steps namespaced
+			expect(steps["br.check"]!.parallel_steps).toEqual(["br.process", "br.fallback"]);
+
+			// Check branches.then namespaced
+			const branches = steps["br.check"]!.branches ?? [];
+			expect(branches[0]!.then).toBe("br.process");
+			expect(branches[1]!.then).toBe("br.fallback");
+		}
+	});
+
+	it("namespaces decision_trees keys", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			const trees = result.data.decision_trees ?? {};
+			expect(trees["sec.route"]).toBeDefined();
+			// Original key should not exist
+			expect(trees["route"]).toBeUndefined();
+		}
+	});
+
+	it("merges reasoning section (base + override)", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+			reasoning: {
+				strategy: "react",
+				max_iterations: 10,
+			},
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			// Local override wins for strategy
+			expect(result.data.reasoning?.strategy).toBe("react");
+			// Local adds max_iterations
+			expect(result.data.reasoning?.max_iterations).toBe(10);
+		}
+	});
+
+	it("merges contracts section", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.contracts).toBeDefined();
+			expect(result.data.contracts?.inputs).toBeDefined();
+		}
+	});
+
+	it("merges quality_gates section", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.quality_gates).toBeDefined();
+			expect(result.data.quality_gates?.pre_output).toBeDefined();
+		}
+	});
+
+	it("merges decision_trees section", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.decision_trees).toBeDefined();
+			expect(Object.keys(result.data.decision_trees ?? {}).length).toBeGreaterThan(0);
+		}
+	});
+
+	it("merges fallback section (override wins entirely)", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+			fallback: {
+				strategy: "abort",
+			},
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			// Local fallback wins entirely
+			expect(result.data.fallback?.strategy).toBe("abort");
+		}
+	});
+
+	it("merges fallback section from import when local has none", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.fallback?.strategy).toBe("escalate");
+		}
+	});
+
+	it("merges metadata section", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+			metadata: { extra: "local-value" },
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.metadata?.author).toBe("test");
+			expect(result.data.metadata?.extra).toBe("local-value");
+		}
+	});
+
+	it("merges description (override wins via nullish coalescing)", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			description: "local description",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.description).toBe("local description");
+		}
+	});
+
+	it("uses imported description when local has none", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			expect(result.data.description).toBe("A spec with all optional sections");
+		}
+	});
+
+	it("merges steps section from multiple sources", () => {
+		const wrapper: LogicSpec = {
+			spec_version: "1.0",
+			name: "wrapper",
+			imports: [{ ref: "./with-sections.logic.md", as: "sec" }],
+			steps: {
+				local_step: { description: "local" },
+			},
+		};
+		const result = resolveImports(wrapper, fixturesDir);
+		expect(result.ok).toBe(true);
+		if (result.ok) {
+			const stepKeys = Object.keys(result.data.steps ?? {});
+			expect(stepKeys).toContain("sec.analyze");
+			expect(stepKeys).toContain("local_step");
+		}
+	});
 });
