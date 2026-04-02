@@ -341,6 +341,11 @@ export function compileStep(
 
 	const systemPromptSegment = segments.join("\n\n");
 
+	const estimatedTokens = estimateTokens(systemPromptSegment);
+	const tokenWarning = estimatedTokens > 2000
+		? `Prompt segment is ~${estimatedTokens} tokens (exceeds 2000 token budget)`
+		: undefined;
+
 	return {
 		systemPromptSegment,
 		outputSchema: (step.output_schema as object) ?? null,
@@ -367,6 +372,7 @@ export function compileStep(
 			attemptNumber: context.attemptNumber,
 			branchTaken: context.branchReason,
 		},
+		tokenWarning,
 	};
 }
 
@@ -384,6 +390,7 @@ export function compileWorkflow(_spec: LogicSpec, _context: WorkflowContext): Co
  *
  * Pure function -- no I/O, no side effects.
  */
-export function estimateTokens(_text: string): number {
-	throw new CompilerError("Not implemented");
+export function estimateTokens(text: string): number {
+	if (text.length === 0) return 0;
+	return Math.ceil(text.length / 4);
 }

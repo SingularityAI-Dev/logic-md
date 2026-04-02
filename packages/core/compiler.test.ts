@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CompilerError, compileStep } from "./compiler.js";
+import { CompilerError, compileStep, estimateTokens } from "./compiler.js";
 import type { ExecutionContext, LogicSpec, Step } from "./types.js";
 
 // =============================================================================
@@ -1105,5 +1105,59 @@ describe("compileStep: selfReflection", () => {
 		const result = compileStep(spec, "analyzed", makeCtx());
 		expect(result.selfReflection).not.toBeNull();
 		expect(result.selfReflection!.minimumScore).toBe(0.5);
+	});
+});
+
+// =============================================================================
+// estimateTokens
+// =============================================================================
+
+describe("estimateTokens", () => {
+	it("returns 0 for empty string", () => {
+		expect(estimateTokens("")).toBe(0);
+	});
+
+	it("estimates ~4 chars per token", () => {
+		expect(estimateTokens("hello world")).toBe(3); // 11 / 4 = 2.75, ceil to 3
+	});
+
+	it("handles long text", () => {
+		const str = "a".repeat(8000);
+		expect(estimateTokens(str)).toBe(2000); // 8000 / 4 = 2000 exactly
+	});
+
+	it("handles whitespace-only text", () => {
+		expect(estimateTokens("    ")).toBe(1); // 4 / 4 = 1
+	});
+});
+
+// =============================================================================
+// Token Warnings
+// =============================================================================
+
+describe("token warnings", () => {
+	it("adds tokenWarning when segment exceeds 2000 tokens", () => {
+		const longInstructions = "x".repeat(9000);
+		const spec = makeSpec({
+			long_step: {
+				instructions: longInstructions,
+			},
+		});
+		const result = compileStep(spec, "long_step", makeCtx());
+		expect(result.tokenWarning).toBeDefined();
+		expect(typeof result.tokenWarning).toBe("string");
+		expect(result.tokenWarning).toContain("2000");
+		expect(result.tokenWarning!.toLowerCase()).toContain("token");
+	});
+
+	it("does not add tokenWarning for short segments", () => {
+		const spec = makeSpec({
+			short_step: {
+				description: "Short step",
+				instructions: "Do something simple",
+			},
+		});
+		const result = compileStep(spec, "short_step", makeCtx());
+		expect(result.tokenWarning).toBeUndefined();
 	});
 });

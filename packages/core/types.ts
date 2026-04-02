@@ -660,6 +660,7 @@ export interface CompiledStep {
 		attemptNumber: number;
 		totalSteps: number;
 	};
+	tokenWarning?: string;
 }
 
 /** A compiled workflow with all steps resolved (v1.1 Compiler) */
