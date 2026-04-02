@@ -188,7 +188,11 @@ Plans:
   1. A quality gate with a `check` expression compiles to an executable function `(output) => { passed, message? }` that evaluates using the expression engine
   2. Self-reflection gates compile to a follow-up prompt template containing the rubric and minimum score threshold
   3. Gate validators correctly pass or fail when given sample outputs (no false positives or negatives on test fixtures)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md -- TDD check-expression gate compilation: step verification + spec pre_output gates to validator functions
+- [ ] 13-02-PLAN.md -- TDD self-reflection compilation: rubric/reflection strategies to prompt templates with minimum scores
 
 ### Phase 14: Token Estimation
 **Goal**: Developers can estimate token counts for compiled prompts and receive warnings when segments are too large
@@ -252,7 +256,7 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 10. Compiler Types & Foundation | v1.1 | 1/1 | Complete | 2026-04-01 |
 | 11. Step Compiler Core | 2/2 | Complete    | 2026-04-02 | - |
 | 12. Step Compiler Context | v1.1 | 0/2 | Not started | - |
-| 13. Quality Gate Compilation | v1.1 | 0/0 | Not started | - |
+| 13. Quality Gate Compilation | v1.1 | 0/2 | Not started | - |
 | 14. Token Estimation | v1.1 | 0/1 | Not started | - |
 | 15. Workflow Compiler | v1.1 | 0/0 | Not started | - |
 | 16. CLI Compile Step | v1.1 | 0/0 | Not started | - |
