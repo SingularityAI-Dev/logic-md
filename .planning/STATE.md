@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 13: Quality Gate Compilation
+**Current focus:** Phase 15: Workflow Compiler
 
 ## Current Position
 
-Phase: 13 of 17 (Quality Gate Compilation) -- COMPLETE
-Plan: 02 of 02 -- COMPLETE
+Phase: 15 of 17 (Workflow Compiler) -- COMPLETE
+Plan: 01 of 01 -- COMPLETE
 Status: Phase Complete
-Last activity: 2026-04-02 -- Phase 13 Plan 02 executed
+Last activity: 2026-04-02 -- Phase 15 Plan 01 executed
 
-Progress: [##############......] 76% (13/17 phases complete)
+Progress: [################....] 82% (15/17 phases complete)
 
 ## Performance Metrics
 
@@ -44,6 +44,7 @@ Progress: [##############......] 76% (13/17 phases complete)
 - Trend: Stable
 | Phase 13 P01 | 3min | 2 tasks | 2 files |
 | Phase 13 P02 | 2min | 2 tasks | 2 files |
+| Phase 15 P01 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,10 @@ Recent decisions affecting current work:
 - [Phase 13]: Reflection strategy passes prompt through with minimumScore 0 (no numeric scoring)
 - [Phase 13]: Default minimumScore is 0.5 for rubric when not specified
 - [Phase 13]: Unsupported strategies (checklist, critic) return null for future extension
+- [Phase 15]: compileWorkflow delegates to resolve() for DAG ordering and compileStep for per-step compilation
+- [Phase 15]: Global quality gates compiled via existing compileGateValidator (module-private, no export needed)
+- [Phase 15]: Empty steps handled as early return with zero-length arrays
+- [Phase 15]: DAG errors propagated as CompilerError with joined error messages
 
 ### Pending Todos
 
@@ -85,5 +90,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 13-02-PLAN.md (Phase 13 complete)
+Stopped at: Completed 15-01-PLAN.md (Phase 15 complete)
 Resume file: None

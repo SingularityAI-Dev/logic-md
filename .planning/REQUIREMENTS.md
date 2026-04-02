@@ -21,10 +21,10 @@
 
 ### Workflow Compiler
 
-- [ ] **WKFL-01**: `compileWorkflow(spec, context)` returns a `CompiledWorkflow` with ordered steps and parallel groups
-- [ ] **WKFL-02**: Workflow compilation reuses DAG resolver `_dagLevels` for execution ordering
-- [ ] **WKFL-03**: Each step in workflow is pre-compiled with `compileStep`
-- [ ] **WKFL-04**: Global quality gates and fallback policies attached to compiled workflow
+- [x] **WKFL-01**: `compileWorkflow(spec, context)` returns a `CompiledWorkflow` with ordered steps and parallel groups
+- [x] **WKFL-02**: Workflow compilation reuses DAG resolver `_dagLevels` for execution ordering
+- [x] **WKFL-03**: Each step in workflow is pre-compiled with `compileStep`
+- [x] **WKFL-04**: Global quality gates and fallback policies attached to compiled workflow
 
 ### Quality Gate Compilation
 
@@ -88,10 +88,10 @@ All v1.0 requirements shipped and validated. See MILESTONES.md for details.
 | COMP-08 | Phase 12 | Complete |
 | COMP-09 | Phase 11 | Complete |
 | COMP-10 | Phase 11 | Complete |
-| WKFL-01 | Phase 15 | Pending |
-| WKFL-02 | Phase 15 | Pending |
-| WKFL-03 | Phase 15 | Pending |
-| WKFL-04 | Phase 15 | Pending |
+| WKFL-01 | Phase 15 | Complete |
+| WKFL-02 | Phase 15 | Complete |
+| WKFL-03 | Phase 15 | Complete |
+| WKFL-04 | Phase 15 | Complete |
 | GATE-01 | Phase 13 | Complete |
 | GATE-02 | Phase 13 | Complete |
 | GATE-03 | Phase 13 | Complete |

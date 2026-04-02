@@ -131,7 +131,7 @@ Plans:
 - [x] **Phase 12: Step Compiler Context** - Branch context, retry context, confidence thresholds, and quality gate descriptions in prompt segments (completed 2026-04-02)
 - [x] **Phase 13: Quality Gate Compilation** - Quality gates compile to executable validators using the expression engine (completed 2026-04-02)
 - [x] **Phase 14: Token Estimation** - Approximate token counting and prompt size warnings (completed 2026-04-02)
-- [ ] **Phase 15: Workflow Compiler** - Compile full workflow with DAG execution plan and pre-compiled steps
+- [x] **Phase 15: Workflow Compiler** - Compile full workflow with DAG execution plan and pre-compiled steps (completed 2026-04-02)
 - [ ] **Phase 16: CLI Compile Step** - Add --step flag to compile command and self-reflection output
 - [ ] **Phase 17: Compiler Test Coverage** - 90%+ coverage across compiler modules with comprehensive scenario tests
 
@@ -261,6 +261,6 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 12. Step Compiler Context | 2/2 | Complete    | 2026-04-02 | - |
 | 13. Quality Gate Compilation | 2/2 | Complete    | 2026-04-02 | - |
 | 14. Token Estimation | v1.1 | Complete    | 2026-04-02 | - |
-| 15. Workflow Compiler | v1.1 | 0/1 | Not started | - |
+| 15. Workflow Compiler | 1/1 | Complete   | 2026-04-02 | - |
 | 16. CLI Compile Step | v1.1 | 0/0 | Not started | - |
 | 17. Compiler Test Coverage | v1.1 | 0/0 | Not started | - |
