@@ -14,8 +14,8 @@
 - [x] **COMP-04**: `systemPromptSegment` includes branch context if applicable (why this branch was taken, alternatives)
 - [x] **COMP-05**: `systemPromptSegment` includes retry context if applicable (attempt number, previous failure reason)
 - [x] **COMP-06**: `systemPromptSegment` includes output format instructions derived from `output_schema` (JSON schema -> structured output instructions)
-- [ ] **COMP-07**: `systemPromptSegment` includes confidence requirements from step confidence thresholds
-- [ ] **COMP-08**: `systemPromptSegment` includes active quality gate descriptions ("Before responding, verify: ...")
+- [x] **COMP-07**: `systemPromptSegment` includes confidence requirements from step confidence thresholds
+- [x] **COMP-08**: `systemPromptSegment` includes active quality gate descriptions ("Before responding, verify: ...")
 - [x] **COMP-09**: Compiled prompt segments are human-readable (debugging surface area)
 - [x] **COMP-10**: Output schema compilation produces instructions compatible with both JSON mode and function-calling mode
 
@@ -84,8 +84,8 @@ All v1.0 requirements shipped and validated. See MILESTONES.md for details.
 | COMP-04 | Phase 12 | Complete |
 | COMP-05 | Phase 12 | Complete |
 | COMP-06 | Phase 11 | Complete |
-| COMP-07 | Phase 12 | Pending |
-| COMP-08 | Phase 12 | Pending |
+| COMP-07 | Phase 12 | Complete |
+| COMP-08 | Phase 12 | Complete |
 | COMP-09 | Phase 11 | Complete |
 | COMP-10 | Phase 11 | Complete |
 | WKFL-01 | Phase 15 | Pending |

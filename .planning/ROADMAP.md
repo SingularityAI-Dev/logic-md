@@ -128,7 +128,7 @@ Plans:
 
 - [x] **Phase 10: Compiler Types & Foundation** - New types, barrel exports, and pure-function architecture constraints (completed 2026-04-01)
 - [x] **Phase 11: Step Compiler Core** - Compile a single step into a prompt segment with reasoning strategy, instructions, and output format (completed 2026-04-02)
-- [ ] **Phase 12: Step Compiler Context** - Branch context, retry context, confidence thresholds, and quality gate descriptions in prompt segments
+- [x] **Phase 12: Step Compiler Context** - Branch context, retry context, confidence thresholds, and quality gate descriptions in prompt segments (completed 2026-04-02)
 - [ ] **Phase 13: Quality Gate Compilation** - Quality gates compile to executable validators using the expression engine
 - [ ] **Phase 14: Token Estimation** - Approximate token counting and prompt size warnings
 - [ ] **Phase 15: Workflow Compiler** - Compile full workflow with DAG execution plan and pre-compiled steps
@@ -255,7 +255,7 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 9. Test Coverage & Integration | v1.0 | 3/3 | Complete | 2026-04-01 |
 | 10. Compiler Types & Foundation | v1.1 | 1/1 | Complete | 2026-04-01 |
 | 11. Step Compiler Core | 2/2 | Complete    | 2026-04-02 | - |
-| 12. Step Compiler Context | 1/2 | In Progress|  | - |
+| 12. Step Compiler Context | 2/2 | Complete   | 2026-04-02 | - |
 | 13. Quality Gate Compilation | v1.1 | 0/2 | Not started | - |
 | 14. Token Estimation | v1.1 | 0/1 | Not started | - |
 | 15. Workflow Compiler | v1.1 | 0/0 | Not started | - |
