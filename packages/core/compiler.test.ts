@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CompilerError, compileStep, estimateTokens } from "./compiler.js";
-import type { ExecutionContext, LogicSpec, Step } from "./types.js";
+import { CompilerError, compileStep, compileWorkflow, estimateTokens } from "./compiler.js";
+import type { ExecutionContext, LogicSpec, Step, WorkflowContext } from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -1147,5 +1147,126 @@ describe("token warnings", () => {
 		});
 		const result = compileStep(spec, "short_step", makeCtx());
 		expect(result.tokenWarning).toBeUndefined();
+	});
+});
+
+// =============================================================================
+// Helpers (compileWorkflow)
+// =============================================================================
+
+/** Build a minimal WorkflowContext */
+function makeWorkflowCtx(overrides: Partial<WorkflowContext> = {}): WorkflowContext {
+	return {
+		currentStep: "",
+		previousOutputs: {},
+		input: null,
+		attemptNumber: 1,
+		branchReason: null,
+		previousFailureReason: null,
+		totalSteps: 0,
+		completedSteps: [],
+		dagLevels: [],
+		...overrides,
+	};
+}
+
+// =============================================================================
+// compileWorkflow
+// =============================================================================
+
+describe("compileWorkflow", () => {
+	it("compiles a single-step workflow", () => {
+		const spec = makeSpec({
+			only_step: { description: "The only step" },
+		});
+		const result = compileWorkflow(spec, makeWorkflowCtx());
+		expect(result.steps).toHaveLength(1);
+		expect(result.dagLevels).toEqual([["only_step"]]);
+		expect(result.metadata.totalSteps).toBe(1);
+		expect(result.metadata.totalLevels).toBe(1);
+		expect(result.metadata.name).toBe("test-spec");
+		expect(result.steps[0]!.metadata.stepName).toBe("only_step");
+	});
+
+	it("orders steps by DAG levels", () => {
+		const spec = researchSpec();
+		const result = compileWorkflow(spec, makeWorkflowCtx());
+		expect(result.dagLevels[0]).toEqual(["gather_sources"]);
+		expect(result.dagLevels[1]).toEqual(["evaluate_credibility"]);
+		expect(result.dagLevels[2]).toEqual(["synthesize"]);
+		expect(result.dagLevels[3]).toEqual(["draft_report", "expand_search"]);
+		expect(result.steps).toHaveLength(5);
+		expect(result.metadata.totalLevels).toBe(4);
+	});
+
+	it("pre-compiles each step via compileStep", () => {
+		const spec = researchSpec();
+		const result = compileWorkflow(spec, makeWorkflowCtx());
+		for (const step of result.steps) {
+			expect(step.systemPromptSegment).toBeTruthy();
+		}
+		expect(result.steps[0]!.systemPromptSegment).toContain("gather_sources");
+		expect(result.steps[0]!.retryPolicy).not.toBeNull();
+	});
+
+	it("attaches global quality gates as validators", () => {
+		const spec: LogicSpec = {
+			...makeSpec({
+				checked: { description: "Checked step" },
+			}),
+			quality_gates: {
+				pre_output: [
+					{
+						name: "len_check",
+						check: "{{ output.length > 0 }}",
+						message: "Output must not be empty",
+					},
+				],
+			},
+		};
+		const result = compileWorkflow(spec, makeWorkflowCtx());
+		expect(result.globalQualityGates).toHaveLength(1);
+		expect(result.globalQualityGates[0]!("hello")).toEqual({ passed: true });
+		expect(result.globalQualityGates[0]!("")).toEqual({
+			passed: false,
+			message: "Output must not be empty",
+		});
+	});
+
+	it("attaches fallback policy", () => {
+		const specWithFallback: LogicSpec = {
+			...makeSpec({
+				step_a: { description: "Step A" },
+			}),
+			fallback: { strategy: "graceful_degrade" },
+		};
+		const result = compileWorkflow(specWithFallback, makeWorkflowCtx());
+		expect(result.fallbackPolicy).toEqual({ strategy: "graceful_degrade" });
+
+		const specWithout = makeSpec({
+			step_a: { description: "Step A" },
+		});
+		const resultWithout = compileWorkflow(specWithout, makeWorkflowCtx());
+		expect(resultWithout.fallbackPolicy).toBeNull();
+	});
+
+	it("returns empty steps for spec with no steps", () => {
+		const spec: LogicSpec = {
+			spec_version: "1.0",
+			name: "empty-workflow",
+		};
+		const result = compileWorkflow(spec, makeWorkflowCtx());
+		expect(result.steps).toEqual([]);
+		expect(result.dagLevels).toEqual([]);
+		expect(result.metadata.totalSteps).toBe(0);
+		expect(result.metadata.totalLevels).toBe(0);
+	});
+
+	it("throws CompilerError on DAG cycle", () => {
+		const spec = makeSpec({
+			step_a: { description: "A", needs: ["step_b"] },
+			step_b: { description: "B", needs: ["step_a"] },
+		});
+		expect(() => compileWorkflow(spec, makeWorkflowCtx())).toThrow(CompilerError);
 	});
 });
