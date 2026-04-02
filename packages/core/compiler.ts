@@ -71,6 +71,54 @@ function formatStepInstructions(stepName: string, step: Step): string {
 }
 
 /**
+ * Format the branch context section.
+ * Explains why this branch was taken and lists alternative branches if present.
+ */
+function formatBranchContext(reason: string, step: Step): string {
+	const lines: string[] = [
+		"## Branch Context",
+		`This step was reached because: ${reason}`,
+	];
+
+	if (step.branches && step.branches.length > 0) {
+		lines.push("");
+		lines.push("Alternative branches from this step:");
+		for (const branch of step.branches) {
+			if (branch.default) {
+				lines.push(`- ${branch.then} (default)`);
+			} else {
+				lines.push(`- ${branch.then} (condition: ${branch.if})`);
+			}
+		}
+	}
+
+	return lines.join("\n");
+}
+
+/**
+ * Format the retry context section.
+ * Explains attempt number, max attempts, and previous failure reason.
+ */
+function formatRetryContext(
+	attemptNumber: number,
+	previousFailureReason: string | null,
+	retryConfig: RetryConfig | undefined,
+): string {
+	let attemptLine = `Attempt ${attemptNumber}`;
+	if (retryConfig) {
+		attemptLine += ` of ${retryConfig.max_attempts ?? 3}`;
+	}
+
+	const lines: string[] = ["## Retry Context", attemptLine];
+
+	if (previousFailureReason !== null) {
+		lines.push(`Previous failure: ${previousFailureReason}`);
+	}
+
+	return lines.join("\n");
+}
+
+/**
  * Format the output schema section for inclusion in the system prompt.
  * Model-agnostic: works for both JSON mode and function-calling mode.
  */
@@ -150,6 +198,16 @@ export function compileStep(
 	}
 
 	segments.push(formatStepInstructions(stepName, step));
+
+	if (context.branchReason !== null) {
+		segments.push(formatBranchContext(context.branchReason, step));
+	}
+
+	if (context.attemptNumber > 1) {
+		segments.push(
+			formatRetryContext(context.attemptNumber, context.previousFailureReason, step.retry),
+		);
+	}
 
 	if (step.output_schema) {
 		segments.push(formatOutputSchema(step.output_schema));
