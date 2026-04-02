@@ -193,7 +193,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. `estimateTokens(text)` returns an approximate count using the ~4 chars/token heuristic
   2. Compiled prompt segments that exceed 2000 tokens include a warning in the compilation result
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 14-01-PLAN.md -- TDD estimateTokens implementation and tokenWarning integration in compileStep
 
 ### Phase 15: Workflow Compiler
 **Goal**: A developer can compile an entire LOGIC.md workflow into an ordered execution plan with pre-compiled steps and global policies
@@ -246,7 +249,7 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 11. Step Compiler Core | 2/2 | Complete    | 2026-04-02 | - |
 | 12. Step Compiler Context | v1.1 | 0/0 | Not started | - |
 | 13. Quality Gate Compilation | v1.1 | 0/0 | Not started | - |
-| 14. Token Estimation | v1.1 | 0/0 | Not started | - |
+| 14. Token Estimation | v1.1 | 0/1 | Not started | - |
 | 15. Workflow Compiler | v1.1 | 0/0 | Not started | - |
 | 16. CLI Compile Step | v1.1 | 0/0 | Not started | - |
 | 17. Compiler Test Coverage | v1.1 | 0/0 | Not started | - |
