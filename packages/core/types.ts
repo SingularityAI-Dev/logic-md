@@ -636,6 +636,7 @@ export interface ExecutionContext {
 	input: unknown;
 	attemptNumber: number;
 	branchReason: string | null;
+	previousFailureReason: string | null;
 }
 
 /** Workflow-level execution context extending step context (v1.1 Compiler) */

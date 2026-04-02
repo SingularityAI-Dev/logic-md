@@ -24,6 +24,7 @@ function makeCtx(overrides: Partial<ExecutionContext> = {}): ExecutionContext {
 		input: null,
 		attemptNumber: 1,
 		branchReason: null,
+		previousFailureReason: null,
 		...overrides,
 	};
 }
@@ -576,5 +577,105 @@ describe("integration: research-synthesizer all steps", () => {
 			const result = compileStep(spec, name, makeCtx());
 			expect(result.metadata.totalSteps).toBe(5);
 		}
+	});
+});
+
+// =============================================================================
+// Branch Context in systemPromptSegment
+// =============================================================================
+
+describe("systemPromptSegment: branch context", () => {
+	it("includes branch context section when branchReason is set", () => {
+		const spec = researchSpec();
+		const result = compileStep(
+			spec,
+			"gather_sources",
+			makeCtx({ branchReason: "confidence below threshold" }),
+		);
+		expect(result.systemPromptSegment).toContain("## Branch Context");
+		expect(result.systemPromptSegment).toContain("confidence below threshold");
+	});
+
+	it("explains alternatives when step has branches", () => {
+		const spec = makeSpec({
+			branching_step: {
+				description: "A step with branches",
+				branches: [
+					{ if: "{{ confidence > 0.8 }}", then: "step_a" },
+					{ default: true, then: "step_b" },
+				],
+			},
+		});
+		const result = compileStep(
+			spec,
+			"branching_step",
+			makeCtx({ branchReason: "confidence check" }),
+		);
+		expect(result.systemPromptSegment).toMatch(/[Aa]lternative/);
+		expect(result.systemPromptSegment).toContain("step_a");
+		expect(result.systemPromptSegment).toContain("step_b");
+	});
+
+	it("omits branch context when branchReason is null", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Branch Context");
+	});
+});
+
+// =============================================================================
+// Retry Context in systemPromptSegment
+// =============================================================================
+
+describe("systemPromptSegment: retry context", () => {
+	it("includes retry context section when attemptNumber > 1", () => {
+		const spec = researchSpec();
+		const result = compileStep(
+			spec,
+			"gather_sources",
+			makeCtx({ attemptNumber: 2 }),
+		);
+		expect(result.systemPromptSegment).toContain("## Retry Context");
+		expect(result.systemPromptSegment).toContain("Attempt 2");
+	});
+
+	it("includes previous failure reason when set", () => {
+		const spec = researchSpec();
+		const result = compileStep(
+			spec,
+			"gather_sources",
+			makeCtx({
+				attemptNumber: 3,
+				previousFailureReason: "Output schema validation failed",
+			}),
+		);
+		expect(result.systemPromptSegment).toContain("Output schema validation failed");
+	});
+
+	it("includes max attempts from retry policy when step has retry config", () => {
+		const spec = researchSpec();
+		const result = compileStep(
+			spec,
+			"gather_sources",
+			makeCtx({ attemptNumber: 2 }),
+		);
+		expect(result.systemPromptSegment).toContain("3");
+	});
+
+	it("omits retry context when attemptNumber is 1", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Retry Context");
+	});
+
+	it("omits failure reason line when previousFailureReason is null", () => {
+		const spec = researchSpec();
+		const result = compileStep(
+			spec,
+			"gather_sources",
+			makeCtx({ attemptNumber: 2, previousFailureReason: null }),
+		);
+		expect(result.systemPromptSegment).toContain("## Retry Context");
+		expect(result.systemPromptSegment).not.toContain("Previous failure");
 	});
 });
