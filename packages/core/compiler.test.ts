@@ -56,6 +56,12 @@ function researchSpec(): LogicSpec {
 						quality_scores: { type: "array" },
 					},
 				},
+				retry: {
+					max_attempts: 3,
+					initial_interval: "1s",
+					backoff_coefficient: 2.0,
+					non_retryable_errors: ["AuthenticationError", "RateLimitError"],
+				},
 			},
 			evaluate_credibility: {
 				needs: ["gather_sources"],
@@ -333,9 +339,242 @@ describe("compiled step output fields", () => {
 		expect(result.selfReflection).toBeNull();
 	});
 
-	it("retryPolicy is null", () => {
+	it("retryPolicy is compiled when step has retry config", () => {
 		const spec = researchSpec();
 		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy).toEqual({
+			maxAttempts: 3,
+			initialInterval: "1s",
+			backoffCoefficient: 2.0,
+			maximumInterval: "1s",
+			nonRetryableErrors: ["AuthenticationError", "RateLimitError"],
+		});
+	});
+
+	it("retryPolicy is null when step has no retry config", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "evaluate_credibility", makeCtx());
 		expect(result.retryPolicy).toBeNull();
+	});
+});
+
+// =============================================================================
+// Output Format in systemPromptSegment
+// =============================================================================
+
+describe("systemPromptSegment: output format section", () => {
+	it("includes Required Output Format heading when step has output_schema", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).toContain("## Required Output Format");
+	});
+
+	it("includes JSON schema instruction text", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).toContain(
+			"Your response must be valid JSON matching the following schema:",
+		);
+	});
+
+	it("includes the JSON schema as formatted JSON", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		const schemaJson = JSON.stringify(spec.steps!.gather_sources.output_schema, null, 2);
+		expect(result.systemPromptSegment).toContain(schemaJson);
+	});
+
+	it("includes JSON parsing instruction", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).toContain(
+			"Ensure your output can be parsed as JSON. Include all required fields.",
+		);
+	});
+
+	it("includes structured output mode instruction", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.systemPromptSegment).toContain(
+			"If using structured output mode, this schema defines the response shape.",
+		);
+	});
+
+	it("omits output format section when step has no output_schema", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "evaluate_credibility", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Required Output Format");
+	});
+
+	it("omits output format section for bare step", () => {
+		const spec = makeSpec({ bare: {} });
+		const result = compileStep(spec, "bare", makeCtx());
+		expect(result.systemPromptSegment).not.toContain("## Required Output Format");
+	});
+});
+
+// =============================================================================
+// Retry Policy Compilation
+// =============================================================================
+
+describe("retryPolicy compilation", () => {
+	it("maps max_attempts to maxAttempts", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy!.maxAttempts).toBe(3);
+	});
+
+	it("maps initial_interval to initialInterval", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy!.initialInterval).toBe("1s");
+	});
+
+	it("maps backoff_coefficient to backoffCoefficient", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy!.backoffCoefficient).toBe(2.0);
+	});
+
+	it("defaults maximumInterval to initialInterval when not specified", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy!.maximumInterval).toBe("1s");
+	});
+
+	it("maps non_retryable_errors to nonRetryableErrors", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.retryPolicy!.nonRetryableErrors).toEqual([
+			"AuthenticationError",
+			"RateLimitError",
+		]);
+	});
+
+	it("applies defaults for partial retry config (only max_attempts)", () => {
+		const spec = makeSpec({
+			partial: {
+				description: "partial retry",
+				retry: { max_attempts: 5 },
+			},
+		});
+		const result = compileStep(spec, "partial", makeCtx());
+		expect(result.retryPolicy).toEqual({
+			maxAttempts: 5,
+			initialInterval: "1s",
+			backoffCoefficient: 1.0,
+			maximumInterval: "60s",
+			nonRetryableErrors: [],
+		});
+	});
+
+	it("applies all defaults for empty retry config", () => {
+		const spec = makeSpec({
+			empty_retry: {
+				description: "empty retry",
+				retry: {},
+			},
+		});
+		const result = compileStep(spec, "empty_retry", makeCtx());
+		expect(result.retryPolicy).toEqual({
+			maxAttempts: 3,
+			initialInterval: "1s",
+			backoffCoefficient: 1.0,
+			maximumInterval: "60s",
+			nonRetryableErrors: [],
+		});
+	});
+
+	it("uses explicit maximumInterval when provided", () => {
+		const spec = makeSpec({
+			with_max: {
+				description: "with max interval",
+				retry: {
+					max_attempts: 2,
+					initial_interval: "500ms",
+					maximum_interval: "30s",
+				},
+			},
+		});
+		const result = compileStep(spec, "with_max", makeCtx());
+		expect(result.retryPolicy!.maximumInterval).toBe("30s");
+	});
+});
+
+// =============================================================================
+// Integration: All 5 research-synthesizer steps
+// =============================================================================
+
+describe("integration: research-synthesizer all steps", () => {
+	it("gather_sources: dagLevel 0, has output_schema, has retry", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.metadata.dagLevel).toBe(0);
+		expect(result.outputSchema).not.toBeNull();
+		expect(result.retryPolicy).not.toBeNull();
+		expect(result.systemPromptSegment).toContain("## Required Output Format");
+		expect(result.systemPromptSegment).toContain("gather_sources");
+	});
+
+	it("evaluate_credibility: dagLevel 1, no output_schema, no retry", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "evaluate_credibility", makeCtx());
+		expect(result.metadata.dagLevel).toBe(1);
+		expect(result.outputSchema).toBeNull();
+		expect(result.retryPolicy).toBeNull();
+		expect(result.systemPromptSegment).not.toContain("## Required Output Format");
+	});
+
+	it("synthesize: dagLevel 2, no output_schema, no retry", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "synthesize", makeCtx());
+		expect(result.metadata.dagLevel).toBe(2);
+		expect(result.outputSchema).toBeNull();
+		expect(result.retryPolicy).toBeNull();
+	});
+
+	it("expand_search: dagLevel 3, minimal config", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "expand_search", makeCtx());
+		expect(result.metadata.dagLevel).toBe(3);
+		expect(result.outputSchema).toBeNull();
+		expect(result.retryPolicy).toBeNull();
+	});
+
+	it("draft_report: dagLevel 3, no output_schema", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "draft_report", makeCtx());
+		expect(result.metadata.dagLevel).toBe(3);
+		expect(result.outputSchema).toBeNull();
+		expect(result.retryPolicy).toBeNull();
+	});
+
+	it("all 5 steps compile without error", () => {
+		const spec = researchSpec();
+		const stepNames = [
+			"gather_sources",
+			"evaluate_credibility",
+			"synthesize",
+			"expand_search",
+			"draft_report",
+		];
+		for (const name of stepNames) {
+			expect(() => compileStep(spec, name, makeCtx())).not.toThrow();
+		}
+	});
+
+	it("totalSteps is 5 for all compiled steps", () => {
+		const spec = researchSpec();
+		const stepNames = [
+			"gather_sources",
+			"evaluate_credibility",
+			"synthesize",
+			"expand_search",
+			"draft_report",
+		];
+		for (const name of stepNames) {
+			const result = compileStep(spec, name, makeCtx());
+			expect(result.metadata.totalSteps).toBe(5);
+		}
 	});
 });
