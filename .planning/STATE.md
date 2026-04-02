@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Developers can define agent reasoning strategies in a portable, declarative file format -- parsed and validated by a standalone library.
-**Current focus:** Phase 10: Compiler Types & Foundation
+**Current focus:** Phase 11: Step Compiler Core
 
 ## Current Position
 
-Phase: 10 of 17 (Compiler Types & Foundation)
-Plan: 01 of 01 -- COMPLETE
-Status: Phase 10 complete
-Last activity: 2026-04-01 -- Phase 10 Plan 01 executed
+Phase: 11 of 17 (Step Compiler Core)
+Plan: 01 of 02 -- COMPLETE
+Status: In progress
+Last activity: 2026-04-02 -- Phase 11 Plan 01 executed
 
 Progress: [###########.........] 59% (10/17 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13 (12 v1.0 + 1 v1.1)
-- Average duration: 4.1min
-- Total execution time: 0.88 hours
+- Total plans completed: 14 (12 v1.0 + 2 v1.1)
+- Average duration: 4.0min
+- Total execution time: 0.93 hours
 
 **By Phase:**
 
@@ -36,9 +36,10 @@ Progress: [###########.........] 59% (10/17 phases complete)
 | 09 | 3 | 7min | 2.3min |
 
 | 10 | 1 | 2min | 2min |
+| 11 | 1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 2min, 2min, 3min, 2min, 2min
+- Last 5 plans: 2min, 3min, 2min, 2min, 3min
 - Trend: Stable
 
 ## Accumulated Context
@@ -54,6 +55,9 @@ Recent decisions affecting current work:
 - QualityGateValidator is a function type separate from QualityGates spec interface
 - CompilerError class established as dedicated error type for compiler module
 - Underscore-prefixed params used for stub function signatures
+- Strategy preamble and step instructions joined with double newline for prompt readability
+- DAG resolver called inline per compileStep (pure, no caching needed at this stage)
+- Research-synthesizer fixture used as canonical test data for compiler tests
 
 ### Pending Todos
 
@@ -65,6 +69,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01
-Stopped at: Completed 10-01-PLAN.md (Phase 10 complete)
+Last session: 2026-04-02
+Stopped at: Completed 11-01-PLAN.md
 Resume file: None

@@ -243,7 +243,7 @@ Note: Phase 13 depends on Phase 11 (not 12), so 12 and 13 can run in parallel af
 | 8. CLI | v1.0 | 2/2 | Complete | 2026-04-01 |
 | 9. Test Coverage & Integration | v1.0 | 3/3 | Complete | 2026-04-01 |
 | 10. Compiler Types & Foundation | v1.1 | 1/1 | Complete | 2026-04-01 |
-| 11. Step Compiler Core | v1.1 | 0/2 | Not started | - |
+| 11. Step Compiler Core | 1/2 | In Progress|  | - |
 | 12. Step Compiler Context | v1.1 | 0/0 | Not started | - |
 | 13. Quality Gate Compilation | v1.1 | 0/0 | Not started | - |
 | 14. Token Estimation | v1.1 | 0/0 | Not started | - |
