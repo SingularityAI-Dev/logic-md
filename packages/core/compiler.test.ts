@@ -836,3 +836,135 @@ describe("systemPromptSegment: quality gate checklist", () => {
 		expect(result.systemPromptSegment).toContain("format_check");
 	});
 });
+
+// =============================================================================
+// Quality Gate Compilation (qualityGates validators)
+// =============================================================================
+
+describe("compileStep: qualityGates", () => {
+	it("step verification gate compiles to validator", () => {
+		const spec = makeSpec({
+			validated: {
+				description: "Validated step",
+				verification: {
+					check: "{{ output.valid == true }}",
+					on_fail: "retry",
+					on_fail_message: "Output not valid",
+				},
+			},
+		});
+		const result = compileStep(spec, "validated", makeCtx());
+		expect(result.qualityGates).toHaveLength(1);
+		expect(result.qualityGates[0]!({ valid: true })).toEqual({ passed: true });
+		expect(result.qualityGates[0]!({ valid: false })).toEqual({
+			passed: false,
+			message: "Output not valid",
+		});
+	});
+
+	it("spec-level pre_output gates compile to validators", () => {
+		const spec: LogicSpec = {
+			...makeSpec({
+				scored: { description: "Scored step" },
+			}),
+			quality_gates: {
+				pre_output: [
+					{
+						name: "confidence-check",
+						check: "{{ output.score >= 0.8 }}",
+						message: "Score too low",
+						severity: "error",
+					},
+				],
+			},
+		};
+		const result = compileStep(spec, "scored", makeCtx());
+		expect(result.qualityGates.length).toBeGreaterThanOrEqual(1);
+		expect(result.qualityGates[0]!({ score: 0.9 })).toEqual({ passed: true });
+		expect(result.qualityGates[0]!({ score: 0.5 })).toEqual({
+			passed: false,
+			message: "Score too low",
+		});
+	});
+
+	it("both step verification and spec pre_output combined", () => {
+		const spec: LogicSpec = {
+			...makeSpec({
+				combined: {
+					description: "Combined step",
+					verification: {
+						check: "{{ output.valid == true }}",
+						on_fail: "retry",
+						on_fail_message: "Not valid",
+					},
+				},
+			}),
+			quality_gates: {
+				pre_output: [
+					{
+						name: "format-gate",
+						check: "{{ output.formatted == true }}",
+						message: "Not formatted",
+					},
+				],
+			},
+		};
+		const result = compileStep(spec, "combined", makeCtx());
+		expect(result.qualityGates).toHaveLength(2);
+		// Step verification first
+		expect(result.qualityGates[0]!({ valid: true })).toEqual({ passed: true });
+		expect(result.qualityGates[0]!({ valid: false })).toEqual({
+			passed: false,
+			message: "Not valid",
+		});
+		// Spec pre_output second
+		expect(result.qualityGates[1]!({ formatted: true })).toEqual({ passed: true });
+		expect(result.qualityGates[1]!({ formatted: false })).toEqual({
+			passed: false,
+			message: "Not formatted",
+		});
+	});
+
+	it("gate with no message returns passed:false without message", () => {
+		const spec = makeSpec({
+			no_msg: {
+				description: "No message step",
+				verification: {
+					check: "{{ output.ok == true }}",
+					on_fail: "retry",
+				},
+			},
+		});
+		const result = compileStep(spec, "no_msg", makeCtx());
+		expect(result.qualityGates).toHaveLength(1);
+		const failing = result.qualityGates[0]!({ ok: false });
+		expect(failing.passed).toBe(false);
+		expect(failing.message).toBeUndefined();
+	});
+
+	it("step without verification has no step-level gates", () => {
+		const spec = researchSpec();
+		const result = compileStep(spec, "gather_sources", makeCtx());
+		expect(result.qualityGates).toEqual([]);
+	});
+
+	it("gate expression uses evaluate() from expression engine", () => {
+		const spec = makeSpec({
+			expr_step: {
+				description: "Expression test step",
+				verification: {
+					check: "{{ output.items.length > 0 }}",
+					on_fail: "retry",
+					on_fail_message: "Items must not be empty",
+				},
+			},
+		});
+		const result = compileStep(spec, "expr_step", makeCtx());
+		expect(result.qualityGates).toHaveLength(1);
+		expect(result.qualityGates[0]!({ items: [1, 2, 3] })).toEqual({ passed: true });
+		expect(result.qualityGates[0]!({ items: [] })).toEqual({
+			passed: false,
+			message: "Items must not be empty",
+		});
+	});
+});
