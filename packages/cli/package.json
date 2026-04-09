@@ -1,20 +1,37 @@
 {
 	"name": "@logic-md/cli",
-	"version": "0.0.0",
+	"version": "1.4.0",
 	"type": "module",
 	"bin": {
 		"logic-md": "./dist/cli.js"
 	},
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		}
+		".": "./dist/cli.js"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"templates"
 	],
+	"scripts": {
+		"build": "tsup",
+		"postbuild": "chmod +x dist/cli.js",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check ."
+	},
 	"dependencies": {
-		"@logic-md/core": "*"
+		"@logic-md/core": "*",
+		"chokidar": "^5.0.0",
+		"commander": "^14.0.0",
+		"microdiff": "^1.5.0",
+		"picocolors": "^1.1.0",
+		"tinyglobby": "^0.2.0"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"tsup": "^8.0.0",
+		"typescript": "~5.8.0",
+		"vitest": "~4.1.0"
 	}
 }

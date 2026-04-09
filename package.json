@@ -10,7 +10,8 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --build tsconfig.build.json",
-		"build": "tsc --build tsconfig.build.json"
+		"build": "npm run build:core && npm run build -w @logic-md/cli && npm run build -w @logic-md/mcp",
+		"build:core": "tsc --build tsconfig.build.json"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "~2.4.0",
