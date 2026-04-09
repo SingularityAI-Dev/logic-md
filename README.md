@@ -10,8 +10,11 @@ LOGIC.md sits between identity (CLAUDE.md / SOUL.md) and capability (SKILL.md / 
 
 | Package | Description |
 |---------|-------------|
-| `@logic-md/core` | Parser, validator, expression engine, DAG resolver |
-| `@logic-md/cli` | CLI tools: `logic-md validate`, `logic-md lint`, `logic-md compile` |
+| `@logic-md/core` | Parser, validator, expression engine, DAG resolver, compiler |
+| `@logic-md/cli` | 9-command CLI for authoring, testing, and managing LOGIC.md files |
+| `@logic-md/mcp` | Model Context Protocol server for AI tool integration |
+
+See also: `integrations/claude-code/` for Claude Code slash commands.
 
 ## Quick Start
 
