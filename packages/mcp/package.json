@@ -1,0 +1,43 @@
+{
+	"name": "@logic-md/mcp",
+	"version": "1.4.0",
+	"type": "module",
+	"bin": {
+		"logic-md-mcp": "./dist/index.js"
+	},
+	"exports": {
+		".": "./dist/index.js"
+	},
+	"files": [
+		"dist",
+		"templates"
+	],
+	"scripts": {
+		"build": "tsup",
+		"postbuild": "chmod +x dist/index.js && cp ../core/schema.json dist/schema.json 2>/dev/null || cp ../core/dist/schema.json dist/schema.json 2>/dev/null || true",
+		"dev": "tsup --watch",
+		"test": "node --test tests/server.test.mjs",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check ."
+	},
+	"dependencies": {
+		"@logic-md/core": "*",
+		"@modelcontextprotocol/sdk": "^1.29.0",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"tsup": "^8.0.0",
+		"typescript": "~5.8.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/logic-md/logic-md",
+		"directory": "packages/mcp"
+	},
+	"keywords": ["logic-md", "mcp", "model-context-protocol", "ai-agents"]
+}
