@@ -1347,11 +1347,7 @@ describe("compileWorkflow: branching workflow", () => {
 			revise: { description: "Revise result", needs: ["analyze"] },
 		});
 		// Compile with branch context to see branch alternatives in prompt
-		const result = compileStep(
-			spec,
-			"analyze",
-			makeCtx({ branchReason: "routing decision" }),
-		);
+		const result = compileStep(spec, "analyze", makeCtx({ branchReason: "routing decision" }));
 		expect(result.systemPromptSegment).toContain("accept");
 		expect(result.systemPromptSegment).toContain("revise");
 	});
@@ -1456,9 +1452,7 @@ describe("compileSelfReflection: edge cases", () => {
 		};
 		const result = compileStep(spec, "step", makeCtx());
 		expect(result.selfReflection).not.toBeNull();
-		expect(result.selfReflection!.prompt).toBe(
-			"Review your output for accuracy and completeness.",
-		);
+		expect(result.selfReflection!.prompt).toBe("Review your output for accuracy and completeness.");
 		expect(result.selfReflection!.minimumScore).toBe(0);
 	});
 

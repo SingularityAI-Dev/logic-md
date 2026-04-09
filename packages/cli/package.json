@@ -14,7 +14,7 @@
 	],
 	"scripts": {
 		"build": "tsup",
-		"postbuild": "chmod +x dist/cli.js",
+		"postbuild": "chmod +x dist/cli.js && cp ../core/schema.json dist/schema.json 2>/dev/null || cp ../core/dist/schema.json dist/schema.json 2>/dev/null || true",
 		"dev": "tsup --watch",
 		"test": "vitest run",
 		"typecheck": "tsc --noEmit",

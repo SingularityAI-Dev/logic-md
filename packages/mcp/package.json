@@ -39,5 +39,10 @@
 		"url": "https://github.com/logic-md/logic-md",
 		"directory": "packages/mcp"
 	},
-	"keywords": ["logic-md", "mcp", "model-context-protocol", "ai-agents"]
+	"keywords": [
+		"logic-md",
+		"mcp",
+		"model-context-protocol",
+		"ai-agents"
+	]
 }

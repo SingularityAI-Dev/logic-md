@@ -394,7 +394,7 @@ export function compileWorkflow(spec: LogicSpec, context: WorkflowContext): Comp
 	const dagResult = resolve(spec.steps);
 	if (!dagResult.ok) {
 		throw new CompilerError(
-			"Workflow DAG resolution failed: " + dagResult.errors.map((e) => e.message).join("; "),
+			`Workflow DAG resolution failed: ${dagResult.errors.map((e) => e.message).join("; ")}`,
 		);
 	}
 

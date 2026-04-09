@@ -1,5 +1,5 @@
-import type { Command } from 'commander'
-import type { Colors } from '../output/color.js'
+import type { Command } from "commander";
+import type { Colors } from "../output/color.js";
 
 // ─── Bash Completion Script ───────────────────────────────────────────────────
 
@@ -102,14 +102,14 @@ _logic_md_completion() {
 }
 
 complete -F _logic_md_completion logic-md
-`
+`;
 
 // ─── Zsh Completion Script ────────────────────────────────────────────────────
 
 const ZSH_COMPLETION = `#compdef logic-md
 # zsh completion for logic-md
 # Install: logic-md completion zsh > ~/.zsh/completions/_logic-md
-#          (ensure ~/.zsh/completions is in your \$fpath)
+#          (ensure ~/.zsh/completions is in your $fpath)
 #   or:    logic-md completion zsh > "\${fpath[1]}/_logic-md"
 
 _logic_md() {
@@ -119,7 +119,7 @@ _logic_md() {
     '1: :->command' \\
     '*: :->args'
 
-  case \$state in
+  case $state in
     command)
       _values 'command' \\
         'validate[Validate LOGIC.md files]' \\
@@ -190,7 +190,7 @@ _logic_md() {
 }
 
 _logic_md "$@"
-`
+`;
 
 // ─── Fish Completion Script ───────────────────────────────────────────────────
 
@@ -254,29 +254,31 @@ end
 
 # Directory/file completion for watch
 complete -c logic-md -n '__fish_seen_subcommand_from watch' -F
-`
+`;
 
 // ─── Command registration ─────────────────────────────────────────────────────
 
 export function registerCompletionCommand(program: Command, _colors: Colors): void {
-  program
-    .command('completion')
-    .description('Output shell completion script for bash, zsh, or fish')
-    .argument('<shell>', 'shell type: bash, zsh, or fish')
-    .addHelpText(
-      'after',
-      `\nExamples:\n  $ logic-md completion bash >> ~/.bash_completion\n  $ logic-md completion zsh > ~/.zsh/completions/_logic-md\n  $ logic-md completion fish > ~/.config/fish/completions/logic-md.fish`,
-    )
-    .action((shell: string) => {
-      const scripts: Record<string, string> = {
-        bash: BASH_COMPLETION,
-        zsh: ZSH_COMPLETION,
-        fish: FISH_COMPLETION,
-      }
-      if (!(shell in scripts)) {
-        process.stderr.write(`error: unsupported shell '${shell}'\nSupported shells: bash, zsh, fish\n`)
-        process.exit(2)
-      }
-      process.stdout.write(scripts[shell])
-    })
+	program
+		.command("completion")
+		.description("Output shell completion script for bash, zsh, or fish")
+		.argument("<shell>", "shell type: bash, zsh, or fish")
+		.addHelpText(
+			"after",
+			`\nExamples:\n  $ logic-md completion bash >> ~/.bash_completion\n  $ logic-md completion zsh > ~/.zsh/completions/_logic-md\n  $ logic-md completion fish > ~/.config/fish/completions/logic-md.fish`,
+		)
+		.action((shell: string) => {
+			const scripts: Record<string, string> = {
+				bash: BASH_COMPLETION,
+				zsh: ZSH_COMPLETION,
+				fish: FISH_COMPLETION,
+			};
+			if (!(shell in scripts)) {
+				process.stderr.write(
+					`error: unsupported shell '${shell}'\nSupported shells: bash, zsh, fish\n`,
+				);
+				process.exit(2);
+			}
+			process.stdout.write(scripts[shell]);
+		});
 }

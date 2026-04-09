@@ -1,4 +1,4 @@
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 const specMarkdown = `# LOGIC.md Specification Summary
 
@@ -71,22 +71,24 @@ context:                      # Optional: context injection
 
 - \`logic-md://schema\`: Full JSON Schema for frontmatter validation
 - \`logic-md://spec\`: This specification summary
-`
+`;
 
 export function registerSpecResource(server: McpServer): void {
-  server.registerResource(
-    'logic-md-spec',
-    'logic-md://spec',
-    {
-      mimeType: 'text/markdown',
-      description: 'LOGIC.md specification summary',
-    },
-    async () => ({
-      contents: [{
-        uri: 'logic-md://spec',
-        mimeType: 'text/markdown',
-        text: specMarkdown,
-      }],
-    })
-  )
+	server.registerResource(
+		"logic-md-spec",
+		"logic-md://spec",
+		{
+			mimeType: "text/markdown",
+			description: "LOGIC.md specification summary",
+		},
+		async () => ({
+			contents: [
+				{
+					uri: "logic-md://spec",
+					mimeType: "text/markdown",
+					text: specMarkdown,
+				},
+			],
+		}),
+	);
 }
