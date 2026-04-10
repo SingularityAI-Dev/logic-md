@@ -1,6 +1,7 @@
 {
 	"name": "@logic-md/core",
 	"version": "1.4.0",
+	"description": "Parser, validator, expression engine, DAG resolver, and reasoning compiler for the LOGIC.md specification",
 	"type": "module",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -20,5 +21,28 @@
 		"ajv-formats": "^3.0.1",
 		"gray-matter": "^4.0.3",
 		"yaml": "^2.8.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SingleSourceStudios/logic-md.git",
+		"directory": "packages/core"
+	},
+	"keywords": [
+		"logic-md",
+		"ai-agents",
+		"reasoning",
+		"declarative",
+		"contracts",
+		"dag",
+		"compiler",
+		"parser",
+		"validator"
+	],
+	"engines": {
+		"node": ">=18"
 	}
 }

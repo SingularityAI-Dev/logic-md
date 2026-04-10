@@ -1,9 +1,10 @@
 {
 	"name": "@logic-md/cli",
 	"version": "1.4.0",
+	"description": "CLI for validating, linting, compiling, and scaffolding LOGIC.md reasoning specifications",
 	"type": "module",
 	"bin": {
-		"logic-md": "./dist/cli.js"
+		"logic-md": "dist/cli.js"
 	},
 	"exports": {
 		".": "./dist/cli.js"
@@ -33,5 +34,26 @@
 		"tsup": "^8.0.0",
 		"typescript": "~5.8.0",
 		"vitest": "~4.1.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SingleSourceStudios/logic-md.git",
+		"directory": "packages/cli"
+	},
+	"keywords": [
+		"logic-md",
+		"cli",
+		"ai-agents",
+		"reasoning",
+		"validate",
+		"lint",
+		"compile"
+	],
+	"engines": {
+		"node": ">=18"
 	}
 }

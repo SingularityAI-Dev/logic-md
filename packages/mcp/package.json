@@ -1,9 +1,10 @@
 {
 	"name": "@logic-md/mcp",
 	"version": "1.4.0",
+	"description": "MCP server exposing LOGIC.md tools for parsing, validating, linting, and compiling reasoning specifications",
 	"type": "module",
 	"bin": {
-		"logic-md-mcp": "./dist/index.js"
+		"logic-md-mcp": "dist/index.js"
 	},
 	"exports": {
 		".": "./dist/index.js"
@@ -36,13 +37,17 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/logic-md/logic-md",
+		"url": "git+https://github.com/SingleSourceStudios/logic-md.git",
 		"directory": "packages/mcp"
 	},
 	"keywords": [
 		"logic-md",
 		"mcp",
 		"model-context-protocol",
-		"ai-agents"
-	]
+		"ai-agents",
+		"reasoning"
+	],
+	"engines": {
+		"node": ">=18"
+	}
 }
