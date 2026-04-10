@@ -38,11 +38,11 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/rainierpotgieter/logic-md"
-Specification = "https://github.com/rainierpotgieter/logic-md/blob/main/docs/SPEC.md"
+Repository = "https://github.com/SingleSourceStudios/logic-md"
+Specification = "https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md"
 
-[tool.setuptools]
-packages = ["logic_md"]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
 logic_md = ["schema.json"]

@@ -2,15 +2,13 @@
 
 A Python SDK for parsing and validating **LOGIC.md** specifications — declarative reasoning configurations for AI agents.
 
-**Status:** Alpha — parser and validator only. Not yet published to PyPI.
+**Status:** Alpha — parser and validator only.
 
 ## Installation
 
 ```bash
 pip install logic-md
 ```
-
-(Not yet available on PyPI — for development, install from source.)
 
 ## Quick Start
 
@@ -85,10 +83,10 @@ def process_spec(spec: LogicSpec) -> None:
 
 ## Schema
 
-The validator uses the canonical JSON Schema from the [logic-md spec repository](https://github.com/rainierpotgieter/logic-md/blob/main/spec/schema.json).
+The validator uses the canonical JSON Schema from the [logic-md spec repository](https://github.com/SingleSourceStudios/logic-md/blob/main/spec/schema.json).
 
 ## Links
 
-- **Repository:** https://github.com/rainierpotgieter/logic-md
-- **Specification:** https://github.com/rainierpotgieter/logic-md/blob/main/docs/SPEC.md
-- **Schema:** https://github.com/rainierpotgieter/logic-md/blob/main/spec/schema.json
+- **Repository:** https://github.com/SingleSourceStudios/logic-md
+- **Specification:** https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md
+- **Schema:** https://github.com/SingleSourceStudios/logic-md/blob/main/spec/schema.json
