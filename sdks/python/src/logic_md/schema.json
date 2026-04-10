@@ -1,0 +1,887 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://logic-md.dev/schema/v1.0/logic-spec.json",
+	"title": "LogicSpec",
+	"description": "LOGIC.md v1.0 specification schema",
+	"type": "object",
+	"required": ["spec_version", "name"],
+	"additionalProperties": false,
+	"properties": {
+		"spec_version": {
+			"type": "string",
+			"const": "1.0",
+			"description": "Specification version. Currently \"1.0\""
+		},
+		"name": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Unique identifier for this reasoning configuration"
+		},
+		"description": {
+			"type": "string",
+			"description": "Human-readable summary"
+		},
+		"imports": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/Import" },
+			"description": "External LOGIC.md files to compose (Section 2.2)"
+		},
+		"reasoning": {
+			"$ref": "#/definitions/Reasoning",
+			"description": "Global reasoning strategy configuration (Section 3)"
+		},
+		"steps": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/Step" },
+			"description": "Named reasoning steps (Section 4)"
+		},
+		"contracts": {
+			"$ref": "#/definitions/Contracts",
+			"description": "Input/output type contracts (Section 5)"
+		},
+		"quality_gates": {
+			"$ref": "#/definitions/QualityGates",
+			"description": "Quality and verification rules (Section 6)"
+		},
+		"decision_trees": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/DecisionTree" },
+			"description": "Decision trees for complex routing (Section 7)"
+		},
+		"fallback": {
+			"$ref": "#/definitions/Fallback",
+			"description": "Fallback and escalation configuration (Section 8)"
+		},
+		"global": {
+			"$ref": "#/definitions/GlobalConfig",
+			"description": "Global workflow constraints (Section 9.1)"
+		},
+		"nodes": {
+			"type": "object",
+			"additionalProperties": { "$ref": "#/definitions/NodeRef" },
+			"description": "Node references in workflow-level specs (Section 9.1)"
+		},
+		"edges": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/Edge" },
+			"description": "Inter-node edges in workflow-level specs (Section 9.1)"
+		},
+		"visual": {
+			"$ref": "#/definitions/Visual",
+			"description": "Visual builder integration (Section 10)"
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "Arbitrary key-value metadata"
+		}
+	},
+	"definitions": {
+		"Expression": {
+			"type": "string",
+			"description": "Expression string using {{ }} delimiters"
+		},
+		"JsonSchemaObject": {
+			"type": "object",
+			"additionalProperties": true,
+			"description": "An inline JSON Schema object as authored by users"
+		},
+		"Import": {
+			"type": "object",
+			"required": ["ref", "as"],
+			"additionalProperties": false,
+			"properties": {
+				"ref": {
+					"type": "string",
+					"description": "File path or URI to the external LOGIC.md file"
+				},
+				"as": {
+					"type": "string",
+					"description": "Namespace prefix for imported values"
+				}
+			}
+		},
+		"Reasoning": {
+			"type": "object",
+			"required": ["strategy"],
+			"additionalProperties": false,
+			"properties": {
+				"strategy": {
+					"type": "string",
+					"enum": ["cot", "react", "tot", "got", "plan-execute", "custom"],
+					"description": "The reasoning strategy to employ (Section 3.2)"
+				},
+				"max_iterations": {
+					"type": "integer",
+					"description": "Maximum reasoning loops before forced output"
+				},
+				"temperature": {
+					"type": "number",
+					"description": "Suggested temperature for reasoning steps"
+				},
+				"thinking_budget": {
+					"type": "integer",
+					"description": "Maximum tokens for internal reasoning (extended thinking)"
+				},
+				"strategy_config": {
+					"type": "object",
+					"additionalProperties": true,
+					"description": "Strategy-specific parameters (varies by strategy)"
+				}
+			}
+		},
+		"ConfidenceConfig": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"minimum": {
+					"type": "number",
+					"description": "Below this value the step fails"
+				},
+				"target": {
+					"type": "number",
+					"description": "Aim for this confidence level"
+				},
+				"escalate_below": {
+					"type": "number",
+					"description": "Below this value escalate to human/supervisor"
+				}
+			}
+		},
+		"Branch": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"if": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression that must evaluate to true for this branch"
+				},
+				"default": {
+					"type": "boolean",
+					"description": "Whether this is the default/fallthrough branch"
+				},
+				"then": {
+					"type": "string",
+					"description": "Target step name to route to"
+				}
+			}
+		},
+		"RetryConfig": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"max_attempts": {
+					"type": "integer",
+					"description": "Maximum number of retry attempts"
+				},
+				"initial_interval": {
+					"type": "string",
+					"description": "Initial delay between retries (duration string)"
+				},
+				"backoff_coefficient": {
+					"type": "number",
+					"description": "Multiplier for exponential backoff"
+				},
+				"maximum_interval": {
+					"type": "string",
+					"description": "Maximum delay between retries (duration string)"
+				},
+				"non_retryable_errors": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Error types that should not trigger a retry"
+				}
+			}
+		},
+		"Verification": {
+			"type": "object",
+			"required": ["check", "on_fail"],
+			"additionalProperties": false,
+			"properties": {
+				"check": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression to evaluate after the step completes"
+				},
+				"on_fail": {
+					"type": "string",
+					"enum": ["retry", "escalate", "skip", "abort", "revise"],
+					"description": "Action to take if the check fails"
+				},
+				"on_fail_message": {
+					"type": "string",
+					"description": "Human-readable message when verification fails"
+				}
+			}
+		},
+		"Step": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"description": {
+					"type": "string",
+					"description": "Human-readable description of what this step accomplishes"
+				},
+				"needs": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Step names that must complete before this step runs"
+				},
+				"instructions": {
+					"type": "string",
+					"description": "Reasoning instructions injected into LLM context for this step"
+				},
+				"input_schema": {
+					"$ref": "#/definitions/JsonSchemaObject",
+					"description": "JSON Schema for step input validation"
+				},
+				"output_schema": {
+					"$ref": "#/definitions/JsonSchemaObject",
+					"description": "JSON Schema for step output validation"
+				},
+				"confidence": {
+					"$ref": "#/definitions/ConfidenceConfig",
+					"description": "Confidence thresholds for this step"
+				},
+				"branches": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/Branch" },
+					"description": "Conditional branching rules"
+				},
+				"retry": {
+					"$ref": "#/definitions/RetryConfig",
+					"description": "Retry/resilience configuration"
+				},
+				"verification": {
+					"$ref": "#/definitions/Verification",
+					"description": "Post-step verification check"
+				},
+				"timeout": {
+					"type": "string",
+					"description": "Maximum time allowed for this step (duration string)"
+				},
+				"allowed_tools": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Tools this step is allowed to use"
+				},
+				"denied_tools": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Tools this step must NOT use"
+				},
+				"execution": {
+					"type": "string",
+					"enum": ["sequential", "parallel", "conditional"],
+					"description": "Execution mode for this step"
+				},
+				"parallel_steps": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Steps to run in parallel (when execution is parallel)"
+				},
+				"join": {
+					"type": "string",
+					"enum": ["all", "any", "majority"],
+					"description": "How parallel results are joined"
+				},
+				"join_timeout": {
+					"type": "string",
+					"description": "Timeout for waiting on parallel step joins (duration string)"
+				}
+			}
+		},
+		"ContractField": {
+			"type": "object",
+			"required": ["name", "type"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Field name"
+				},
+				"type": {
+					"type": "string",
+					"description": "Field type (JSON Schema type string)"
+				},
+				"required": {
+					"oneOf": [{ "type": "boolean" }, { "type": "array", "items": { "type": "string" } }],
+					"description": "Whether the field is required, or array of required sub-properties"
+				},
+				"description": {
+					"type": "string",
+					"description": "Human-readable description of the field"
+				},
+				"constraints": {
+					"type": "object",
+					"additionalProperties": true,
+					"description": "Additional validation constraints"
+				},
+				"properties": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/definitions/JsonSchemaObject" },
+					"description": "Sub-properties (for object-type fields)"
+				},
+				"items": {
+					"$ref": "#/definitions/JsonSchemaObject",
+					"description": "Item schema (for array-type fields)"
+				}
+			}
+		},
+		"Capabilities": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Display name of the agent/node capability"
+				},
+				"version": {
+					"type": "string",
+					"description": "Semantic version of the capability"
+				},
+				"description": {
+					"type": "string",
+					"description": "Human-readable description"
+				},
+				"supported_domains": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Domains this agent supports"
+				},
+				"max_input_tokens": {
+					"type": "integer",
+					"description": "Maximum input token count"
+				},
+				"avg_response_time": {
+					"type": "string",
+					"description": "Average response time (duration string)"
+				},
+				"languages": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Supported languages (ISO codes)"
+				}
+			}
+		},
+		"ContractValidation": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"mode": {
+					"type": "string",
+					"enum": ["strict", "warn", "permissive"],
+					"description": "Validation strictness mode"
+				},
+				"on_input_violation": {
+					"type": "string",
+					"enum": ["reject", "coerce", "warn", "retry", "escalate"],
+					"description": "Action when input violates the contract"
+				},
+				"on_output_violation": {
+					"type": "string",
+					"enum": ["reject", "coerce", "warn", "retry", "escalate"],
+					"description": "Action when output violates the contract"
+				}
+			}
+		},
+		"Contracts": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"inputs": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/ContractField" },
+					"description": "Input field definitions"
+				},
+				"outputs": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/ContractField" },
+					"description": "Output field definitions"
+				},
+				"capabilities": {
+					"$ref": "#/definitions/Capabilities",
+					"description": "Capability advertisement"
+				},
+				"validation": {
+					"$ref": "#/definitions/ContractValidation",
+					"description": "Validation configuration"
+				}
+			}
+		},
+		"Gate": {
+			"type": "object",
+			"required": ["name", "check"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Name of the quality gate"
+				},
+				"check": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression to evaluate"
+				},
+				"message": {
+					"type": "string",
+					"description": "Human-readable message when the gate fails"
+				},
+				"severity": {
+					"type": "string",
+					"enum": ["error", "warning", "info"],
+					"description": "Severity level of the gate"
+				},
+				"on_fail": {
+					"type": "string",
+					"enum": ["retry", "escalate", "skip", "abort", "revise"],
+					"description": "Action to take on failure"
+				}
+			}
+		},
+		"Invariant": {
+			"type": "object",
+			"required": ["name", "check"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Name of the invariant"
+				},
+				"check": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression to evaluate"
+				},
+				"message": {
+					"type": "string",
+					"description": "Human-readable message when the invariant is breached"
+				},
+				"on_breach": {
+					"type": "string",
+					"description": "Action to take on breach (step name or built-in action)"
+				}
+			}
+		},
+		"ReflectionConfig": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"prompt": {
+					"type": "string",
+					"description": "Prompt for the agent to review its output"
+				},
+				"max_revisions": {
+					"type": "integer",
+					"description": "Maximum number of revision cycles"
+				}
+			}
+		},
+		"RubricCriterion": {
+			"type": "object",
+			"required": ["name", "weight"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Name of the criterion"
+				},
+				"weight": {
+					"type": "number",
+					"description": "Weight in scoring (0-1)"
+				},
+				"description": {
+					"type": "string",
+					"description": "Description of what this criterion evaluates"
+				}
+			}
+		},
+		"RubricConfig": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"criteria": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/RubricCriterion" },
+					"description": "Scoring criteria"
+				},
+				"minimum_score": {
+					"type": "number",
+					"description": "Minimum passing score"
+				}
+			}
+		},
+		"SelfVerification": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"enabled": {
+					"type": "boolean",
+					"description": "Whether self-verification is enabled"
+				},
+				"strategy": {
+					"type": "string",
+					"enum": ["reflection", "rubric", "checklist", "critic"],
+					"description": "Self-verification strategy"
+				},
+				"reflection": {
+					"$ref": "#/definitions/ReflectionConfig",
+					"description": "Reflection configuration (when strategy is 'reflection')"
+				},
+				"rubric": {
+					"$ref": "#/definitions/RubricConfig",
+					"description": "Rubric configuration (when strategy is 'rubric')"
+				},
+				"checklist": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Checklist items (when strategy is 'checklist')"
+				}
+			}
+		},
+		"QualityGates": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"pre_output": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/Gate" },
+					"description": "Checks run before any step produces final output"
+				},
+				"post_output": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/Gate" },
+					"description": "Checks run after output, can trigger revision"
+				},
+				"invariants": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/Invariant" },
+					"description": "Invariants checked continuously during reasoning"
+				},
+				"self_verification": {
+					"$ref": "#/definitions/SelfVerification",
+					"description": "Self-verification loop configuration"
+				}
+			}
+		},
+		"DecisionBranch": {
+			"type": "object",
+			"required": ["next"],
+			"additionalProperties": false,
+			"properties": {
+				"value": {
+					"description": "Value to match against the condition"
+				},
+				"default": {
+					"type": "boolean",
+					"description": "Whether this is the default/fallthrough branch"
+				},
+				"next": {
+					"type": "string",
+					"description": "Target node or step name"
+				}
+			}
+		},
+		"DecisionNode": {
+			"type": "object",
+			"required": ["condition", "branches"],
+			"additionalProperties": false,
+			"properties": {
+				"condition": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression to evaluate for routing"
+				},
+				"branches": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/DecisionBranch" },
+					"description": "Branches to evaluate in order"
+				}
+			}
+		},
+		"Terminal": {
+			"type": "object",
+			"required": ["action"],
+			"additionalProperties": false,
+			"properties": {
+				"action": {
+					"type": "string",
+					"description": "Action to perform (step name or built-in action)"
+				},
+				"message": {
+					"type": "string",
+					"description": "Human-readable message"
+				}
+			}
+		},
+		"DecisionTree": {
+			"type": "object",
+			"required": ["root", "nodes"],
+			"additionalProperties": false,
+			"properties": {
+				"description": {
+					"type": "string",
+					"description": "Human-readable description of the decision tree"
+				},
+				"root": {
+					"type": "string",
+					"description": "Name of the root node to start evaluation"
+				},
+				"nodes": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/definitions/DecisionNode" },
+					"description": "Named decision nodes"
+				},
+				"terminals": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/definitions/Terminal" },
+					"description": "Named terminal nodes"
+				}
+			}
+		},
+		"EscalationLevel": {
+			"type": "object",
+			"required": ["level", "trigger", "action"],
+			"additionalProperties": false,
+			"properties": {
+				"level": {
+					"type": "integer",
+					"description": "Escalation level number (higher = more severe)"
+				},
+				"trigger": {
+					"$ref": "#/definitions/Expression",
+					"description": "Expression that triggers this escalation level"
+				},
+				"action": {
+					"type": "string",
+					"description": "Action to take at this level"
+				},
+				"new_strategy": {
+					"type": "string",
+					"enum": ["cot", "react", "tot", "got", "plan-execute", "custom"],
+					"description": "New reasoning strategy to switch to"
+				},
+				"message": {
+					"type": "string",
+					"description": "Human-readable message"
+				},
+				"include_reasoning_trace": {
+					"type": "boolean",
+					"description": "Whether to include the reasoning trace"
+				}
+			}
+		},
+		"DegradationRule": {
+			"type": "object",
+			"required": ["when", "fallback_to"],
+			"additionalProperties": false,
+			"properties": {
+				"when": {
+					"type": "string",
+					"description": "Condition that triggers degradation"
+				},
+				"fallback_to": {
+					"type": "string",
+					"description": "Target to degrade to"
+				},
+				"message": {
+					"type": "string",
+					"description": "Human-readable message"
+				},
+				"include_fields": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Fields to include in degraded output"
+				},
+				"exclude_fields": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Fields to exclude from degraded output"
+				}
+			}
+		},
+		"Fallback": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"strategy": {
+					"type": "string",
+					"enum": ["graceful_degrade", "escalate", "abort", "retry_different"],
+					"description": "Global fallback strategy"
+				},
+				"escalation": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/EscalationLevel" },
+					"description": "Escalation chain (ordered by level)"
+				},
+				"degradation": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/DegradationRule" },
+					"description": "Graceful degradation rules"
+				}
+			}
+		},
+		"GlobalConfig": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"max_total_time": {
+					"type": "string",
+					"description": "Maximum total time for the workflow (duration string)"
+				},
+				"max_total_cost": {
+					"type": "number",
+					"description": "Maximum total cost in USD"
+				},
+				"fail_fast": {
+					"type": "boolean",
+					"description": "Whether to stop all branches on first failure"
+				},
+				"max_parallelism": {
+					"type": "integer",
+					"description": "Maximum number of nodes that can run in parallel"
+				}
+			}
+		},
+		"NodeRef": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"logic_ref": {
+					"type": "string",
+					"description": "Path to the node's LOGIC.md file"
+				},
+				"depends_on": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Nodes that must complete before this one"
+				},
+				"overrides": {
+					"type": "object",
+					"additionalProperties": true,
+					"description": "Property overrides for this node"
+				}
+			}
+		},
+		"Edge": {
+			"type": "object",
+			"required": ["from", "to"],
+			"additionalProperties": false,
+			"properties": {
+				"from": {
+					"type": "string",
+					"description": "Source node name"
+				},
+				"to": {
+					"type": "string",
+					"description": "Target node name"
+				},
+				"contract": {
+					"$ref": "#/definitions/JsonSchemaObject",
+					"description": "Inter-node data flow contract (JSON Schema)"
+				},
+				"on_contract_violation": {
+					"type": "string",
+					"description": "Action on contract violation"
+				}
+			}
+		},
+		"VisualPort": {
+			"type": "object",
+			"required": ["name", "type"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Port name"
+				},
+				"type": {
+					"type": "string",
+					"description": "Port data type"
+				},
+				"required": {
+					"type": "boolean",
+					"description": "Whether the port connection is required"
+				}
+			}
+		},
+		"VisualPorts": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"inputs": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/VisualPort" },
+					"description": "Input port definitions"
+				},
+				"outputs": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/VisualPort" },
+					"description": "Output port definitions"
+				}
+			}
+		},
+		"InspectorField": {
+			"type": "object",
+			"required": ["key", "label", "type"],
+			"additionalProperties": false,
+			"properties": {
+				"key": {
+					"type": "string",
+					"description": "Property path (dot-notation key into the spec)"
+				},
+				"label": {
+					"type": "string",
+					"description": "Display label in the inspector"
+				},
+				"type": {
+					"type": "string",
+					"description": "Input control type"
+				},
+				"options": {
+					"type": "array",
+					"items": { "type": "string" },
+					"description": "Available options (for select-type controls)"
+				},
+				"default": {
+					"description": "Default value"
+				},
+				"min": {
+					"type": "number",
+					"description": "Minimum value (for numeric controls)"
+				},
+				"max": {
+					"type": "number",
+					"description": "Maximum value (for numeric controls)"
+				},
+				"step": {
+					"type": "number",
+					"description": "Step increment (for slider controls)"
+				}
+			}
+		},
+		"Visual": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"icon": {
+					"type": "string",
+					"description": "Icon identifier"
+				},
+				"category": {
+					"type": "string",
+					"description": "Palette category"
+				},
+				"color": {
+					"type": "string",
+					"description": "Node color (hex string)"
+				},
+				"inspector": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/InspectorField" },
+					"description": "Configurable parameters exposed in the node inspector"
+				},
+				"ports": {
+					"$ref": "#/definitions/VisualPorts",
+					"description": "Port definitions for visual wiring"
+				}
+			}
+		}
+	}
+}
