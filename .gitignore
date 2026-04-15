@@ -8,3 +8,7 @@ coverage/
 *.tgz
 *.log
 .DS_Store
+
+.planning/
+docs/handover/
+PROGRESS.md
