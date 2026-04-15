@@ -32,7 +32,7 @@ Without it, multi-step agent pipelines degrade predictably. Node A produces an i
 **What's not done**
 
 - No external adopters yet. The validation is internal to Modular9. We need real-world feedback on whether this solves problems for other teams.
-- Benchmarks pending. We have the framework for measuring reasoning impact (structured prompting vs. freeform), but no published data yet.
+- Preliminary benchmark on Llama 3.1 70B was inconclusive (deltas within variance). Cross-model sweep on frontier models (Claude Sonnet, GPT-4o class) is the next experiment. Harness and raw runs are in the repo regardless of outcome.
 - Framework adapter ecosystem is nascent. LangGraph adapter exists. CrewAI and AutoGen adapters are planned.
 
 **Where to find it**
