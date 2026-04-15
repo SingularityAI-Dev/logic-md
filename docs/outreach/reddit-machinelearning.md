@@ -1,162 +1,78 @@
-# r/MachineLearning Post: LOGIC.md – Structured Reasoning Contracts Meet Software Engineering
+# r/MachineLearning Post: LOGIC.md – Pipeline-level adaptive computation for agents
 
 ## Title
-LOGIC.md: Declarative contracts for multi-step agent reasoning (reasoning DAGs + quality gates)
+[P] LOGIC.md: declarative reasoning contracts for multi-step LLM pipelines (pipeline-level adaptive computation, framework-agnostic)
 
 ## Body
 
-**TL;DR:** A file format for specifying multi-step AI agent reasoning as declarative contracts — inspired by OpenAPI specs and software engineering contracts, but for reasoning pipelines. Validates outputs, enforces step dependencies, and measures reasoning reliability without framework lock-in. 325 tests, v1.0 stable, seeking external validation.
+**TL;DR:** A portable YAML format for multi-step LLM pipelines that declares step DAGs, output contracts, quality gates, self-verification loops, and fallback chains. Treat it as **pipeline-level adaptive computation** — the same halt/retry/verify primitives PonderNet and Universal Transformers put *inside* the model, exposed *outside* the model as a declarative spec. v1.0 stable, 325 tests, seeking external validation and benchmark collaborators.
 
 ---
 
-## The Core Idea
+## Why this exists
 
-Structured prompting and output schema validation (e.g., BAML, Instructor) have shown that constraining LLM outputs reliably improves downstream reliability. But they operate at the *call* level — validating a single LLM output.
+Three results motivate a contract layer above the model:
 
-LOGIC.md extends this to the *pipeline* level: validating reasoning *flow*, not just outputs. It borrows from:
+1. **Adaptive computation improves reasoning.** Universal Transformers (arXiv:1807.03819), PonderNet (arXiv:2107.05407), and Ouro's looped LMs (arXiv:2510.25741) show that variable-depth, halting-aware computation beats fixed-depth forward passes on reasoning tasks.
+2. **RL post-training has a ceiling.** Yue et al. (arXiv:2504.13837) argue RLHF/RLAIF sharpens base-model capability rather than adding new reasoning capacity. Reliability gains must come from elsewhere.
+3. **Pretraining data is finite.** Villalobos et al. (arXiv:2211.04325) quantify the approaching wall on human-generated data; Kaplan et al. (arXiv:2001.08361) set the frame.
 
-- **Structured prompting**: Output contracts enforce that agents produce concrete data, not intent summaries.
-- **Software contracts**: Pre-conditions, post-conditions, and invariants, but for multi-agent reasoning.
-- **OpenAPI/JSON Schema**: Portable specs that travel with code and survive tool changes.
-
-The result is a framework-agnostic format for declaring:
-1. **Step DAGs** with explicit dependencies (topological sort)
-2. **Output contracts** between agents (typed, with constraints)
-3. **Quality gates** (pre/post output validation + self-verification)
-4. **Fallback escalation chains** (graceful degradation on failure)
-5. **Per-step tool permissions** (what each step can and cannot do)
+If (1)–(3) hold, reliability gains are increasingly an inference-time orchestration problem. LOGIC.md is a portable, model-agnostic format for that layer: declare halt conditions, verification loops, and fallback chains once; execute them across LangGraph, CrewAI, AutoGen, or custom runtimes.
 
 ---
 
-## What Makes This a Research Contribution
+## What it declares
 
-**1. The describing-vs-doing problem is measurable**
+- **Step DAGs** with explicit `needs`, parallel levels (Kahn's algorithm, cycle detection).
+- **Output contracts** — typed inputs/outputs enforced at step boundaries.
+- **Quality gates** — `pre_output`, `post_output`, and `self_verification` (reflection / rubric / checklist / critic).
+- **Halting policy** — confidence thresholds + `max_retries` per gate. Direct analogue of PonderNet's ponder cost, at the pipeline layer.
+- **Fallback chains** — graceful degradation when gates fail or budgets exhaust.
+- **Per-step tool permissions** — `allowed_tools` / `denied_tools` enforced per node.
 
-This isn't theoretical. In Modular9 (a visual agent builder), multi-step workflows predictably produced intent summaries from every node instead of artifacts.
-
-Example: A "security auditor" node that should produce an OWASP Top 10 report instead outputs: "As a Security Auditor, I would perform a comprehensive review of the attack surface, map findings to CWE IDs, and produce a risk matrix."
-
-The next node receives a description, not data. The pipeline fails end-to-end.
-
-Adding LOGIC.md contracts with three changes:
-1. **Execution mandate** in system prompt: "Your output IS the artifact."
-2. **Output contract injection** in user prompt: Structured field definitions (type, required, constraints).
-3. **Input framing** in user prompt: "Here is the data from the previous step [structured]."
-
-Result: Each node produces actual data. Node A writes the audit. Node B receives it and writes the threat model. Node C produces the summary. End-to-end artifact generation.
-
-These are established prompting techniques. The contribution is a declarative, portable format to apply them *systematically* across any framework.
-
-**2. Conformance as a benchmark**
-
-LOGIC.md specs can be validated against a canonical specification — like JSON Schema for APIs. This enables:
-
-- **Cross-language implementation validation**: TypeScript and Python implementations must pass the same 18 conformance test fixtures.
-- **Reasoning reliability benchmarks**: Measure the impact of structured prompting + quality gates vs. freeform reasoning across model families.
-- **Framework interop**: Define a spec once, compile it to LangGraph, CrewAI, or AutoGen without translation.
-
-**3. Quality gates as observable reasoning loops**
-
-Quality gates (pre-output, post-output, self-verification) map to observable reasoning patterns:
-
-```yaml
-quality_gates:
-  post_output:
-    - check: "outputs.confidence > 0.7"
-      action: retry
-      strategy: self_verification  # reflection, rubric, checklist, critic
-```
-
-This is measurable: Did the model succeed without retry? Did it self-correct on retry? What was the latency cost? These metrics can be collected systematically across pipelines.
+Full spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md). Expressions use a safe evaluator — no `eval`, no `Function`.
 
 ---
 
-## Technical Details
+## The empirical observation driving it
 
-**Format**
+Multi-step pipelines reliably fail by producing *intent summaries* instead of artifacts: "As a Security Auditor, I would perform an OWASP Top 10 review..." — passed verbatim to the next node, which summarises the summary. End-to-end artifact generation collapses.
 
-LOGIC.md files are markdown with YAML frontmatter. Two fields required: `spec_version` and `name`. Everything else optional.
+Three interventions, all declared in LOGIC.md, resolved this in the Modular9 integration: an execution mandate in the system prompt, structured output-contract injection in the user prompt, and input framing that labels prior-step output as data. These are known prompting techniques; the contribution is applying them *systematically and portably* via a spec.
 
-```yaml
----
-spec_version: "1.0"
-name: multi-step-reasoner
-reasoning:
-  strategy: plan-execute
-steps:
-  - name: research
-    instructions: "Gather sources and synthesize findings"
-    contracts:
-      outputs:
-        sources: { type: array, items: { type: object } }
-        findings: { type: string }
-    quality_gates:
-      post_output:
-        - check: "outputs.sources.length > 3"
-          action: retry
-          max_retries: 2
-
-  - name: analyze
-    needs: [research]
-    contracts:
-      inputs:
-        sources: { type: array }
-      outputs:
-        analysis: { type: string }
-        confidence: { type: number }
-    quality_gates:
-      post_output:
-        - check: "outputs.confidence > 0.6"
-          action: escalate_to_human
----
-```
-
-**DAG Resolution**
-
-Steps are topologically sorted. Independent steps execute in parallel. Kahn's algorithm for cycle detection.
-
-**Expression Engine**
-
-Quality gate checks use a safe expression syntax (no eval, no Function constructor):
-```
-outputs.findings.length > 0 && inputs.sources.some(s => s.confidence > 0.7)
-```
-
-**Validation**
-
-Against a canonical JSON Schema. Same schema validates across TypeScript, Python, and any language.
+This was validated internally on one codebase. Cross-model benchmarks are the obvious next step and are not published yet — calling that out upfront.
 
 ---
 
-## Current State
+## Falsifiable open questions
 
-- **Core implementation**: TypeScript, 307 tests, 95.9% branch coverage on compiler module.
-- **MCP integration**: 7 tools (parse, validate, lint, compile_step, compile_workflow, init, list_templates). Works with Claude, Cursor, Windsurf.
-- **Python SDK (alpha)**: Parser + validator. Conformance tested against fixtures.
-- **Adapters**: LangGraph (experimental), VSCode extension, GitHub Action.
-- **Conformance suite**: 18 test fixtures covering valid, invalid, and edge cases.
+1. Does output-contract injection improve artifact-rate reliably across model families (Claude, GPT, Llama, Qwen)? We have anecdotal evidence; no controlled benchmark.
+2. Do declarative quality gates + retry budgets outperform equivalent imperative orchestration on latency-adjusted reliability?
+3. What is the cost/reliability curve of self-verification strategies (reflection vs rubric vs critic) as retry budget scales?
+4. Can framework adapters (LangGraph → CrewAI → AutoGen) preserve spec semantics end-to-end, or do impedance mismatches force lossy compilation?
+
+If anyone is running adaptive-compute or verification-loop experiments and wants a standard spec format to ablate against, I'd like to collaborate.
 
 ---
 
-## Open Questions
+## Implementation state
 
-1. **Does output contract injection reliably improve reasoning?** We saw it work in Modular9 but haven't published benchmarks across model families.
-
-2. **What does a reasoning conformance suite look like at scale?** We have 18 fixtures. What does 100 look like? What patterns should be tested?
-
-3. **Can frameworks adopt this without rewrites?** LangGraph adapter shows it's possible. But adoption friction exists — why would a CrewAI user switch to a new file format?
-
-4. **How do quality gates trade off latency and reliability?** Self-verification is expensive. When is retry justified? Can this be learned or heuristically tuned?
+- TypeScript reference impl (`@logic-md/core`): 307 tests, 95.9% branch coverage on the compiler.
+- Python SDK (alpha, PyPI `logic-md`): parser + validator, conformance-tested.
+- MCP server: 7 tools (parse, validate, lint, compile_step, compile_workflow, init, list_templates).
+- LangGraph adapter (experimental), VSCode extension, GitHub Action.
+- 18 conformance fixtures against a canonical JSON Schema for cross-language implementations.
 
 ---
 
 ## Links
 
-- GitHub: [github.com/SingleSourceStudios/logic-md](https://github.com/SingleSourceStudios/logic-md)
-- Spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md)
-- Implementer guide: [docs/IMPLEMENTER-GUIDE.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/IMPLEMENTER-GUIDE.md)
-- Conformance fixtures: [spec/fixtures/](https://github.com/SingleSourceStudios/logic-md/tree/main/spec/fixtures)
+- GitHub: github.com/SingleSourceStudios/logic-md
+- Spec: docs/SPEC.md
+- Theoretical grounding (README): github.com/SingleSourceStudios/logic-md#theoretical-grounding
+- Implementer guide: docs/IMPLEMENTER-GUIDE.md
+- Conformance fixtures: spec/fixtures/
 
 ---
 
-**Feedback welcome.** This is early-stage research validated internally. Would this be useful for your agent pipeline work? Is structured prompting + quality gates something you're already solving elsewhere? Would a standardized reasoning contract format be valuable?
+Feedback especially welcome on: the framing as pipeline-level adaptive computation, whether the open questions are the right ones to benchmark first, and gaps in the conformance suite.

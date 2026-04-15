@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540" role="img" aria-label="LOGIC.md sits between agent identity, tools, and protocols as the missing declarative reasoning layer.">
+  <defs>
+    <style>
+      .bg { fill: #0d1117; }
+      .panel { fill: #161b22; stroke: #30363d; stroke-width: 1.5; }
+      .panel-core { fill: #161b22; stroke: #7c6fe0; stroke-width: 2; }
+      .title { fill: #c9d1d9; font: 600 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.04em; }
+      .subtitle { fill: #8b949e; font: 400 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .label-core { fill: #7c6fe0; font: 700 26px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.05em; }
+      .label-green { fill: #2db88a; font: 700 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.04em; }
+      .label-orange { fill: #e07050; font: 700 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.04em; }
+      .tag { fill: #8b949e; font: 600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.14em; }
+      .muted { fill: #8b949e; font: 400 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .accent-purple { stroke: #7c6fe0; }
+      .accent-green { stroke: #2db88a; }
+      .accent-orange { stroke: #e07050; }
+    </style>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7c6fe0" stop-opacity="0.55"/>
+      <stop offset="70%" stop-color="#7c6fe0" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#7c6fe0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect class="bg" width="1200" height="540"/>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">LOGIC.md — THE MISSING REASONING LAYER</text>
+  <text x="600" y="62" text-anchor="middle" class="subtitle">declarative · portable · framework-agnostic</text>
+
+  <!-- CLAUDE.md / SKILL.md row -->
+  <g transform="translate(120,100)">
+    <rect class="panel" width="440" height="84" rx="10"/>
+    <text x="20" y="24" class="tag">IDENTITY</text>
+    <text x="20" y="56" class="title">CLAUDE.md  ·  AGENTS.md  ·  SOUL.md</text>
+    <text x="20" y="76" class="muted">who the agent is</text>
+  </g>
+
+  <g transform="translate(640,100)">
+    <rect class="panel" width="440" height="84" rx="10"/>
+    <text x="20" y="24" class="tag">CAPABILITY</text>
+    <text x="20" y="56" class="title">SKILL.md  ·  tool bundles</text>
+    <text x="20" y="76" class="muted">what the agent can do</text>
+  </g>
+
+  <!-- Core LOGIC.md panel with pulse glow -->
+  <g transform="translate(200,214)">
+    <ellipse cx="400" cy="60" rx="520" ry="110" fill="url(#glow)">
+      <animate attributeName="opacity" values="0.35;0.9;0.35" dur="3.6s" repeatCount="indefinite"/>
+    </ellipse>
+
+    <rect class="panel-core" width="800" height="120" rx="12">
+      <animate attributeName="stroke-opacity" values="0.55;1;0.55" dur="3.6s" repeatCount="indefinite"/>
+    </rect>
+
+    <text x="30" y="34" class="tag" fill="#7c6fe0">REASONING CONTRACT · v1.0</text>
+    <text x="30" y="78" class="label-core">LOGIC.md</text>
+
+    <g transform="translate(330,50)">
+      <text x="0" y="0" class="muted">step DAGs</text>
+      <text x="0" y="20" class="muted">output contracts</text>
+      <text x="0" y="40" class="muted">quality gates</text>
+    </g>
+    <g transform="translate(530,50)">
+      <text x="0" y="0" class="muted">self-verification</text>
+      <text x="0" y="20" class="muted">retry &amp; halting</text>
+      <text x="0" y="40" class="muted">fallback chains</text>
+    </g>
+  </g>
+
+  <!-- Animated feed-in ticks from identity/capability into LOGIC.md -->
+  <g stroke-width="1.5" fill="none" opacity="0.9">
+    <line x1="340" y1="184" x2="340" y2="214" class="accent-purple" stroke-dasharray="4 4">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="860" y1="184" x2="860" y2="214" class="accent-purple" stroke-dasharray="4 4">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- Bottom: MCP / A2A row -->
+  <g transform="translate(120,390)">
+    <rect class="panel" width="440" height="84" rx="10" stroke="#2db88a" stroke-width="2"/>
+    <text x="20" y="24" class="tag">TOOL I/O</text>
+    <text x="20" y="56" class="label-green">MCP  ·  Model Context Protocol</text>
+    <text x="20" y="76" class="muted">agents ↔ tools</text>
+  </g>
+
+  <g transform="translate(640,390)">
+    <rect class="panel" width="440" height="84" rx="10" stroke="#e07050" stroke-width="2"/>
+    <text x="20" y="24" class="tag">AGENT I/O</text>
+    <text x="20" y="56" class="label-orange">A2A  ·  agent-to-agent</text>
+    <text x="20" y="76" class="muted">agents ↔ agents</text>
+  </g>
+
+  <!-- Animated feed-out ticks from LOGIC.md downwards -->
+  <g stroke-width="1.5" fill="none" opacity="0.9">
+    <line x1="340" y1="334" x2="340" y2="390" class="accent-green" stroke-dasharray="4 4">
+      <animate attributeName="stroke-dashoffset" values="0;16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="860" y1="334" x2="860" y2="390" class="accent-orange" stroke-dasharray="4 4">
+      <animate attributeName="stroke-dashoffset" values="0;16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="512" text-anchor="middle" class="muted">between identity and capability — the contract layer your agents were missing</text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500" role="img" aria-label="Animated pipeline showing three reasoning steps linked by output contracts, with a quality gate firing a retry loop.">
+  <defs>
+    <style>
+      .bg { fill: #0d1117; }
+      .panel { fill: #161b22; stroke: #30363d; stroke-width: 1.5; }
+      .node-purple { fill: #161b22; stroke: #7c6fe0; stroke-width: 2; }
+      .node-green { fill: #161b22; stroke: #2db88a; stroke-width: 2; }
+      .node-orange { fill: #161b22; stroke: #e07050; stroke-width: 2; }
+      .title { fill: #c9d1d9; font: 600 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.04em; }
+      .subtitle { fill: #8b949e; font: 400 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .label { fill: #c9d1d9; font: 700 16px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.03em; }
+      .sub { fill: #8b949e; font: 400 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .tag { fill: #8b949e; font: 600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.14em; }
+      .contract-label { fill: #7c6fe0; font: 600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.08em; }
+      .gate-label { fill: #e07050; font: 600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.08em; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="500"/>
+
+  <text x="600" y="40" text-anchor="middle" class="title">PIPELINE WITH CONTRACTS</text>
+  <text x="600" y="62" text-anchor="middle" class="subtitle">typed handoffs · quality gates · halting policy</text>
+
+  <!-- Three nodes -->
+  <g transform="translate(80,170)">
+    <rect class="node-purple" width="260" height="130" rx="12"/>
+    <text x="20" y="26" class="tag" fill="#7c6fe0">STEP · 01</text>
+    <text x="20" y="58" class="label">research</text>
+    <text x="20" y="82" class="sub">strategy: plan-execute</text>
+    <text x="20" y="102" class="sub">outputs: sources[]</text>
+    <text x="20" y="120" class="sub">tools: web_search</text>
+  </g>
+
+  <g transform="translate(470,170)">
+    <rect class="node-green" width="260" height="130" rx="12"/>
+    <text x="20" y="26" class="tag" fill="#2db88a">STEP · 02</text>
+    <text x="20" y="58" class="label">analyze</text>
+    <text x="20" y="82" class="sub">needs: [research]</text>
+    <text x="20" y="102" class="sub">outputs: analysis, confidence</text>
+    <text x="20" y="120" class="sub">gate: confidence &gt; 0.7</text>
+  </g>
+
+  <g transform="translate(860,170)">
+    <rect class="node-orange" width="260" height="130" rx="12"/>
+    <text x="20" y="26" class="tag" fill="#e07050">STEP · 03</text>
+    <text x="20" y="58" class="label">synthesize</text>
+    <text x="20" y="82" class="sub">needs: [analyze]</text>
+    <text x="20" y="102" class="sub">outputs: report</text>
+    <text x="20" y="120" class="sub">tools: file_write</text>
+  </g>
+
+  <!-- Edges with contract labels -->
+  <g fill="none" stroke-width="2">
+    <path d="M 340 235 L 470 235" stroke="#7c6fe0"/>
+    <path d="M 730 235 L 860 235" stroke="#2db88a"/>
+  </g>
+
+  <text x="405" y="222" text-anchor="middle" class="contract-label">CONTRACT</text>
+  <text x="405" y="258" text-anchor="middle" class="sub">sources: array</text>
+
+  <text x="795" y="222" text-anchor="middle" class="contract-label">CONTRACT</text>
+  <text x="795" y="258" text-anchor="middle" class="sub">analysis + score</text>
+
+  <!-- Flowing data packets along edges -->
+  <circle r="6" fill="#7c6fe0">
+    <animateMotion dur="2.4s" repeatCount="indefinite" path="M 340 235 L 470 235"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="6" fill="#2db88a">
+    <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 730 235 L 860 235"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.4s" begin="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Quality gate retry loop on step 02 -->
+  <g fill="none" stroke="#e07050" stroke-width="1.8" stroke-dasharray="5 4">
+    <path d="M 600 170 C 600 100, 720 100, 720 170">
+      <animate attributeName="stroke-dashoffset" values="0;-36" dur="1.6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <polygon points="718,168 712,158 724,158" fill="#e07050"/>
+  <text x="660" y="98" text-anchor="middle" class="gate-label">QUALITY GATE · RETRY</text>
+  <text x="660" y="116" text-anchor="middle" class="sub">confidence below threshold → re-run</text>
+
+  <!-- Fallback arrow below -->
+  <g fill="none" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="3 4">
+    <path d="M 600 300 C 600 380, 990 380, 990 300">
+      <animate attributeName="stroke-dashoffset" values="0;-28" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <polygon points="988,302 982,312 994,312" fill="#8b949e"/>
+  <text x="795" y="400" text-anchor="middle" class="sub" fill="#8b949e">FALLBACK · escalate to human if retries exhausted</text>
+
+  <!-- Footer legend -->
+  <g transform="translate(80,455)">
+    <circle cx="10" cy="-4" r="5" fill="#7c6fe0"/>
+    <text x="22" y="0" class="sub">typed output</text>
+    <circle cx="160" cy="-4" r="5" fill="#e07050"/>
+    <text x="172" y="0" class="sub">gate / retry</text>
+    <circle cx="320" cy="-4" r="5" fill="#8b949e"/>
+    <text x="332" y="0" class="sub">fallback</text>
+    <text x="1040" y="0" class="sub">halting = adaptive compute</text>
+  </g>
+</svg>

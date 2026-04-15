@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img" aria-label="Quality gate loop: a reasoning step evaluates its own output and branches to pass, retry, or escalate.">
+  <defs>
+    <style>
+      .bg { fill: #0d1117; }
+      .title { fill: #c9d1d9; font: 700 20px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.05em; }
+      .subtitle { fill: #8b949e; font: 400 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .step { fill: #161b22; stroke: #7c6fe0; stroke-width: 2; }
+      .gate { fill: #161b22; stroke: #e07050; stroke-width: 2; }
+      .outcome-pass { fill: #0f1a16; stroke: #2db88a; stroke-width: 2; }
+      .outcome-retry { fill: #1a1510; stroke: #e07050; stroke-width: 2; }
+      .outcome-esc { fill: #1c1014; stroke: #f85149; stroke-width: 2; }
+      .label { fill: #c9d1d9; font: 700 16px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .sub { fill: #8b949e; font: 400 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .tag { fill: #8b949e; font: 600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.14em; }
+      .pass-label { fill: #2db88a; font: 700 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.08em; }
+      .retry-label { fill: #e07050; font: 700 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.08em; }
+      .esc-label { fill: #f85149; font: 700 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.08em; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1000" height="520"/>
+
+  <text x="500" y="40" text-anchor="middle" class="title">QUALITY GATE · HALTING POLICY</text>
+  <text x="500" y="62" text-anchor="middle" class="subtitle">declarative adaptive computation — pass · retry · escalate</text>
+
+  <!-- Step node (left) -->
+  <g transform="translate(60,180)">
+    <rect class="step" width="220" height="110" rx="12"/>
+    <text x="20" y="28" class="tag" fill="#7c6fe0">STEP</text>
+    <text x="20" y="60" class="label">analyze</text>
+    <text x="20" y="82" class="sub">self_verification: critic</text>
+    <text x="20" y="100" class="sub">max_retries: 3</text>
+  </g>
+
+  <!-- Gate diamond (center) -->
+  <g transform="translate(500,235)">
+    <polygon class="gate" points="0,-75 110,0 0,75 -110,0"/>
+    <text x="0" y="-16" text-anchor="middle" class="tag" fill="#e07050">GATE</text>
+    <text x="0" y="8" text-anchor="middle" class="label">confidence</text>
+    <text x="0" y="30" text-anchor="middle" class="sub">&gt; 0.7 ?</text>
+  </g>
+
+  <!-- Outcome nodes on right -->
+  <g transform="translate(780,80)">
+    <rect class="outcome-pass" width="180" height="70" rx="10"/>
+    <text x="20" y="28" class="tag" fill="#2db88a">OUTCOME · A</text>
+    <text x="20" y="54" class="pass-label">PASS ·  proceed</text>
+  </g>
+
+  <g transform="translate(780,210)">
+    <rect class="outcome-retry" width="180" height="70" rx="10"/>
+    <text x="20" y="28" class="tag" fill="#e07050">OUTCOME · B</text>
+    <text x="20" y="54" class="retry-label">RETRY ·  re-run step</text>
+  </g>
+
+  <g transform="translate(780,340)">
+    <rect class="outcome-esc" width="180" height="70" rx="10"/>
+    <text x="20" y="28" class="tag" fill="#f85149">OUTCOME · C</text>
+    <text x="20" y="54" class="esc-label">ESCALATE ·  fallback</text>
+  </g>
+
+  <!-- Step → Gate arrow -->
+  <g fill="none" stroke="#7c6fe0" stroke-width="2" stroke-dasharray="4 4">
+    <line x1="280" y1="235" x2="390" y2="235">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  <polygon points="390,235 380,230 380,240" fill="#7c6fe0"/>
+
+  <!-- Gate → three outcomes (each highlights in sequence) -->
+  <!-- Pass path -->
+  <g fill="none" stroke="#2db88a" stroke-width="2">
+    <path d="M 610 235 C 700 235, 700 115, 780 115" stroke-dasharray="5 4">
+      <animate attributeName="opacity" values="0.25;1;0.25;0.25;0.25;0.25" keyTimes="0;0.16;0.33;0.66;0.83;1" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <polygon points="780,115 770,110 770,120" fill="#2db88a">
+    <animate attributeName="opacity" values="0.25;1;0.25;0.25;0.25;0.25" keyTimes="0;0.16;0.33;0.66;0.83;1" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+
+  <!-- Retry path -->
+  <g fill="none" stroke="#e07050" stroke-width="2">
+    <line x1="610" y1="235" x2="780" y2="245" stroke-dasharray="5 4">
+      <animate attributeName="opacity" values="0.25;0.25;0.25;1;0.25;0.25" keyTimes="0;0.16;0.33;0.5;0.66;1" dur="6s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  <polygon points="780,245 770,240 770,250" fill="#e07050">
+    <animate attributeName="opacity" values="0.25;0.25;0.25;1;0.25;0.25" keyTimes="0;0.16;0.33;0.5;0.66;1" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+
+  <!-- Escalate path -->
+  <g fill="none" stroke="#f85149" stroke-width="2">
+    <path d="M 610 235 C 700 235, 700 375, 780 375" stroke-dasharray="5 4">
+      <animate attributeName="opacity" values="0.25;0.25;0.25;0.25;0.25;1" keyTimes="0;0.16;0.33;0.5;0.83;1" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <polygon points="780,375 770,370 770,380" fill="#f85149">
+    <animate attributeName="opacity" values="0.25;0.25;0.25;0.25;0.25;1" keyTimes="0;0.16;0.33;0.5;0.83;1" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+
+  <!-- Retry loop back to step -->
+  <g fill="none" stroke="#e07050" stroke-width="1.6" stroke-dasharray="4 4">
+    <path d="M 870 210 C 870 140, 170 140, 170 180">
+      <animate attributeName="stroke-dashoffset" values="0;-32" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.6;0.2" keyTimes="0;0.16;0.33;0.5;0.66;1" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <polygon points="170,180 165,170 175,170" fill="#e07050">
+    <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.6;0.2" keyTimes="0;0.16;0.33;0.5;0.66;1" dur="6s" repeatCount="indefinite"/>
+  </polygon>
+
+  <!-- Gate label text in flow -->
+  <text x="720" y="90" text-anchor="middle" class="pass-label">≥ threshold</text>
+  <text x="700" y="275" text-anchor="middle" class="retry-label">&lt; threshold · budget left</text>
+  <text x="720" y="415" text-anchor="middle" class="esc-label">budget exhausted</text>
+
+  <!-- Footer -->
+  <text x="500" y="480" text-anchor="middle" class="sub">maps directly to PonderNet-style halting — declared, not learned</text>
+  <text x="500" y="500" text-anchor="middle" class="sub">the reasoning contract decides when to stop computing</text>
+</svg>

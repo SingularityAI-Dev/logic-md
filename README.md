@@ -13,6 +13,10 @@ A portable, framework-agnostic file format for specifying *how* an agent thinks 
 
 Developed alongside and validated through [Modular9](https://github.com/SingleSourceStudios/modular9), a visual node-based agent builder by the same author, where it addressed a common agent pipeline failure mode that ad-hoc prompt engineering could not reliably solve at scale.
 
+<p align="center">
+  <img src="docs/assets/hero-layers.svg" alt="LOGIC.md sits between agent identity (CLAUDE.md), capability (SKILL.md), and protocols (MCP, A2A) as the missing declarative reasoning layer." width="100%"/>
+</p>
+
 ---
 
 ## The problem
@@ -26,6 +30,10 @@ vulnerabilities..."
 ```
 
 The next node in your pipeline receives an intent description, not data. Your workflow becomes a chain of *I would do X* statements that never produce real artifacts.
+
+<p align="center">
+  <img src="docs/assets/describing-vs-doing.svg" alt="Before and after LOGIC.md: agents that describe intent versus agents that emit structured artifacts that flow to the next step." width="100%"/>
+</p>
 
 This is not a prompt engineering problem. It is a missing contracts problem.
 
@@ -80,6 +88,14 @@ Agents stop describing. They start doing.
 **Multi-agent DAGs** — `global / nodes / edges` with per-edge contracts and join modes (`wait_all`, `first`, `any`). Parallel agents converge cleanly with defined merge behaviour.
 
 **Fallback and escalation** — escalation chains and graceful degradation rules when steps fail, confidence thresholds are not met, or retries are exhausted.
+
+<p align="center">
+  <img src="docs/assets/pipeline-contracts.svg" alt="Animated pipeline showing three reasoning steps linked by typed output contracts, with a quality gate firing a retry loop and a fallback escalation path." width="100%"/>
+</p>
+
+<p align="center">
+  <img src="docs/assets/quality-gate-loop.svg" alt="Quality gate loop: a step evaluates its own output and branches to pass, retry, or escalate — declarative adaptive computation." width="90%"/>
+</p>
 
 ---
 
@@ -157,6 +173,20 @@ A BAML function could be the implementation behind a LOGIC.md step. They compose
 [Instructor](https://python.useinstructor.com/) and [Outlines](https://github.com/dottxt-ai/outlines) handle structured output validation at the generation layer — ensuring individual LLM calls produce outputs matching a Pydantic model or a constrained grammar. They're excellent at what they do and work with most LLM providers.
 
 LOGIC.md operates at a different abstraction level: reasoning architecture rather than output validation. It defines step ordering, dependencies between agents, quality gates across a pipeline, and multi-agent composition. You'd use Instructor or Outlines *within* a LOGIC.md step to validate that step's output, while LOGIC.md orchestrates how steps relate to each other.
+
+---
+
+## Theoretical grounding
+
+LOGIC.md is best understood as **pipeline-level adaptive computation**: a declarative way to allocate extra reasoning effort (retry, self-verification, fallback) where it is needed, without modifying the underlying model. This connects to three active research threads.
+
+**Adaptive computation and learned halting.** [Universal Transformers](https://arxiv.org/abs/1807.03819) and [PonderNet](https://arxiv.org/abs/2107.05407) show that iterative, variable-depth computation improves reasoning reliability compared to fixed-depth forward passes. [Ouro — Scaling Latent Reasoning via Looped Language Models](https://arxiv.org/abs/2510.25741) extends this with looped LMs that re-enter their own latent state. These techniques operate inside the model. LOGIC.md's quality gates, retry policies, and self-verification loops implement the same primitive — "compute more when the output is not yet good enough" — at the orchestration layer, where any model (local, hosted, or mixed) can benefit without retraining.
+
+**Reasoning reliability beyond the base model.** [Yue et al. (2025) — *Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?*](https://arxiv.org/abs/2504.13837) argues that RL post-training sharpens capabilities already present in the base model rather than adding new reasoning capacity. If that holds, reliability gains at the application layer must come from structured inference-time scaffolding: contracts, verification, and orchestrated retry. LOGIC.md is a portable format for exactly that scaffolding.
+
+**Scaling limits and the case for inference-time structure.** [Kaplan et al. (2020)](https://arxiv.org/abs/2001.08361) established the original scaling laws; [Villalobos et al. (2022) — *Will we run out of data?*](https://arxiv.org/abs/2211.04325) quantifies the approaching limit on human-generated training data. As pretraining returns diminish, reliability increasingly depends on how inference is orchestrated. A portable, declarative format for multi-step reasoning contracts becomes more valuable — not less — in that regime.
+
+LOGIC.md does not replace any of this research. It is inference-time, model-agnostic orchestration. The connection is that it exposes the same adaptive-compute and halting primitives — declaratively, across frameworks — that these papers argue matter for reasoning quality.
 
 ---
 

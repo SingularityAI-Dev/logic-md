@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 580" width="1200" height="580" role="img" aria-label="Before and after LOGIC.md: agents that describe intent versus agents that emit structured artifacts.">
+  <defs>
+    <style>
+      .bg { fill: #0d1117; }
+      .title { fill: #c9d1d9; font: 700 20px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.05em; }
+      .head-bad { fill: #f85149; font: 700 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.14em; }
+      .head-good { fill: #2db88a; font: 700 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing: 0.14em; }
+      .node-bad { fill: #161b22; stroke: #f85149; stroke-width: 1.8; }
+      .node-good { fill: #161b22; stroke: #2db88a; stroke-width: 2; }
+      .node-label { fill: #c9d1d9; font: 700 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .bubble-bad { fill: #1c1014; stroke: #f85149; stroke-width: 1.2; }
+      .bubble-good { fill: #0f1a16; stroke: #2db88a; stroke-width: 1.2; }
+      .bubble-text-bad { fill: #f0a0a0; font: 400 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-style: italic; }
+      .bubble-text-good { fill: #9fe0c4; font: 400 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .caption { fill: #8b949e; font: 400 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+      .divider { stroke: #30363d; stroke-width: 1; stroke-dasharray: 4 6; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="580"/>
+
+  <text x="600" y="38" text-anchor="middle" class="title">DESCRIBING vs DOING</text>
+  <text x="600" y="60" text-anchor="middle" class="caption">the failure mode LOGIC.md contracts eliminate</text>
+
+  <line class="divider" x1="600" y1="90" x2="600" y2="540"/>
+
+  <!-- LEFT: Without LOGIC.md -->
+  <text x="300" y="110" text-anchor="middle" class="head-bad">WITHOUT CONTRACTS · agents describe</text>
+
+  <!-- Three nodes stacked on left -->
+  <g transform="translate(80,150)">
+    <rect class="node-bad" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">research</text>
+  </g>
+  <g transform="translate(80,270)">
+    <rect class="node-bad" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">analyze</text>
+  </g>
+  <g transform="translate(80,390)">
+    <rect class="node-bad" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">synthesize</text>
+  </g>
+
+  <!-- Speech bubbles that fade (dead-end intent) -->
+  <g>
+    <rect class="bubble-bad" x="270" y="150" width="300" height="66" rx="8">
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="284" y="174" class="bubble-text-bad">"I would research the topic and</text>
+    <text x="284" y="192" class="bubble-text-bad">gather relevant sources across</text>
+    <text x="284" y="210" class="bubble-text-bad">credible industry publications..."</text>
+    <g>
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" repeatCount="indefinite"/>
+      <text x="284" y="174" class="bubble-text-bad">"I would research the topic and</text>
+      <text x="284" y="192" class="bubble-text-bad">gather relevant sources across</text>
+      <text x="284" y="210" class="bubble-text-bad">credible industry publications..."</text>
+    </g>
+  </g>
+
+  <g>
+    <rect class="bubble-bad" x="270" y="270" width="300" height="66" rx="8">
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <g>
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.4s" repeatCount="indefinite"/>
+      <text x="284" y="294" class="bubble-text-bad">"I would analyze those findings,</text>
+      <text x="284" y="312" class="bubble-text-bad">identify key themes, and map them</text>
+      <text x="284" y="330" class="bubble-text-bad">to strategic priorities..."</text>
+    </g>
+  </g>
+
+  <g>
+    <rect class="bubble-bad" x="270" y="390" width="300" height="66" rx="8">
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.8s" repeatCount="indefinite"/>
+    </rect>
+    <g>
+      <animate attributeName="opacity" values="0;1;1;0.2" keyTimes="0;0.1;0.7;1" dur="4s" begin="0.8s" repeatCount="indefinite"/>
+      <text x="284" y="414" class="bubble-text-bad">"I would then synthesize the</text>
+      <text x="284" y="432" class="bubble-text-bad">analysis into an executive</text>
+      <text x="284" y="450" class="bubble-text-bad">summary..."</text>
+    </g>
+  </g>
+
+  <!-- Dead-end marker -->
+  <text x="300" y="510" text-anchor="middle" class="caption" fill="#f85149">pipeline produces no artifact · ✕</text>
+
+  <!-- RIGHT: With LOGIC.md -->
+  <text x="900" y="110" text-anchor="middle" class="head-good">WITH CONTRACTS · agents emit data</text>
+
+  <!-- Three nodes stacked on right -->
+  <g transform="translate(650,150)">
+    <rect class="node-good" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">research</text>
+  </g>
+  <g transform="translate(650,270)">
+    <rect class="node-good" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">analyze</text>
+  </g>
+  <g transform="translate(650,390)">
+    <rect class="node-good" width="160" height="64" rx="10"/>
+    <text x="80" y="40" text-anchor="middle" class="node-label">synthesize</text>
+  </g>
+
+  <!-- Structured data packets that flow through -->
+  <g>
+    <rect class="bubble-good" x="840" y="150" width="300" height="66" rx="8"/>
+    <text x="854" y="174" class="bubble-text-good">sources: [</text>
+    <text x="866" y="192" class="bubble-text-good">{ title, url, summary },</text>
+    <text x="866" y="210" class="bubble-text-good">{ title, url, summary }, ... ]</text>
+  </g>
+
+  <g>
+    <rect class="bubble-good" x="840" y="270" width="300" height="66" rx="8"/>
+    <text x="854" y="294" class="bubble-text-good">analysis: "...",</text>
+    <text x="854" y="312" class="bubble-text-good">themes: [...],</text>
+    <text x="854" y="330" class="bubble-text-good">confidence: 0.84</text>
+  </g>
+
+  <g>
+    <rect class="bubble-good" x="840" y="390" width="300" height="66" rx="8"/>
+    <text x="854" y="414" class="bubble-text-good">report: {</text>
+    <text x="866" y="432" class="bubble-text-good">executive_summary,</text>
+    <text x="866" y="450" class="bubble-text-good">recommendations }</text>
+  </g>
+
+  <!-- Forward-flowing arrows on the right, data actually moves downstream -->
+  <g fill="none" stroke="#2db88a" stroke-width="1.8" stroke-dasharray="4 4">
+    <line x1="730" y1="214" x2="730" y2="270">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="730" y1="334" x2="730" y2="390">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- Animated packet travelling down the right chain -->
+  <circle r="5" fill="#2db88a">
+    <animateMotion dur="3.6s" repeatCount="indefinite" path="M 730 214 L 730 270 L 730 334 L 730 390"/>
+    <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.1;0.5;0.9;1" dur="3.6s" repeatCount="indefinite"/>
+  </circle>
+
+  <text x="900" y="510" text-anchor="middle" class="caption" fill="#2db88a">each step emits the artifact the next step consumes · ✓</text>
+
+  <!-- Bottom caption -->
+  <text x="600" y="558" text-anchor="middle" class="caption">same model, same prompt family — the difference is the declarative output contract</text>
+</svg>
