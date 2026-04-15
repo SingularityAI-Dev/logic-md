@@ -72,7 +72,7 @@ LOGIC.md is not just a spec. The ecosystem includes:
 
 All open source, MIT licensed.
 
-GitHub: github.com/SingleSourceStudios/logic-md
+GitHub: github.com/SingularityAI-Dev/logic-md
 
 ---
 
@@ -116,4 +116,4 @@ Building this in public. If you're interested in:
 
 Either way, I'm listening.
 
-GitHub: github.com/SingleSourceStudios/logic-md
+GitHub: github.com/SingularityAI-Dev/logic-md

@@ -75,7 +75,7 @@ The LangGraph adapter compiles this to StateGraph node definitions with:
 
 **The experimental adapter**
 
-It lives at [`adapters/langgraph/`](https://github.com/SingleSourceStudios/logic-md/tree/main/adapters/langgraph).
+It lives at [`adapters/langgraph/`](https://github.com/SingularityAI-Dev/logic-md/tree/main/adapters/langgraph).
 
 Current state:
 - Proof of concept. Converts a LOGIC.md spec to a `StateGraph` builder.
@@ -133,7 +133,7 @@ A few reasons:
 **Next steps**
 
 1. Drop a message if you're interested in contributing to the LangGraph adapter.
-2. Check out the spec at [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md).
+2. Check out the spec at [docs/SPEC.md](https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md).
 3. Open an issue on GitHub if you see gaps or opportunities.
 
 This is early-stage work validated internally. Real-world feedback from the LangGraph community would help enormously.
@@ -142,7 +142,7 @@ This is early-stage work validated internally. Real-world feedback from the Lang
 
 **Links**
 
-- GitHub: [github.com/SingleSourceStudios/logic-md](https://github.com/SingleSourceStudios/logic-md)
-- LangGraph adapter: [adapters/langgraph/](https://github.com/SingleSourceStudios/logic-md/tree/main/adapters/langgraph)
-- Spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md)
+- GitHub: [github.com/SingularityAI-Dev/logic-md](https://github.com/SingularityAI-Dev/logic-md)
+- LangGraph adapter: [adapters/langgraph/](https://github.com/SingularityAI-Dev/logic-md/tree/main/adapters/langgraph)
+- Spec: [docs/SPEC.md](https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md)
 - npm: `@logic-md/core`, `@logic-md/cli`, `@logic-md/mcp`

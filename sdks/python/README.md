@@ -83,10 +83,10 @@ def process_spec(spec: LogicSpec) -> None:
 
 ## Schema
 
-The validator uses the canonical JSON Schema from the [logic-md spec repository](https://github.com/SingleSourceStudios/logic-md/blob/main/spec/schema.json).
+The validator uses the canonical JSON Schema from the [logic-md spec repository](https://github.com/SingularityAI-Dev/logic-md/blob/main/spec/schema.json).
 
 ## Links
 
-- **Repository:** https://github.com/SingleSourceStudios/logic-md
-- **Specification:** https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md
-- **Schema:** https://github.com/SingleSourceStudios/logic-md/blob/main/spec/schema.json
+- **Repository:** https://github.com/SingularityAI-Dev/logic-md
+- **Specification:** https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md
+- **Schema:** https://github.com/SingularityAI-Dev/logic-md/blob/main/spec/schema.json

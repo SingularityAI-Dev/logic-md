@@ -30,7 +30,7 @@ If (1)–(3) hold, reliability gains are increasingly an inference-time orchestr
 - **Fallback chains** — graceful degradation when gates fail or budgets exhaust.
 - **Per-step tool permissions** — `allowed_tools` / `denied_tools` enforced per node.
 
-Full spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md). Expressions use a safe evaluator — no `eval`, no `Function`.
+Full spec: [docs/SPEC.md](https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md). Expressions use a safe evaluator — no `eval`, no `Function`.
 
 ---
 
@@ -67,9 +67,9 @@ If anyone is running adaptive-compute or verification-loop experiments and wants
 
 ## Links
 
-- GitHub: github.com/SingleSourceStudios/logic-md
+- GitHub: github.com/SingularityAI-Dev/logic-md
 - Spec: docs/SPEC.md
-- Theoretical grounding (README): github.com/SingleSourceStudios/logic-md#theoretical-grounding
+- Theoretical grounding (README): github.com/SingularityAI-Dev/logic-md#theoretical-grounding
 - Implementer guide: docs/IMPLEMENTER-GUIDE.md
 - Conformance fixtures: spec/fixtures/
 

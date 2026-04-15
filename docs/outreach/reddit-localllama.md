@@ -115,8 +115,8 @@ validated = validate(spec)
 
 **Links**
 
-- GitHub: [github.com/SingleSourceStudios/logic-md](https://github.com/SingleSourceStudios/logic-md)
-- Spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md)
+- GitHub: [github.com/SingularityAI-Dev/logic-md](https://github.com/SingularityAI-Dev/logic-md)
+- Spec: [docs/SPEC.md](https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md)
 - PyPI: `pip install logic-md`
 - npm: `npm install @logic-md/core` or `npm install -g @logic-md/cli`
 

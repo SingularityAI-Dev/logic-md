@@ -179,7 +179,7 @@ Once all tests pass:
 4. **Badge granted** — include the conformance badge in your repo:
 
 ```markdown
-[![LOGIC.md Conformant](https://img.shields.io/badge/LOGIC.md-conformant-7c6fe0)](https://github.com/SingleSourceStudios/logic-md)
+[![LOGIC.md Conformant](https://img.shields.io/badge/LOGIC.md-conformant-7c6fe0)](https://github.com/SingularityAI-Dev/logic-md)
 ```
 
 ---
@@ -392,7 +392,7 @@ Example entry:
 
 Estimated time: 1-2 weeks for a Parser implementation, 3-4 weeks for a Runtime, depending on your familiarity with the language.
 
-Questions? Open an issue in the [main repo](https://github.com/SingleSourceStudios/logic-md) with the `implementation` label.
+Questions? Open an issue in the [main repo](https://github.com/SingularityAI-Dev/logic-md) with the `implementation` label.
 
 ---
 
@@ -417,4 +417,4 @@ A: This is volunteer work, like most open-source. If your framework company want
 
 **Last updated**: April 2026  
 **Spec version**: 1.0  
-**GitHub**: [SingleSourceStudios/logic-md](https://github.com/SingleSourceStudios/logic-md)
+**GitHub**: [SingularityAI-Dev/logic-md](https://github.com/SingularityAI-Dev/logic-md)

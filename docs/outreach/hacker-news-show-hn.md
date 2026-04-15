@@ -37,8 +37,8 @@ Without it, multi-step agent pipelines degrade predictably. Node A produces an i
 
 **Where to find it**
 
-- GitHub: [github.com/SingleSourceStudios/logic-md](https://github.com/SingleSourceStudios/logic-md)
-- Spec: [docs/SPEC.md](https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md)
+- GitHub: [github.com/SingularityAI-Dev/logic-md](https://github.com/SingularityAI-Dev/logic-md)
+- Spec: [docs/SPEC.md](https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md)
 - npm: `@logic-md/core`, `@logic-md/cli`, `@logic-md/mcp`
 - PyPI: `logic-md`
 

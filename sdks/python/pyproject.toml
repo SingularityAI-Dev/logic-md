@@ -38,8 +38,8 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/SingleSourceStudios/logic-md"
-Specification = "https://github.com/SingleSourceStudios/logic-md/blob/main/docs/SPEC.md"
+Repository = "https://github.com/SingularityAI-Dev/logic-md"
+Specification = "https://github.com/SingularityAI-Dev/logic-md/blob/main/docs/SPEC.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]

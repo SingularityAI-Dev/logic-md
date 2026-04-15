@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-LOGIC.md is a declarative reasoning specification format for AI agents — the first of its kind, zero prior art in the ecosystem. It was built inside the Modular9 codebase across 6 milestones in approximately one week, then extracted into a standalone repo at `~/development/logic-md` (GitHub: `SingleSourceStudios/logic-md`, private). As of this session it is at v1.4.0, fully consolidated, with a world-class README and two animated architecture diagrams ready for open-source launch. The immediate next step is: register the `@logic-md` npm org, publish three packages, make the repo public, and execute the HN + Reddit launch.
+LOGIC.md is a declarative reasoning specification format for AI agents — the first of its kind, zero prior art in the ecosystem. It was built inside the Modular9 codebase across 6 milestones in approximately one week, then extracted into a standalone repo at `~/development/logic-md` (GitHub: `SingularityAI-Dev/logic-md`, private). As of this session it is at v1.4.0, fully consolidated, with a world-class README and two animated architecture diagrams ready for open-source launch. The immediate next step is: register the `@logic-md` npm org, publish three packages, make the repo public, and execute the HN + Reddit launch.
 
 ---
 
@@ -92,7 +92,7 @@ All 6 milestones were built using the GSD framework inside the Modular9 codebase
 └── tsconfig.build.json
 ```
 
-**GitHub**: `github.com/SingleSourceStudios/logic-md` (currently **private**)
+**GitHub**: `github.com/SingularityAI-Dev/logic-md` (currently **private**)
 **Status**: v1.4.0 tagged, all packages building, 307 tests passing, 2 lint warnings (non-blocking)
 
 ### Modular9 repo (keeps vendored copies — do not touch)
@@ -352,7 +352,7 @@ Paste this into the next Claude chat to continue immediately:
 I am launching LOGIC.md — a declarative reasoning spec format for AI agents,
 zero prior art, v1.4.0, 307 tests, 6 milestones built in one week.
 
-Repo: github.com/SingleSourceStudios/logic-md (currently private)
+Repo: github.com/SingularityAI-Dev/logic-md (currently private)
 Packages: @logic-md/core, @logic-md/cli, @logic-md/mcp
 README: complete and ready
 Architecture diagrams: two animated SVG diagrams built, need static export for README

@@ -406,7 +406,7 @@ LOGIC.md's thesis — that declarative contracts + quality gates measurably impr
 
 **Next:** cross-model sweep on Claude Sonnet and GPT-4o class models, same harness, measuring (a) artifact-rate — does the step produce the declared output shape, (b) handoff fidelity — does the next step receive usable data, and (c) latency-adjusted reliability under a fixed retry budget.
 
-If you have API credits and want to co-run the benchmark, [open an issue](https://github.com/SingleSourceStudios/logic-md/issues) — the harness is reproducible and raw outputs will be published regardless of outcome.
+If you have API credits and want to co-run the benchmark, [open an issue](https://github.com/SingularityAI-Dev/logic-md/issues) — the harness is reproducible and raw outputs will be published regardless of outcome.
 
 ---
 
@@ -441,7 +441,7 @@ If you have API credits and want to co-run the benchmark, [open an issue](https:
 ## Development
 
 ```bash
-git clone https://github.com/SingleSourceStudios/logic-md.git
+git clone https://github.com/SingularityAI-Dev/logic-md.git
 cd logic-md
 npm install
 npm test          # tests across all packages

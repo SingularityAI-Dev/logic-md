@@ -3,7 +3,7 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/SingleSourceStudios/logic-md.git
+git clone https://github.com/SingularityAI-Dev/logic-md.git
 cd logic-md
 npm install
 ```
