@@ -98,6 +98,6 @@
     <text x="172" y="0" class="sub">gate / retry</text>
     <circle cx="320" cy="-4" r="5" fill="#8b949e"/>
     <text x="332" y="0" class="sub">fallback</text>
-    <text x="1040" y="0" class="sub">halting = adaptive compute</text>
+    <text x="1110" y="0" text-anchor="end" class="sub">halting = adaptive compute</text>
   </g>
 </svg>

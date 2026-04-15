@@ -109,10 +109,11 @@
     <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.6;0.2" keyTimes="0;0.16;0.33;0.5;0.66;1" dur="6s" repeatCount="indefinite"/>
   </polygon>
 
-  <!-- Gate label text in flow -->
-  <text x="720" y="90" text-anchor="middle" class="pass-label">≥ threshold</text>
-  <text x="700" y="275" text-anchor="middle" class="retry-label">&lt; threshold · budget left</text>
-  <text x="720" y="415" text-anchor="middle" class="esc-label">budget exhausted</text>
+  <!-- Gate label text in flow (tucked between gate and outcome boxes to avoid overlap) -->
+  <text x="695" y="160" text-anchor="middle" class="pass-label">≥ threshold</text>
+  <text x="695" y="222" text-anchor="middle" class="retry-label">&lt; threshold</text>
+  <text x="695" y="238" text-anchor="middle" class="sub">budget left</text>
+  <text x="695" y="315" text-anchor="middle" class="esc-label">budget exhausted</text>
 
   <!-- Footer -->
   <text x="500" y="480" text-anchor="middle" class="sub">maps directly to PonderNet-style halting — declared, not learned</text>
