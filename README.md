@@ -195,7 +195,7 @@ LOGIC.md does not replace any of this research. It is inference-time, model-agno
 | Package | Description | Install |
 |---|---|---|
 | `@logic-md/core` | Parser, validator, expression engine, DAG resolver, reasoning compiler | `npm i @logic-md/core` |
-| `@logic-md/cli` | 9 commands, 12 templates, shell completion for bash/zsh/fish | `npm i -g @logic-md/cli` |
+| `@logic-md/cli` | 9 commands, 16 templates, shell completion for bash/zsh/fish | `npm i -g @logic-md/cli` |
 | `@logic-md/mcp` | 7 MCP tools over stdio and HTTP, works with any MCP host | `npm i @logic-md/mcp` |
 
 ---
@@ -241,7 +241,7 @@ logic-md validate my-agent.logic.md
 logic-md lint my-agent.logic.md
 
 # Scaffold from a template
-logic-md init --template research-synthesizer
+logic-md init --template researcher
 
 # Compile a single step to see its runtime prompt segment
 logic-md compile my-agent.logic.md --step gather_sources
@@ -253,7 +253,7 @@ logic-md diff v1.logic.md v2.logic.md
 logic-md watch my-agent.logic.md
 ```
 
-**Built-in templates:** `research-synthesizer`, `code-reviewer`, `data-analyst`, `customer-support`, `content-writer`, `security-auditor`, `bug-triager`, `api-integrator`, `document-summarizer`, `decision-maker`, `plan-and-execute`, `react-loop`
+**Built-in templates (16):** `minimal`, `analyst`, `researcher`, `summarizer`, `extractor`, `reviewer`, `code-review`, `validator`, `generator`, `classifier`, `refactor`, `planner`, `orchestrator`, `debugger`, `debug-workflow`, `architecture`
 
 ### In Python (alpha)
 
@@ -394,7 +394,7 @@ For building implementations in other languages, see [`docs/IMPLEMENTER-GUIDE.md
 - **95.9% branch coverage** on the compiler module (100% statements / functions / lines)
 - **9 CLI commands** — validate, lint, compile, init, test, watch, fmt, diff, completion
 - **7 MCP tools** — parse, validate, lint, compile_step, compile_workflow, init, list_templates
-- **12 CLI templates + 4 Claude Code workflow templates**
+- **16 CLI templates + 4 Claude Code workflow templates**
 
 ---
 
@@ -414,7 +414,7 @@ If you have API credits and want to co-run the benchmark, [open an issue](https:
 
 **Shipped (v1.4)**
 - `@logic-md/core`, `@logic-md/cli`, `@logic-md/mcp` on npm · `logic-md` (alpha) on PyPI
-- 9-command CLI with 12 templates · 7-tool MCP server (stdio + HTTP)
+- 9-command CLI with 16 templates · 7-tool MCP server (stdio + HTTP)
 - LangGraph adapter (experimental) · VSCode extension · GitHub Action for CI
 - 325 tests · 95.9% branch coverage on compiler · 18 conformance fixtures · canonical JSON Schema
 

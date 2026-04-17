@@ -40,6 +40,12 @@ Explain reasoning strategy, design rationale, edge cases...
 | `steps` | map\<string, Step\> | no | Named reasoning steps |
 | `contracts` | Contracts | no | Input/output type contracts |
 | `quality_gates` | QualityGates | no | Global quality and verification rules |
+| `fallback` | Fallback | no | Global fallback strategy and escalation chain (§8) |
+| `decision_trees` | map\<string, DecisionTree\> | no | Named conditional routing trees (§7) |
+| `visual` | Visual | no | Visual builder integration metadata (§10) |
+| `global` | Global | no | Workflow-level cross-cutting constraints for multi-agent systems (§9.1) |
+| `nodes` | map\<string, Node\> | no | Node definitions in a multi-agent workflow (§9.1) |
+| `edges` | array\<Edge\> | no | Inter-node data flow contracts in a multi-agent workflow (§9.1) |
 | `metadata` | map | no | Arbitrary key-value metadata |
 
 ### 2.2 Imports
