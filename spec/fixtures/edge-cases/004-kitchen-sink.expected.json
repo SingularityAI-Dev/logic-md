@@ -1,174 +1,164 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "kitchen-sink",
-    "description": "Exercises every top-level section simultaneously",
-    "reasoning": {
-      "strategy": "react",
-      "max_iterations": 10,
-      "temperature": 0.4,
-      "thinking_budget": 8000,
-      "strategy_config": {
-        "observation_source": "tools",
-        "max_actions_per_thought": 2
-      }
-    },
-    "steps": {
-      "research": {
-        "description": "Gather data",
-        "instructions": "Search for relevant sources",
-        "allowed_tools": [
-          "web_search"
-        ],
-        "timeout": "60s",
-        "output_schema": {
-          "type": "object",
-          "required": [
-            "sources"
-          ],
-          "properties": {
-            "sources": {
-              "type": "array",
-              "minItems": 1
-            }
-          }
-        },
-        "confidence": {
-          "minimum": 0.6,
-          "target": 0.85,
-          "escalate_below": 0.4
-        },
-        "retry": {
-          "max_attempts": 3,
-          "initial_interval": "1s",
-          "backoff_coefficient": 2,
-          "maximum_interval": "30s"
-        },
-        "branches": [
-          {
-            "if": "{{ output.sources.length == 0 }}",
-            "then": "fallback_search"
-          },
-          {
-            "default": true,
-            "then": "analyze"
-          }
-        ]
-      },
-      "analyze": {
-        "needs": [
-          "research"
-        ],
-        "description": "Analyze gathered data",
-        "instructions": "Evaluate source quality and extract findings",
-        "denied_tools": [
-          "web_search"
-        ],
-        "verification": {
-          "check": "{{ output.findings.length > 0 }}",
-          "on_fail": "retry",
-          "on_fail_message": "No findings extracted"
-        }
-      }
-    },
-    "contracts": {
-      "inputs": [
-        {
-          "name": "query",
-          "type": "string",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "report",
-          "type": "object",
-          "required": [
-            "findings"
-          ],
-          "properties": {
-            "findings": {
-              "type": "array"
-            }
-          }
-        }
-      ],
-      "validation": {
-        "mode": "strict",
-        "on_input_violation": "reject",
-        "on_output_violation": "retry"
-      }
-    },
-    "quality_gates": {
-      "pre_output": [
-        {
-          "name": "has_findings",
-          "check": "{{ output.findings.length > 0 }}",
-          "severity": "error"
-        }
-      ],
-      "self_verification": {
-        "enabled": true,
-        "strategy": "rubric",
-        "rubric": {
-          "criteria": [
-            {
-              "name": "accuracy",
-              "weight": 0.5,
-              "description": "Claims are factually correct"
-            },
-            {
-              "name": "completeness",
-              "weight": 0.5,
-              "description": "All aspects are covered"
-            }
-          ],
-          "minimum_score": 0.7
-        }
-      }
-    },
-    "fallback": {
-      "strategy": "escalate",
-      "escalation": [
-        {
-          "level": 1,
-          "trigger": "{{ confidence < 0.5 }}",
-          "action": "retry_with_different_strategy",
-          "new_strategy": "tot"
-        }
-      ]
-    },
-    "decision_trees": {
-      "route_input": {
-        "description": "Route based on input type",
-        "root": "check_type",
-        "nodes": {
-          "check_type": {
-            "condition": "{{ input.type }}",
-            "branches": [
-              {
-                "value": "simple",
-                "next": "quick_answer"
-              },
-              {
-                "default": true,
-                "next": "deep_research"
-              }
-            ]
-          }
-        },
-        "terminals": {
-          "quick_answer": {
-            "action": "direct_response",
-            "message": "Answering directly"
-          }
-        }
-      }
-    },
-    "metadata": {
-      "author": "Test Suite",
-      "version": "1.0.0"
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "kitchen-sink",
+		"description": "Exercises every top-level section simultaneously",
+		"reasoning": {
+			"strategy": "react",
+			"max_iterations": 10,
+			"temperature": 0.4,
+			"thinking_budget": 8000,
+			"strategy_config": {
+				"observation_source": "tools",
+				"max_actions_per_thought": 2
+			}
+		},
+		"steps": {
+			"research": {
+				"description": "Gather data",
+				"instructions": "Search for relevant sources",
+				"allowed_tools": ["web_search"],
+				"timeout": "60s",
+				"output_schema": {
+					"type": "object",
+					"required": ["sources"],
+					"properties": {
+						"sources": {
+							"type": "array",
+							"minItems": 1
+						}
+					}
+				},
+				"confidence": {
+					"minimum": 0.6,
+					"target": 0.85,
+					"escalate_below": 0.4
+				},
+				"retry": {
+					"max_attempts": 3,
+					"initial_interval": "1s",
+					"backoff_coefficient": 2,
+					"maximum_interval": "30s"
+				},
+				"branches": [
+					{
+						"if": "{{ output.sources.length == 0 }}",
+						"then": "fallback_search"
+					},
+					{
+						"default": true,
+						"then": "analyze"
+					}
+				]
+			},
+			"analyze": {
+				"needs": ["research"],
+				"description": "Analyze gathered data",
+				"instructions": "Evaluate source quality and extract findings",
+				"denied_tools": ["web_search"],
+				"verification": {
+					"check": "{{ output.findings.length > 0 }}",
+					"on_fail": "retry",
+					"on_fail_message": "No findings extracted"
+				}
+			}
+		},
+		"contracts": {
+			"inputs": [
+				{
+					"name": "query",
+					"type": "string",
+					"required": true
+				}
+			],
+			"outputs": [
+				{
+					"name": "report",
+					"type": "object",
+					"required": ["findings"],
+					"properties": {
+						"findings": {
+							"type": "array"
+						}
+					}
+				}
+			],
+			"validation": {
+				"mode": "strict",
+				"on_input_violation": "reject",
+				"on_output_violation": "retry"
+			}
+		},
+		"quality_gates": {
+			"pre_output": [
+				{
+					"name": "has_findings",
+					"check": "{{ output.findings.length > 0 }}",
+					"severity": "error"
+				}
+			],
+			"self_verification": {
+				"enabled": true,
+				"strategy": "rubric",
+				"rubric": {
+					"criteria": [
+						{
+							"name": "accuracy",
+							"weight": 0.5,
+							"description": "Claims are factually correct"
+						},
+						{
+							"name": "completeness",
+							"weight": 0.5,
+							"description": "All aspects are covered"
+						}
+					],
+					"minimum_score": 0.7
+				}
+			}
+		},
+		"fallback": {
+			"strategy": "escalate",
+			"escalation": [
+				{
+					"level": 1,
+					"trigger": "{{ confidence < 0.5 }}",
+					"action": "retry_with_different_strategy",
+					"new_strategy": "tot"
+				}
+			]
+		},
+		"decision_trees": {
+			"route_input": {
+				"description": "Route based on input type",
+				"root": "check_type",
+				"nodes": {
+					"check_type": {
+						"condition": "{{ input.type }}",
+						"branches": [
+							{
+								"value": "simple",
+								"next": "quick_answer"
+							},
+							{
+								"default": true,
+								"next": "deep_research"
+							}
+						]
+					}
+				},
+				"terminals": {
+					"quick_answer": {
+						"action": "direct_response",
+						"message": "Answering directly"
+					}
+				}
+			}
+		},
+		"metadata": {
+			"author": "Test Suite",
+			"version": "1.0.0"
+		}
+	}
 }
