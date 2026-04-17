@@ -1,70 +1,70 @@
 {
-  "name": "code-review",
-  "description": "Review a pull request for correctness, style, security, and produce a structured verdict",
-  "category": "software-engineering",
-  "complexity": "high",
-  "input_type": "code-diff",
-  "input_file": "code-review-sample.js",
-  "expected_output_schema": {
-    "type": "object",
-    "required": ["verdict", "critical_issues", "major_issues", "minor_issues", "summary"],
-    "properties": {
-      "verdict": {
-        "type": "string",
-        "enum": ["approve", "request-changes", "comment"],
-        "description": "Overall review verdict"
-      },
-      "critical_issues": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": ["file", "line", "issue", "fix"],
-          "properties": {
-            "file": { "type": "string" },
-            "line": { "type": "number" },
-            "issue": { "type": "string" },
-            "fix": { "type": "string" }
-          }
-        },
-        "description": "Critical issues that must be fixed before merge"
-      },
-      "major_issues": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": ["file", "line", "issue", "fix"],
-          "properties": {
-            "file": { "type": "string" },
-            "line": { "type": "number" },
-            "issue": { "type": "string" },
-            "fix": { "type": "string" }
-          }
-        },
-        "description": "Major issues that should be fixed"
-      },
-      "minor_issues": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": ["file", "line", "issue"],
-          "properties": {
-            "file": { "type": "string" },
-            "line": { "type": "number" },
-            "issue": { "type": "string" }
-          }
-        },
-        "description": "Minor style or documentation issues"
-      },
-      "summary": {
-        "type": "string",
-        "minLength": 50,
-        "description": "Overall summary of the review"
-      }
-    }
-  },
-  "control_prompt": "You are a code reviewer. Review the following code change and provide a verdict (approve, request-changes, or comment). List any issues you find organized by severity.",
-  "treatment_spec": "code-review.logic.md",
-  "timeout_ms": 30000,
-  "retry_on_failure": true,
-  "max_retries": 2
+	"name": "code-review",
+	"description": "Review a pull request for correctness, style, security, and produce a structured verdict",
+	"category": "software-engineering",
+	"complexity": "high",
+	"input_type": "code-diff",
+	"input_file": "code-review-sample.js",
+	"expected_output_schema": {
+		"type": "object",
+		"required": ["verdict", "critical_issues", "major_issues", "minor_issues", "summary"],
+		"properties": {
+			"verdict": {
+				"type": "string",
+				"enum": ["approve", "request-changes", "comment"],
+				"description": "Overall review verdict"
+			},
+			"critical_issues": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": ["file", "line", "issue", "fix"],
+					"properties": {
+						"file": { "type": "string" },
+						"line": { "type": "number" },
+						"issue": { "type": "string" },
+						"fix": { "type": "string" }
+					}
+				},
+				"description": "Critical issues that must be fixed before merge"
+			},
+			"major_issues": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": ["file", "line", "issue", "fix"],
+					"properties": {
+						"file": { "type": "string" },
+						"line": { "type": "number" },
+						"issue": { "type": "string" },
+						"fix": { "type": "string" }
+					}
+				},
+				"description": "Major issues that should be fixed"
+			},
+			"minor_issues": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": ["file", "line", "issue"],
+					"properties": {
+						"file": { "type": "string" },
+						"line": { "type": "number" },
+						"issue": { "type": "string" }
+					}
+				},
+				"description": "Minor style or documentation issues"
+			},
+			"summary": {
+				"type": "string",
+				"minLength": 50,
+				"description": "Overall summary of the review"
+			}
+		}
+	},
+	"control_prompt": "You are a code reviewer. Review the following code change and provide a verdict (approve, request-changes, or comment). List any issues you find organized by severity.",
+	"treatment_spec": "code-review.logic.md",
+	"timeout_ms": 30000,
+	"retry_on_failure": true,
+	"max_retries": 2
 }

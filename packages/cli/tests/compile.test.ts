@@ -1,9 +1,9 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { compileWorkflow, parse, validate } from "@logic-md/core";
+import { join } from "node:path";
 import type { WorkflowContext } from "@logic-md/core";
+import { compileWorkflow, parse, validate } from "@logic-md/core";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 describe("compile command", () => {
 	let tempDir: string;

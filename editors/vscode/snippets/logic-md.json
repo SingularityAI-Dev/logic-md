@@ -1,185 +1,183 @@
 {
-  "LOGIC.md Template": {
-    "prefix": "logic-init",
-    "body": [
-      "---",
-      "spec_version: 1.0",
-      "name: \"${1:Agent Name}\"",
-      "description: \"${2:Brief description of the reasoning flow}\"",
-      "reasoning: ${3:cot}",
-      "global:",
-      "  timeout: 30",
-      "  allowed_tools:",
-      "    - search",
-      "    - calculate",
-      "steps:",
-      "  - id: ${4:step_1}",
-      "    instructions: \"${5:What should the agent do?}\"",
-      "    needs:",
-      "      - ${6:context_or_data}",
-      "    verification:",
-      "      - condition: \"{{ $output }}\"",
-      "        message: \"Output validation\"",
-      "quality_gates:",
-      "  - metric: success_rate",
-      "    threshold: 0.95",
-      "    severity: error",
-      "fallback:",
-      "  step: ${7:fallback_step}",
-      "  message: \"Fallback behavior\"",
-      "---",
-      "",
-      "# ${1:Agent Name}",
-      "",
-      "${2:Brief description of the reasoning flow}",
-      "",
-      "## Reasoning Strategy",
-      "",
-      "This workflow uses **${3:cot}** reasoning to ensure step-by-step decision making.",
-      "",
-      "## Steps",
-      "",
-      "### Step 1: ${5:What should the agent do?}",
-      "",
-      "This step handles the initial processing.",
-      "",
-      "## Quality Metrics",
-      "",
-      "- Success Rate: 95% target",
-      "- Response Time: < 30 seconds"
-    ],
-    "description": "Create a new LOGIC.md specification with full frontmatter and markdown body"
-  },
-  "Step Definition": {
-    "prefix": "logic-step",
-    "body": [
-      "  - id: ${1:step_id}",
-      "    instructions: \"${2:Detailed instructions for this step}\"",
-      "    needs:",
-      "      - ${3:input_dependency}",
-      "    output_schema:",
-      "      type: object",
-      "      properties:",
-      "        result:",
-      "          type: ${4:string}",
-      "    verification:",
-      "      - condition: \"{{ $output.result }}\"",
-      "        message: \"Result validation failed\"",
-      "    on_fail: ${5:retry}"
-    ],
-    "description": "Create a new step in the steps array"
-  },
-  "Contract Definition": {
-    "prefix": "logic-contracts",
-    "body": [
-      "contracts:",
-      "  - id: ${1:contract_id}",
-      "    description: \"${2:What this contract enforces}\"",
-      "    input_schema:",
-      "      type: object",
-      "      properties:",
-      "        ${3:param_name}:",
-      "          type: ${4:string}",
-      "      required:",
-      "        - ${3:param_name}",
-      "    output_schema:",
-      "      type: object",
-      "      properties:",
-      "        success:",
-      "          type: boolean",
-      "    preconditions:",
-      "      - \"{{ $input.${3:param_name} }}\"",
-      "    postconditions:",
-      "      - \"{{ $output.success == true }}\"",
-      "    error_handling:",
-      "      on_fail: ${5:revise}"
-    ],
-    "description": "Create a contracts definition block"
-  },
-  "Quality Gates": {
-    "prefix": "logic-gates",
-    "body": [
-      "quality_gates:",
-      "  - metric: ${1:success_rate}",
-      "    threshold: ${2:0.95}",
-      "    on_fail: ${3:escalate}",
-      "    severity: ${4:error}",
-      "    message: \"${5:Gate threshold not met}\"",
-      "  - metric: ${6:response_time}",
-      "    threshold: ${7:30}",
-      "    on_fail: ${8:abort}",
-      "    severity: ${9:warning}"
-    ],
-    "description": "Create quality gates for workflow validation"
-  },
-  "Branch Condition": {
-    "prefix": "logic-branch",
-    "body": [
-      "    branches:",
-      "      - condition: \"{{ ${1:condition_expression} }}\"",
-      "        target: ${2:target_step_id}",
-      "      - condition: \"{{ ${3:else_condition} }}\"",
-      "        target: ${4:alternative_step_id}",
-      "      - target: ${5:default_step_id}"
-    ],
-    "description": "Create branching logic with conditions"
-  },
-  "Fallback Configuration": {
-    "prefix": "logic-fallback",
-    "body": [
-      "fallback:",
-      "  step: ${1:fallback_step_id}",
-      "  message: \"${2:Fallback triggered due to failure}\"",
-      "  decision_tree:",
-      "    - condition: \"{{ $error.code == 'timeout' }}\"",
-      "      action: \"${3:timeout_recovery}\"",
-      "    - condition: \"{{ $error.code == 'validation' }}\"",
-      "      action: \"${4:validation_recovery}\""
-    ],
-    "description": "Create a fallback configuration with decision tree"
-  },
-  "Retry Configuration": {
-    "prefix": "logic-retry",
-    "body": [
-      "    retry:",
-      "      max_attempts: ${1:3}",
-      "      delay: ${2:1000}",
-      "      backoff: exponential",
-      "      backoff_factor: ${3:2}"
-    ],
-    "description": "Add retry logic to a step"
-  },
-  "Expression Template": {
-    "prefix": "logic-expr",
-    "body": [
-      "{{ ${1:expression} }}"
-    ],
-    "description": "Create a LOGIC.md expression placeholder"
-  },
-  "Decision Tree": {
-    "prefix": "logic-decision-tree",
-    "body": [
-      "decision_trees:",
-      "  - id: ${1:tree_id}",
-      "    description: \"${2:Decision logic}\"",
-      "    condition: \"{{ ${3:root_condition} }}\"",
-      "    then_step: ${4:if_true_step}",
-      "    else_step: ${5:if_false_step}",
-      "    default_step: ${6:default_step}"
-    ],
-    "description": "Create a decision tree structure"
-  },
-  "Import Statement": {
-    "prefix": "logic-import",
-    "body": [
-      "imports:",
-      "  - source: \"${1:./path/to/file.logic.md}\"",
-      "    alias: \"${2:alias_name}\"",
-      "  - source: \"${3:./another.logic.md}\"",
-      "    items:",
-      "      - ${4:step_id}",
-      "      - ${5:another_id}}"
-    ],
-    "description": "Add import statements for external LOGIC.md files"
-  }
+	"LOGIC.md Template": {
+		"prefix": "logic-init",
+		"body": [
+			"---",
+			"spec_version: 1.0",
+			"name: \"${1:Agent Name}\"",
+			"description: \"${2:Brief description of the reasoning flow}\"",
+			"reasoning: ${3:cot}",
+			"global:",
+			"  timeout: 30",
+			"  allowed_tools:",
+			"    - search",
+			"    - calculate",
+			"steps:",
+			"  - id: ${4:step_1}",
+			"    instructions: \"${5:What should the agent do?}\"",
+			"    needs:",
+			"      - ${6:context_or_data}",
+			"    verification:",
+			"      - condition: \"{{ $output }}\"",
+			"        message: \"Output validation\"",
+			"quality_gates:",
+			"  - metric: success_rate",
+			"    threshold: 0.95",
+			"    severity: error",
+			"fallback:",
+			"  step: ${7:fallback_step}",
+			"  message: \"Fallback behavior\"",
+			"---",
+			"",
+			"# ${1:Agent Name}",
+			"",
+			"${2:Brief description of the reasoning flow}",
+			"",
+			"## Reasoning Strategy",
+			"",
+			"This workflow uses **${3:cot}** reasoning to ensure step-by-step decision making.",
+			"",
+			"## Steps",
+			"",
+			"### Step 1: ${5:What should the agent do?}",
+			"",
+			"This step handles the initial processing.",
+			"",
+			"## Quality Metrics",
+			"",
+			"- Success Rate: 95% target",
+			"- Response Time: < 30 seconds"
+		],
+		"description": "Create a new LOGIC.md specification with full frontmatter and markdown body"
+	},
+	"Step Definition": {
+		"prefix": "logic-step",
+		"body": [
+			"  - id: ${1:step_id}",
+			"    instructions: \"${2:Detailed instructions for this step}\"",
+			"    needs:",
+			"      - ${3:input_dependency}",
+			"    output_schema:",
+			"      type: object",
+			"      properties:",
+			"        result:",
+			"          type: ${4:string}",
+			"    verification:",
+			"      - condition: \"{{ $output.result }}\"",
+			"        message: \"Result validation failed\"",
+			"    on_fail: ${5:retry}"
+		],
+		"description": "Create a new step in the steps array"
+	},
+	"Contract Definition": {
+		"prefix": "logic-contracts",
+		"body": [
+			"contracts:",
+			"  - id: ${1:contract_id}",
+			"    description: \"${2:What this contract enforces}\"",
+			"    input_schema:",
+			"      type: object",
+			"      properties:",
+			"        ${3:param_name}:",
+			"          type: ${4:string}",
+			"      required:",
+			"        - ${3:param_name}",
+			"    output_schema:",
+			"      type: object",
+			"      properties:",
+			"        success:",
+			"          type: boolean",
+			"    preconditions:",
+			"      - \"{{ $input.${3:param_name} }}\"",
+			"    postconditions:",
+			"      - \"{{ $output.success == true }}\"",
+			"    error_handling:",
+			"      on_fail: ${5:revise}"
+		],
+		"description": "Create a contracts definition block"
+	},
+	"Quality Gates": {
+		"prefix": "logic-gates",
+		"body": [
+			"quality_gates:",
+			"  - metric: ${1:success_rate}",
+			"    threshold: ${2:0.95}",
+			"    on_fail: ${3:escalate}",
+			"    severity: ${4:error}",
+			"    message: \"${5:Gate threshold not met}\"",
+			"  - metric: ${6:response_time}",
+			"    threshold: ${7:30}",
+			"    on_fail: ${8:abort}",
+			"    severity: ${9:warning}"
+		],
+		"description": "Create quality gates for workflow validation"
+	},
+	"Branch Condition": {
+		"prefix": "logic-branch",
+		"body": [
+			"    branches:",
+			"      - condition: \"{{ ${1:condition_expression} }}\"",
+			"        target: ${2:target_step_id}",
+			"      - condition: \"{{ ${3:else_condition} }}\"",
+			"        target: ${4:alternative_step_id}",
+			"      - target: ${5:default_step_id}"
+		],
+		"description": "Create branching logic with conditions"
+	},
+	"Fallback Configuration": {
+		"prefix": "logic-fallback",
+		"body": [
+			"fallback:",
+			"  step: ${1:fallback_step_id}",
+			"  message: \"${2:Fallback triggered due to failure}\"",
+			"  decision_tree:",
+			"    - condition: \"{{ $error.code == 'timeout' }}\"",
+			"      action: \"${3:timeout_recovery}\"",
+			"    - condition: \"{{ $error.code == 'validation' }}\"",
+			"      action: \"${4:validation_recovery}\""
+		],
+		"description": "Create a fallback configuration with decision tree"
+	},
+	"Retry Configuration": {
+		"prefix": "logic-retry",
+		"body": [
+			"    retry:",
+			"      max_attempts: ${1:3}",
+			"      delay: ${2:1000}",
+			"      backoff: exponential",
+			"      backoff_factor: ${3:2}"
+		],
+		"description": "Add retry logic to a step"
+	},
+	"Expression Template": {
+		"prefix": "logic-expr",
+		"body": ["{{ ${1:expression} }}"],
+		"description": "Create a LOGIC.md expression placeholder"
+	},
+	"Decision Tree": {
+		"prefix": "logic-decision-tree",
+		"body": [
+			"decision_trees:",
+			"  - id: ${1:tree_id}",
+			"    description: \"${2:Decision logic}\"",
+			"    condition: \"{{ ${3:root_condition} }}\"",
+			"    then_step: ${4:if_true_step}",
+			"    else_step: ${5:if_false_step}",
+			"    default_step: ${6:default_step}"
+		],
+		"description": "Create a decision tree structure"
+	},
+	"Import Statement": {
+		"prefix": "logic-import",
+		"body": [
+			"imports:",
+			"  - source: \"${1:./path/to/file.logic.md}\"",
+			"    alias: \"${2:alias_name}\"",
+			"  - source: \"${3:./another.logic.md}\"",
+			"    items:",
+			"      - ${4:step_id}",
+			"      - ${5:another_id}}"
+		],
+		"description": "Add import statements for external LOGIC.md files"
+	}
 }

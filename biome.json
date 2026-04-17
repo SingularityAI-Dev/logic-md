@@ -20,6 +20,6 @@
 		"lineWidth": 100
 	},
 	"files": {
-		"includes": ["**", "!**/dist", "!**/node_modules", "!**/coverage", "!**/.planning"]
+		"includes": ["**", "!**/dist", "!**/node_modules", "!**/coverage", "!**/.planning", "!**/benchmarks", "!**/adapters"]
 	}
 }

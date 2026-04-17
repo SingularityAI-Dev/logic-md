@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "/name",
-      "keyword": "minLength",
-      "message": "must NOT have fewer than 1 characters"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "/name",
+			"keyword": "minLength",
+			"message": "must NOT have fewer than 1 characters"
+		}
+	]
 }

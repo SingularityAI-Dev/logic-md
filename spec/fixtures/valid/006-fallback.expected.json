@@ -1,44 +1,44 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "resilient-agent",
-    "fallback": {
-      "strategy": "graceful_degrade",
-      "escalation": [
-        {
-          "level": 1,
-          "trigger": "{{ confidence < 0.5 }}",
-          "action": "retry_with_different_strategy",
-          "new_strategy": "tot"
-        },
-        {
-          "level": 2,
-          "trigger": "{{ attempts >= 3 }}",
-          "action": "request_human_review",
-          "message": "Unable to reach confidence after 3 attempts",
-          "include_reasoning_trace": true
-        },
-        {
-          "level": 3,
-          "trigger": "{{ attempts >= 5 }}",
-          "action": "abort",
-          "message": "Maximum attempts exhausted"
-        }
-      ],
-      "degradation": [
-        {
-          "when": "tools_unavailable",
-          "fallback_to": "reasoning_only",
-          "message": "External tools unavailable"
-        },
-        {
-          "when": "timeout_exceeded",
-          "fallback_to": "partial_output",
-          "include_fields": ["summary", "confidence_score"],
-          "exclude_fields": ["detailed_findings"]
-        }
-      ]
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "resilient-agent",
+		"fallback": {
+			"strategy": "graceful_degrade",
+			"escalation": [
+				{
+					"level": 1,
+					"trigger": "{{ confidence < 0.5 }}",
+					"action": "retry_with_different_strategy",
+					"new_strategy": "tot"
+				},
+				{
+					"level": 2,
+					"trigger": "{{ attempts >= 3 }}",
+					"action": "request_human_review",
+					"message": "Unable to reach confidence after 3 attempts",
+					"include_reasoning_trace": true
+				},
+				{
+					"level": 3,
+					"trigger": "{{ attempts >= 5 }}",
+					"action": "abort",
+					"message": "Maximum attempts exhausted"
+				}
+			],
+			"degradation": [
+				{
+					"when": "tools_unavailable",
+					"fallback_to": "reasoning_only",
+					"message": "External tools unavailable"
+				},
+				{
+					"when": "timeout_exceeded",
+					"fallback_to": "partial_output",
+					"include_fields": ["summary", "confidence_score"],
+					"exclude_fields": ["detailed_findings"]
+				}
+			]
+		}
+	}
 }

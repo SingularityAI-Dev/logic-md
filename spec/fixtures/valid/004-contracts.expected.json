@@ -1,53 +1,53 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "contracted-agent",
-    "contracts": {
-      "inputs": [
-        {
-          "name": "query",
-          "type": "string",
-          "required": true,
-          "description": "The research question",
-          "constraints": { "max_length": 2000 }
-        },
-        {
-          "name": "context",
-          "type": "array",
-          "required": false,
-          "items": {
-            "type": "object",
-            "properties": {
-              "title": { "type": "string" },
-              "url": { "type": "string" }
-            }
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "report",
-          "type": "object",
-          "required": ["summary", "confidence"],
-          "properties": {
-            "summary": { "type": "string" },
-            "confidence": { "type": "number" }
-          }
-        }
-      ],
-      "capabilities": {
-        "name": "Research Agent",
-        "version": "1.0.0",
-        "description": "Researches topics and produces reports",
-        "supported_domains": ["technology", "finance"],
-        "languages": ["en"]
-      },
-      "validation": {
-        "mode": "strict",
-        "on_input_violation": "reject",
-        "on_output_violation": "retry"
-      }
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "contracted-agent",
+		"contracts": {
+			"inputs": [
+				{
+					"name": "query",
+					"type": "string",
+					"required": true,
+					"description": "The research question",
+					"constraints": { "max_length": 2000 }
+				},
+				{
+					"name": "context",
+					"type": "array",
+					"required": false,
+					"items": {
+						"type": "object",
+						"properties": {
+							"title": { "type": "string" },
+							"url": { "type": "string" }
+						}
+					}
+				}
+			],
+			"outputs": [
+				{
+					"name": "report",
+					"type": "object",
+					"required": ["summary", "confidence"],
+					"properties": {
+						"summary": { "type": "string" },
+						"confidence": { "type": "number" }
+					}
+				}
+			],
+			"capabilities": {
+				"name": "Research Agent",
+				"version": "1.0.0",
+				"description": "Researches topics and produces reports",
+				"supported_domains": ["technology", "finance"],
+				"languages": ["en"]
+			},
+			"validation": {
+				"mode": "strict",
+				"on_input_violation": "reject",
+				"on_output_violation": "retry"
+			}
+		}
+	}
 }

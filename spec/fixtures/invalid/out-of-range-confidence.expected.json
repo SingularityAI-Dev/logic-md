@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "/steps/analyze/confidence/minimum",
-      "keyword": "maximum",
-      "message": "must be <= 1"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "/steps/analyze/confidence/minimum",
+			"keyword": "maximum",
+			"message": "must be <= 1"
+		}
+	]
 }

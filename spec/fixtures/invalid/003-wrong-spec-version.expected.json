@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "/spec_version",
-      "keyword": "const",
-      "message": "must be equal to constant"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "/spec_version",
+			"keyword": "const",
+			"message": "must be equal to constant"
+		}
+	]
 }

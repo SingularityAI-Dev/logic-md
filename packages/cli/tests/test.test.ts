@@ -1,9 +1,9 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { parse, validate, resolve, estimateTokens } from "@logic-md/core";
+import { join } from "node:path";
 import type { LogicSpec } from "@logic-md/core";
+import { estimateTokens, parse, resolve, validate } from "@logic-md/core";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 describe("test command", () => {
 	let tempDir: string;

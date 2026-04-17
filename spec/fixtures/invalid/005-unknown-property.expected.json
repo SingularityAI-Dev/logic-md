@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "",
-      "keyword": "additionalProperties",
-      "message": "must NOT have additional properties"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "",
+			"keyword": "additionalProperties",
+			"message": "must NOT have additional properties"
+		}
+	]
 }

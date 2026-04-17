@@ -1,11 +1,9 @@
-import { mkdtempSync, rmSync, readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { parse, validate } from "@logic-md/core";
-import { readdirSync } from "node:fs";
-import { dirname, join as pathJoin } from "node:path";
+import { dirname, join, join as pathJoin } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse, validate } from "@logic-md/core";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 describe("init command", () => {
 	let tempDir: string;

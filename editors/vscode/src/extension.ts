@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 /**
  * LOGIC.md VSCode Extension
@@ -11,12 +11,12 @@ let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(context: vscode.ExtensionContext) {
 	// Create diagnostics collection for validation messages
-	diagnosticCollection = vscode.languages.createDiagnosticCollection('logic-md');
+	diagnosticCollection = vscode.languages.createDiagnosticCollection("logic-md");
 	context.subscriptions.push(diagnosticCollection);
 
 	// Show activation message
-	console.log('LOGIC.md VSCode extension activated');
-	vscode.window.showInformationMessage('LOGIC.md extension is now active');
+	console.log("LOGIC.md VSCode extension activated");
+	vscode.window.showInformationMessage("LOGIC.md extension is now active");
 
 	// Handle document open
 	context.subscriptions.push(
@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (isLogicMdFile(doc)) {
 				validateDocument(doc);
 			}
-		})
+		}),
 	);
 
 	// Handle document change
@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (isLogicMdFile(event.document)) {
 				validateDocument(event.document);
 			}
-		})
+		}),
 	);
 
 	// Handle document save
@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (isLogicMdFile(doc)) {
 				validateDocument(doc);
 			}
-		})
+		}),
 	);
 
 	// Validate all open LOGIC.md files
@@ -63,7 +63,7 @@ export function deactivate() {
  * Check if a document is a LOGIC.md file
  */
 function isLogicMdFile(doc: vscode.TextDocument): boolean {
-	return doc.languageId === 'logic-md' || doc.fileName.endsWith('.logic.md');
+	return doc.languageId === "logic-md" || doc.fileName.endsWith(".logic.md");
 }
 
 /**
@@ -81,7 +81,7 @@ function isLogicMdFile(doc: vscode.TextDocument): boolean {
 function validateDocument(doc: vscode.TextDocument): void {
 	const diagnostics: vscode.Diagnostic[] = [];
 	const text = doc.getText();
-	const lines = text.split('\n');
+	const lines = text.split("\n");
 
 	// Check for frontmatter delimiters
 	const frontmatterStart = text.search(/^---/m);
@@ -92,37 +92,34 @@ function validateDocument(doc: vscode.TextDocument): void {
 		diagnostics.push(
 			new vscode.Diagnostic(
 				range,
-				'LOGIC.md files should start with frontmatter (---).',
-				vscode.DiagnosticSeverity.Warning
-			)
+				"LOGIC.md files should start with frontmatter (---).",
+				vscode.DiagnosticSeverity.Warning,
+			),
 		);
 	} else if (frontmatterEnd === -1) {
 		const range = new vscode.Range(0, 0, 0, 0);
 		diagnostics.push(
 			new vscode.Diagnostic(
 				range,
-				'Frontmatter must be closed with --- delimiter.',
-				vscode.DiagnosticSeverity.Error
-			)
+				"Frontmatter must be closed with --- delimiter.",
+				vscode.DiagnosticSeverity.Error,
+			),
 		);
 	}
 
 	// Check for required fields in frontmatter
 	if (frontmatterStart !== -1 && frontmatterEnd !== -1) {
-		const frontmatterText = text.substring(
-			frontmatterStart + 3,
-			frontmatterEnd
-		);
+		const frontmatterText = text.substring(frontmatterStart + 3, frontmatterEnd);
 
-		const requiredFields = ['spec_version', 'name', 'reasoning'];
+		const requiredFields = ["spec_version", "name", "reasoning"];
 		requiredFields.forEach((field) => {
 			if (!frontmatterText.includes(`${field}:`)) {
 				diagnostics.push(
 					new vscode.Diagnostic(
 						new vscode.Range(0, 0, 0, 0),
 						`Required field missing: ${field}`,
-						vscode.DiagnosticSeverity.Warning
-					)
+						vscode.DiagnosticSeverity.Warning,
+					),
 				);
 			}
 		});

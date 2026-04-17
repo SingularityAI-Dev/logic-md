@@ -1,8 +1,8 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "no-body"
-  },
-  "note": "No markdown body after closing --- is valid. Body is always optional."
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "no-body"
+	},
+	"note": "No markdown body after closing --- is valid. Body is always optional."
 }

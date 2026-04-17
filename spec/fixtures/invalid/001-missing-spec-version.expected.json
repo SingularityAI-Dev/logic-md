@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "",
-      "keyword": "required",
-      "message": "must have required property 'spec_version'"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "",
+			"keyword": "required",
+			"message": "must have required property 'spec_version'"
+		}
+	]
 }

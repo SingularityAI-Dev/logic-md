@@ -1,20 +1,20 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "with-imports",
-    "imports": [
-      {
-        "ref": "./shared/retry-policies.logic.md",
-        "as": "policies"
-      },
-      {
-        "ref": "./shared/validation.logic.md",
-        "as": "validation"
-      }
-    ],
-    "reasoning": {
-      "strategy": "cot"
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "with-imports",
+		"imports": [
+			{
+				"ref": "./shared/retry-policies.logic.md",
+				"as": "policies"
+			},
+			{
+				"ref": "./shared/validation.logic.md",
+				"as": "validation"
+			}
+		],
+		"reasoning": {
+			"strategy": "cot"
+		}
+	}
 }

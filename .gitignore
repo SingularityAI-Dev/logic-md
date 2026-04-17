@@ -11,5 +11,11 @@ coverage/
 
 .planning/
 docs/handover/
+docs/assets/
+docs/html/
+docs/outreach/
+docs/oss/
+docs/*.pdf
+docs/*.docx
 PROGRESS.md
 LOGIC-MD-STRATEGIC-PLAN.md

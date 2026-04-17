@@ -1,11 +1,11 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "cot-strategy",
-    "reasoning": {
-      "strategy": "cot"
-    }
-  },
-  "note": "All six strategy values are valid: cot, react, tot, got, plan-execute, custom. Test each independently."
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "cot-strategy",
+		"reasoning": {
+			"strategy": "cot"
+		}
+	},
+	"note": "All six strategy values are valid: cot, react, tot, got, plan-execute, custom. Test each independently."
 }

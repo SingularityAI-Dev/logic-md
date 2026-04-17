@@ -1,73 +1,76 @@
 {
-  "name": "research-synthesis",
-  "description": "Synthesize research findings from multiple sources into a structured report with citations",
-  "category": "information-processing",
-  "complexity": "high",
-  "input_type": "research-query",
-  "input_file": "research-synthesis-sample.txt",
-  "expected_output_schema": {
-    "type": "object",
-    "required": ["research_question", "key_findings", "sources", "confidence_levels", "conclusion"],
-    "properties": {
-      "research_question": {
-        "type": "string",
-        "description": "The core research question being answered"
-      },
-      "key_findings": {
-        "type": "array",
-        "minItems": 3,
-        "items": {
-          "type": "object",
-          "required": ["finding", "supporting_evidence", "source_refs"],
-          "properties": {
-            "finding": { "type": "string" },
-            "supporting_evidence": { "type": "array", "items": { "type": "string" } },
-            "source_refs": { "type": "array", "items": { "type": "string" } }
-          }
-        },
-        "description": "Key findings with supporting evidence and source references"
-      },
-      "sources": {
-        "type": "array",
-        "minItems": 2,
-        "items": {
-          "type": "object",
-          "required": ["name", "type", "reliability"],
-          "properties": {
-            "name": { "type": "string" },
-            "type": { "type": "string", "enum": ["academic", "industry", "news", "government", "other"] },
-            "reliability": { "type": "string", "enum": ["high", "medium", "low"] },
-            "url": { "type": "string" }
-          }
-        },
-        "description": "List of consulted sources with reliability assessment"
-      },
-      "confidence_levels": {
-        "type": "object",
-        "properties": {
-          "overall": { "type": "string", "enum": ["high", "medium", "low"] },
-          "per_finding": {
-            "type": "object",
-            "additionalProperties": { "type": "string" }
-          }
-        },
-        "description": "Confidence assessments for findings"
-      },
-      "conclusion": {
-        "type": "string",
-        "minLength": 100,
-        "description": "Final synthesis and conclusion"
-      },
-      "unresolved_questions": {
-        "type": "array",
-        "items": { "type": "string" },
-        "description": "Questions that remain unanswered"
-      }
-    }
-  },
-  "control_prompt": "You are a research analyst. Investigate the research question provided and synthesize findings from multiple perspectives. Cite your sources and assess confidence levels.",
-  "treatment_spec": "research-synthesis.logic.md",
-  "timeout_ms": 30000,
-  "retry_on_failure": true,
-  "max_retries": 2
+	"name": "research-synthesis",
+	"description": "Synthesize research findings from multiple sources into a structured report with citations",
+	"category": "information-processing",
+	"complexity": "high",
+	"input_type": "research-query",
+	"input_file": "research-synthesis-sample.txt",
+	"expected_output_schema": {
+		"type": "object",
+		"required": ["research_question", "key_findings", "sources", "confidence_levels", "conclusion"],
+		"properties": {
+			"research_question": {
+				"type": "string",
+				"description": "The core research question being answered"
+			},
+			"key_findings": {
+				"type": "array",
+				"minItems": 3,
+				"items": {
+					"type": "object",
+					"required": ["finding", "supporting_evidence", "source_refs"],
+					"properties": {
+						"finding": { "type": "string" },
+						"supporting_evidence": { "type": "array", "items": { "type": "string" } },
+						"source_refs": { "type": "array", "items": { "type": "string" } }
+					}
+				},
+				"description": "Key findings with supporting evidence and source references"
+			},
+			"sources": {
+				"type": "array",
+				"minItems": 2,
+				"items": {
+					"type": "object",
+					"required": ["name", "type", "reliability"],
+					"properties": {
+						"name": { "type": "string" },
+						"type": {
+							"type": "string",
+							"enum": ["academic", "industry", "news", "government", "other"]
+						},
+						"reliability": { "type": "string", "enum": ["high", "medium", "low"] },
+						"url": { "type": "string" }
+					}
+				},
+				"description": "List of consulted sources with reliability assessment"
+			},
+			"confidence_levels": {
+				"type": "object",
+				"properties": {
+					"overall": { "type": "string", "enum": ["high", "medium", "low"] },
+					"per_finding": {
+						"type": "object",
+						"additionalProperties": { "type": "string" }
+					}
+				},
+				"description": "Confidence assessments for findings"
+			},
+			"conclusion": {
+				"type": "string",
+				"minLength": 100,
+				"description": "Final synthesis and conclusion"
+			},
+			"unresolved_questions": {
+				"type": "array",
+				"items": { "type": "string" },
+				"description": "Questions that remain unanswered"
+			}
+		}
+	},
+	"control_prompt": "You are a research analyst. Investigate the research question provided and synthesize findings from multiple perspectives. Cite your sources and assess confidence levels.",
+	"treatment_spec": "research-synthesis.logic.md",
+	"timeout_ms": 30000,
+	"retry_on_failure": true,
+	"max_retries": 2
 }

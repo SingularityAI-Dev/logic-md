@@ -1,37 +1,37 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "visual-builder",
-    "reasoning": {
-      "strategy": "cot"
-    },
-    "visual": {
-      "icon": "brain",
-      "category": "reasoning",
-      "color": "#6366F1",
-      "inspector": [
-        {
-          "key": "reasoning.strategy",
-          "label": "Reasoning Strategy",
-          "type": "select"
-        }
-      ],
-      "ports": {
-        "inputs": [
-          {
-            "name": "query",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "outputs": [
-          {
-            "name": "result",
-            "type": "object"
-          }
-        ]
-      }
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "visual-builder",
+		"reasoning": {
+			"strategy": "cot"
+		},
+		"visual": {
+			"icon": "brain",
+			"category": "reasoning",
+			"color": "#6366F1",
+			"inspector": [
+				{
+					"key": "reasoning.strategy",
+					"label": "Reasoning Strategy",
+					"type": "select"
+				}
+			],
+			"ports": {
+				"inputs": [
+					{
+						"name": "query",
+						"type": "string",
+						"required": true
+					}
+				],
+				"outputs": [
+					{
+						"name": "result",
+						"type": "object"
+					}
+				]
+			}
+		}
+	}
 }

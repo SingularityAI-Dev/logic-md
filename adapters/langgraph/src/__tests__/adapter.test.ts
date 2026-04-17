@@ -8,14 +8,14 @@
  * 4. Invalid specs are rejected appropriately
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
-import { toStateGraphFromContent, toStateGraphFromSpec, AdapterError } from "../index.js";
 import { parse, validate } from "@logic-md/core";
+import { beforeEach, describe, expect, it } from "vitest";
+import { AdapterError, toStateGraphFromContent, toStateGraphFromSpec } from "../index.js";
 
 describe("LangGraph Adapter", () => {
-  describe("toStateGraphFromContent", () => {
-    it("should convert a single-step spec to a graph with 1 node", () => {
-      const spec = `---
+	describe("toStateGraphFromContent", () => {
+		it("should convert a single-step spec to a graph with 1 node", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "single-step-workflow"
 reasoning:
@@ -33,25 +33,25 @@ steps:
 A simple single-step workflow.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.nodes).toHaveLength(1);
-      expect(graph.nodes[0]).toBeDefined();
-      expect(graph.nodes[0]!.name).toBe("analyze");
-      expect(graph.nodes[0]!.promptSegment).toBe("Analyze the input.");
-      expect(graph.nodes[0]!.outputSchema).toBeDefined();
+			expect(graph.nodes).toHaveLength(1);
+			expect(graph.nodes[0]).toBeDefined();
+			expect(graph.nodes[0]!.name).toBe("analyze");
+			expect(graph.nodes[0]!.promptSegment).toBe("Analyze the input.");
+			expect(graph.nodes[0]!.outputSchema).toBeDefined();
 
-      expect(graph.edges).toHaveLength(0);
-      expect(graph.entryPoint).toBe("analyze");
-      expect(graph.endNodes).toContain("analyze");
+			expect(graph.edges).toHaveLength(0);
+			expect(graph.entryPoint).toBe("analyze");
+			expect(graph.endNodes).toContain("analyze");
 
-      expect(graph.metadata.workflowName).toBe("single-step-workflow");
-      expect(graph.metadata.totalSteps).toBe(1);
-      expect(graph.metadata.totalLevels).toBe(1);
-    });
+			expect(graph.metadata.workflowName).toBe("single-step-workflow");
+			expect(graph.metadata.totalSteps).toBe(1);
+			expect(graph.metadata.totalLevels).toBe(1);
+		});
 
-    it("should convert a linear multi-step spec to a correct DAG", () => {
-      const spec = `---
+		it("should convert a linear multi-step spec to a correct DAG", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "linear-workflow"
 steps:
@@ -68,23 +68,23 @@ steps:
 A three-step linear workflow.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.nodes).toHaveLength(3);
-      expect(graph.nodes.map((n) => n.name)).toEqual(["step1", "step2", "step3"]);
+			expect(graph.nodes).toHaveLength(3);
+			expect(graph.nodes.map((n) => n.name)).toEqual(["step1", "step2", "step3"]);
 
-      expect(graph.edges).toHaveLength(2);
-      expect(graph.edges[0]).toEqual({ from: "step1", to: "step2" });
-      expect(graph.edges[1]).toEqual({ from: "step2", to: "step3" });
+			expect(graph.edges).toHaveLength(2);
+			expect(graph.edges[0]).toEqual({ from: "step1", to: "step2" });
+			expect(graph.edges[1]).toEqual({ from: "step2", to: "step3" });
 
-      expect(graph.entryPoint).toBe("step1");
-      expect(graph.endNodes).toEqual(["step3"]);
+			expect(graph.entryPoint).toBe("step1");
+			expect(graph.endNodes).toEqual(["step3"]);
 
-      expect(graph.metadata.totalLevels).toBe(3);
-    });
+			expect(graph.metadata.totalLevels).toBe(3);
+		});
 
-    it("should handle a branching DAG with parallel levels", () => {
-      const spec = `---
+		it("should handle a branching DAG with parallel levels", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "branching-workflow"
 steps:
@@ -104,30 +104,30 @@ steps:
 A workflow with parallel branches.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.nodes).toHaveLength(4);
+			expect(graph.nodes).toHaveLength(4);
 
-      // Check DAG levels
-      expect(graph.metadata.totalLevels).toBe(3);
-      expect(graph.nodes[0]!.metadata.dagLevel).toBe(0); // start
-      expect(graph.nodes[1]!.metadata.dagLevel).toBe(1); // parallel_a
-      expect(graph.nodes[2]!.metadata.dagLevel).toBe(1); // parallel_b
-      expect(graph.nodes[3]!.metadata.dagLevel).toBe(2); // merge
+			// Check DAG levels
+			expect(graph.metadata.totalLevels).toBe(3);
+			expect(graph.nodes[0]!.metadata.dagLevel).toBe(0); // start
+			expect(graph.nodes[1]!.metadata.dagLevel).toBe(1); // parallel_a
+			expect(graph.nodes[2]!.metadata.dagLevel).toBe(1); // parallel_b
+			expect(graph.nodes[3]!.metadata.dagLevel).toBe(2); // merge
 
-      // Check edges
-      expect(graph.edges).toHaveLength(3);
-      expect(graph.edges).toContainEqual({ from: "start", to: "parallel_a" });
-      expect(graph.edges).toContainEqual({ from: "start", to: "parallel_b" });
-      expect(graph.edges).toContainEqual({ from: "parallel_a", to: "merge" });
-      expect(graph.edges).toContainEqual({ from: "parallel_b", to: "merge" });
+			// Check edges
+			expect(graph.edges).toHaveLength(3);
+			expect(graph.edges).toContainEqual({ from: "start", to: "parallel_a" });
+			expect(graph.edges).toContainEqual({ from: "start", to: "parallel_b" });
+			expect(graph.edges).toContainEqual({ from: "parallel_a", to: "merge" });
+			expect(graph.edges).toContainEqual({ from: "parallel_b", to: "merge" });
 
-      expect(graph.entryPoint).toBe("start");
-      expect(graph.endNodes).toEqual(["merge"]);
-    });
+			expect(graph.entryPoint).toBe("start");
+			expect(graph.endNodes).toEqual(["merge"]);
+		});
 
-    it("should capture quality gates in metadata", () => {
-      const spec = `---
+		it("should capture quality gates in metadata", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "workflow-with-gates"
 steps:
@@ -146,27 +146,27 @@ quality_gates:
 Workflow with quality gates.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      const node = graph.nodes[0];
-      expect(node).toBeDefined();
-      expect(node!.metadata.qualityGates).toBeDefined();
-      expect(node!.metadata.qualityGates).toContainEqual({
-        name: "verification",
-        check: "{{ output.confidence > 0.8 }}",
-        severity: "error",
-      });
+			const node = graph.nodes[0];
+			expect(node).toBeDefined();
+			expect(node!.metadata.qualityGates).toBeDefined();
+			expect(node!.metadata.qualityGates).toContainEqual({
+				name: "verification",
+				check: "{{ output.confidence > 0.8 }}",
+				severity: "error",
+			});
 
-      expect(graph.metadata.globalQualityGates).toBeDefined();
-      expect(graph.metadata.globalQualityGates).toContainEqual({
-        name: "global_gate",
-        check: "{{ steps.validate.confidence > 0.9 }}",
-        severity: "error",
-      });
-    });
+			expect(graph.metadata.globalQualityGates).toBeDefined();
+			expect(graph.metadata.globalQualityGates).toContainEqual({
+				name: "global_gate",
+				check: "{{ steps.validate.confidence > 0.9 }}",
+				severity: "error",
+			});
+		});
 
-    it("should include retry policy in metadata", () => {
-      const spec = `---
+		it("should include retry policy in metadata", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "workflow-with-retry"
 steps:
@@ -182,16 +182,16 @@ steps:
 Workflow with retry policy.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      const node = graph.nodes[0];
-      expect(node).toBeDefined();
-      expect(node!.metadata.retryPolicy).toBeDefined();
-      expect(node!.metadata.retryPolicy?.maxAttempts).toBe(3);
-    });
+			const node = graph.nodes[0];
+			expect(node).toBeDefined();
+			expect(node!.metadata.retryPolicy).toBeDefined();
+			expect(node!.metadata.retryPolicy?.maxAttempts).toBe(3);
+		});
 
-    it("should reject an empty spec", () => {
-      const spec = `---
+		it("should reject an empty spec", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "empty-workflow"
 ---
@@ -199,14 +199,12 @@ name: "empty-workflow"
 No steps defined.
 `;
 
-      expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(AdapterError);
-      expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(
-        /no steps defined/i
-      );
-    });
+			expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(AdapterError);
+			expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(/no steps defined/i);
+		});
 
-    it("should reject a spec with a cycle", () => {
-      const spec = `---
+		it("should reject a spec with a cycle", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "cyclic-workflow"
 steps:
@@ -221,11 +219,11 @@ steps:
 This has a cycle.
 `;
 
-      expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(AdapterError);
-    });
+			expect(() => toStateGraphFromContent(spec, { strict: true })).toThrow(AdapterError);
+		});
 
-    it("should handle invalid YAML with strict mode", () => {
-      const badContent = `---
+		it("should handle invalid YAML with strict mode", () => {
+			const badContent = `---
 spec_version: "1.0"
 name: [invalid array in name]
 ---
@@ -233,26 +231,26 @@ name: [invalid array in name]
 Bad YAML.
 `;
 
-      expect(() => toStateGraphFromContent(badContent, { strict: true })).toThrow();
-    });
+			expect(() => toStateGraphFromContent(badContent, { strict: true })).toThrow();
+		});
 
-    it("should warn but not throw in non-strict mode for invalid content", () => {
-      const badContent = `---
+		it("should warn but not throw in non-strict mode for invalid content", () => {
+			const badContent = `---
 spec_version: "1.0"
 ---
 
 No name field.
 `;
 
-      // Should not throw
-      const graph = toStateGraphFromContent(badContent, { strict: false });
-      expect(graph).toBeDefined();
-    });
-  });
+			// Should not throw
+			const graph = toStateGraphFromContent(badContent, { strict: false });
+			expect(graph).toBeDefined();
+		});
+	});
 
-  describe("toStateGraphFromSpec", () => {
-    it("should work with pre-parsed and pre-validated specs", () => {
-      const content = `---
+	describe("toStateGraphFromSpec", () => {
+		it("should work with pre-parsed and pre-validated specs", () => {
+			const content = `---
 spec_version: "1.0"
 name: "test-workflow"
 steps:
@@ -263,21 +261,21 @@ steps:
 Test.
 `;
 
-      const parseResult = parse(content);
-      expect(parseResult.ok).toBe(true);
-      if (!parseResult.ok) throw new Error("Parse failed");
+			const parseResult = parse(content);
+			expect(parseResult.ok).toBe(true);
+			if (!parseResult.ok) throw new Error("Parse failed");
 
-      const validateResult = validate(content);
-      expect(validateResult.ok).toBe(true);
-      if (!validateResult.ok) throw new Error("Validation failed");
+			const validateResult = validate(content);
+			expect(validateResult.ok).toBe(true);
+			if (!validateResult.ok) throw new Error("Validation failed");
 
-      const graph = toStateGraphFromSpec(parseResult.data);
-      expect(graph.nodes).toHaveLength(1);
-      expect(graph.nodes[0]!.name).toBe("task");
-    });
+			const graph = toStateGraphFromSpec(parseResult.data);
+			expect(graph.nodes).toHaveLength(1);
+			expect(graph.nodes[0]!.name).toBe("task");
+		});
 
-    it("should handle specs with descriptions and metadata", () => {
-      const content = `---
+		it("should handle specs with descriptions and metadata", () => {
+			const content = `---
 spec_version: "1.0"
 name: "documented-workflow"
 description: "A workflow with full documentation."
@@ -298,24 +296,24 @@ steps:
 Full documentation.
 `;
 
-      const parseResult = parse(content);
-      expect(parseResult.ok).toBe(true);
-      if (!parseResult.ok) throw new Error("Parse failed");
+			const parseResult = parse(content);
+			expect(parseResult.ok).toBe(true);
+			if (!parseResult.ok) throw new Error("Parse failed");
 
-      const validateResult = validate(content);
-      expect(validateResult.ok).toBe(true);
-      if (!validateResult.ok) throw new Error("Validation failed");
+			const validateResult = validate(content);
+			expect(validateResult.ok).toBe(true);
+			if (!validateResult.ok) throw new Error("Validation failed");
 
-      const graph = toStateGraphFromSpec(parseResult.data);
-      expect(graph.metadata.workflowName).toBe("documented-workflow");
-      expect(graph.nodes[0]!.promptSegment).toBe("Begin here.");
-      expect(graph.nodes[0]!.outputSchema).toBeDefined();
-    });
-  });
+			const graph = toStateGraphFromSpec(parseResult.data);
+			expect(graph.metadata.workflowName).toBe("documented-workflow");
+			expect(graph.nodes[0]!.promptSegment).toBe("Begin here.");
+			expect(graph.nodes[0]!.outputSchema).toBeDefined();
+		});
+	});
 
-  describe("Complex workflows", () => {
-    it("should handle a diamond DAG pattern", () => {
-      const spec = `---
+	describe("Complex workflows", () => {
+		it("should handle a diamond DAG pattern", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "diamond-workflow"
 steps:
@@ -335,23 +333,23 @@ steps:
 Diamond pattern.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.nodes).toHaveLength(4);
-      expect(graph.metadata.totalLevels).toBe(3);
+			expect(graph.nodes).toHaveLength(4);
+			expect(graph.metadata.totalLevels).toBe(3);
 
-      // All paths should lead to bottom
-      const bottomNode = graph.nodes.find((n) => n.name === "bottom");
-      expect(bottomNode).toBeDefined();
-      expect(bottomNode!.metadata.dagLevel).toBe(2);
+			// All paths should lead to bottom
+			const bottomNode = graph.nodes.find((n) => n.name === "bottom");
+			expect(bottomNode).toBeDefined();
+			expect(bottomNode!.metadata.dagLevel).toBe(2);
 
-      // Check edges form the diamond
-      expect(graph.edges.filter((e) => e.from === "root")).toHaveLength(2);
-      expect(graph.edges.filter((e) => e.to === "bottom")).toHaveLength(2);
-    });
+			// Check edges form the diamond
+			expect(graph.edges.filter((e) => e.from === "root")).toHaveLength(2);
+			expect(graph.edges.filter((e) => e.to === "bottom")).toHaveLength(2);
+		});
 
-    it("should correctly identify entry and end nodes in complex graphs", () => {
-      const spec = `---
+		it("should correctly identify entry and end nodes in complex graphs", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "complex-workflow"
 steps:
@@ -374,16 +372,16 @@ steps:
 Multiple end points.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.entryPoint).toBe("entry");
-      expect(new Set(graph.endNodes)).toEqual(new Set(["end_a", "end_b"]));
-    });
-  });
+			expect(graph.entryPoint).toBe("entry");
+			expect(new Set(graph.endNodes)).toEqual(new Set(["end_a", "end_b"]));
+		});
+	});
 
-  describe("Edge cases", () => {
-    it("should handle steps with no output schema", () => {
-      const spec = `---
+	describe("Edge cases", () => {
+		it("should handle steps with no output schema", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "no-schema-workflow"
 steps:
@@ -394,14 +392,14 @@ steps:
 Test.
 `;
 
-      const graph = toStateGraphFromContent(spec);
+			const graph = toStateGraphFromContent(spec);
 
-      expect(graph.nodes[0]).toBeDefined();
-      expect(graph.nodes[0]!.outputSchema).toBeNull();
-    });
+			expect(graph.nodes[0]).toBeDefined();
+			expect(graph.nodes[0]!.outputSchema).toBeNull();
+		});
 
-    it("should handle steps with input schema", () => {
-      const spec = `---
+		it("should handle steps with input schema", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "input-schema-workflow"
 steps:
@@ -417,12 +415,12 @@ steps:
 Test.
 `;
 
-      const graph = toStateGraphFromContent(spec);
-      expect(graph.nodes[0]).toBeDefined();
-    });
+			const graph = toStateGraphFromContent(spec);
+			expect(graph.nodes[0]).toBeDefined();
+		});
 
-    it("should preserve metadata when includeMetadata is disabled", () => {
-      const spec = `---
+		it("should preserve metadata when includeMetadata is disabled", () => {
+			const spec = `---
 spec_version: "1.0"
 name: "metadata-test"
 steps:
@@ -439,11 +437,11 @@ quality_gates:
 Test.
 `;
 
-      const graph = toStateGraphFromContent(spec, { includeMetadata: false });
+			const graph = toStateGraphFromContent(spec, { includeMetadata: false });
 
-      expect(graph.nodes[0]!.metadata.qualityGates).toBeUndefined();
-      expect(graph.nodes[0]!.metadata.retryPolicy).toBeUndefined();
-      expect(graph.metadata.globalQualityGates).toBeUndefined();
-    });
-  });
+			expect(graph.nodes[0]!.metadata.qualityGates).toBeUndefined();
+			expect(graph.nodes[0]!.metadata.retryPolicy).toBeUndefined();
+			expect(graph.metadata.globalQualityGates).toBeUndefined();
+		});
+	});
 });

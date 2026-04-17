@@ -1,4 +1,4 @@
 {
-  "valid": true,
-  "note": "Full parsed output omitted for brevity. This fixture validates that all 12 top-level sections (reasoning, steps, contracts, quality_gates, decision_trees, fallback, metadata, and the required spec_version + name) can coexist. A conformant parser MUST accept this file without errors."
+	"valid": true,
+	"note": "Full parsed output omitted for brevity. This fixture validates that all 12 top-level sections (reasoning, steps, contracts, quality_gates, decision_trees, fallback, metadata, and the required spec_version + name) can coexist. A conformant parser MUST accept this file without errors."
 }

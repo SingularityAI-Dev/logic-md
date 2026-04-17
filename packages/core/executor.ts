@@ -7,13 +7,7 @@
 
 import { compileWorkflow, estimateTokens } from "./compiler.js";
 import { resolve } from "./dag.js";
-import type {
-	CompiledWorkflow,
-	LogicSpec,
-	RetryPolicy,
-	Step,
-	WorkflowContext,
-} from "./types.js";
+import type { CompiledWorkflow, LogicSpec, RetryPolicy, Step, WorkflowContext } from "./types.js";
 
 // =============================================================================
 // Public Types

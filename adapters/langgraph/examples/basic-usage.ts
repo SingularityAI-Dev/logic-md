@@ -127,56 +127,56 @@ if quality gates fail.
 
 // Main execution
 async function main() {
-  console.log("=== LangGraph Adapter Example ===\n");
+	console.log("=== LangGraph Adapter Example ===\n");
 
-  try {
-    // Convert the LOGIC.md spec to a graph definition
-    const graphDef = toStateGraphFromContent(logicMdSpec);
+	try {
+		// Convert the LOGIC.md spec to a graph definition
+		const graphDef = toStateGraphFromContent(logicMdSpec);
 
-    console.log("Workflow Name:", graphDef.metadata.workflowName);
-    console.log("Total Steps:", graphDef.metadata.totalSteps);
-    console.log("Total Levels:", graphDef.metadata.totalLevels);
-    console.log("Fallback Strategy:", graphDef.metadata.fallbackStrategy);
-    console.log();
+		console.log("Workflow Name:", graphDef.metadata.workflowName);
+		console.log("Total Steps:", graphDef.metadata.totalSteps);
+		console.log("Total Levels:", graphDef.metadata.totalLevels);
+		console.log("Fallback Strategy:", graphDef.metadata.fallbackStrategy);
+		console.log();
 
-    // Display nodes
-    console.log("--- Nodes ---");
-    for (const node of graphDef.nodes) {
-      console.log(`\n[${node.metadata.dagLevel}] ${node.name}`);
-      console.log(`    Prompt: ${node.promptSegment.substring(0, 60)}...`);
-      if (node.outputSchema) {
-        console.log(
-          `    Output: ${JSON.stringify(node.outputSchema.properties ? Object.keys(node.outputSchema.properties) : [])}`
-        );
-      }
-    }
+		// Display nodes
+		console.log("--- Nodes ---");
+		for (const node of graphDef.nodes) {
+			console.log(`\n[${node.metadata.dagLevel}] ${node.name}`);
+			console.log(`    Prompt: ${node.promptSegment.substring(0, 60)}...`);
+			if (node.outputSchema) {
+				console.log(
+					`    Output: ${JSON.stringify(node.outputSchema.properties ? Object.keys(node.outputSchema.properties) : [])}`,
+				);
+			}
+		}
 
-    // Display edges
-    console.log("\n--- Dependencies ---");
-    for (const edge of graphDef.edges) {
-      console.log(`${edge.from} → ${edge.to}`);
-    }
+		// Display edges
+		console.log("\n--- Dependencies ---");
+		for (const edge of graphDef.edges) {
+			console.log(`${edge.from} → ${edge.to}`);
+		}
 
-    // Display graph topology
-    console.log("\n--- Topology ---");
-    console.log(`Entry Point: ${graphDef.entryPoint}`);
-    console.log(`End Nodes: ${graphDef.endNodes.join(", ")}`);
+		// Display graph topology
+		console.log("\n--- Topology ---");
+		console.log(`Entry Point: ${graphDef.entryPoint}`);
+		console.log(`End Nodes: ${graphDef.endNodes.join(", ")}`);
 
-    // Display quality gates
-    if (graphDef.metadata.globalQualityGates) {
-      console.log("\n--- Quality Gates ---");
-      for (const gate of graphDef.metadata.globalQualityGates) {
-        console.log(`[${gate.severity}] ${gate.name}: ${gate.check}`);
-      }
-    }
+		// Display quality gates
+		if (graphDef.metadata.globalQualityGates) {
+			console.log("\n--- Quality Gates ---");
+			for (const gate of graphDef.metadata.globalQualityGates) {
+				console.log(`[${gate.severity}] ${gate.name}: ${gate.check}`);
+			}
+		}
 
-    // Output as JSON for consumption by LangGraph builder
-    console.log("\n--- Serialized Definition (JSON) ---");
-    console.log(JSON.stringify(graphDef, null, 2));
-  } catch (error) {
-    console.error("Error:", error instanceof Error ? error.message : error);
-    process.exit(1);
-  }
+		// Output as JSON for consumption by LangGraph builder
+		console.log("\n--- Serialized Definition (JSON) ---");
+		console.log(JSON.stringify(graphDef, null, 2));
+	} catch (error) {
+		console.error("Error:", error instanceof Error ? error.message : error);
+		process.exit(1);
+	}
 }
 
 main().catch(console.error);

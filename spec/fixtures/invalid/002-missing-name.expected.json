@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "",
-      "keyword": "required",
-      "message": "must have required property 'name'"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "",
+			"keyword": "required",
+			"message": "must have required property 'name'"
+		}
+	]
 }

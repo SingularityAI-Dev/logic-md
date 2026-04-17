@@ -1,10 +1,10 @@
 {
-  "valid": false,
-  "errors": [
-    {
-      "path": "/quality_gates/self_verification/rubric/criteria/0/weight",
-      "keyword": "maximum",
-      "message": "must be <= 1"
-    }
-  ]
+	"valid": false,
+	"errors": [
+		{
+			"path": "/quality_gates/self_verification/rubric/criteria/0/weight",
+			"keyword": "maximum",
+			"message": "must be <= 1"
+		}
+	]
 }

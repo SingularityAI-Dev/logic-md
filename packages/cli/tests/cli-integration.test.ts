@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { parse, validate } from "@logic-md/core";
+import { describe, expect, it } from "vitest";
 
 describe("CLI commands integration", () => {
 	it("should support basic workflow validation flow", () => {

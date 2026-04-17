@@ -1,48 +1,48 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "gated-agent",
-    "quality_gates": {
-      "pre_output": [
-        {
-          "name": "factual_grounding",
-          "check": "{{ output.citations.length > 0 }}",
-          "message": "All claims must be grounded",
-          "severity": "error"
-        },
-        {
-          "name": "bias_check",
-          "check": "{{ output.perspectives >= 2 }}",
-          "message": "Consider multiple perspectives",
-          "severity": "warning"
-        }
-      ],
-      "post_output": [
-        {
-          "name": "consistency",
-          "check": "{{ !output.contradicts_previous }}",
-          "message": "Output contradicts earlier findings",
-          "on_fail": "revise"
-        }
-      ],
-      "invariants": [
-        {
-          "name": "token_budget",
-          "check": "{{ reasoning.tokens_used < reasoning.thinking_budget * 0.95 }}",
-          "message": "Approaching token limit",
-          "on_breach": "summarize_and_conclude"
-        }
-      ],
-      "self_verification": {
-        "enabled": true,
-        "strategy": "checklist",
-        "checklist": [
-          "Output includes at least 3 sources",
-          "No unsupported speculative claims",
-          "Confidence score between 0 and 1"
-        ]
-      }
-    }
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "gated-agent",
+		"quality_gates": {
+			"pre_output": [
+				{
+					"name": "factual_grounding",
+					"check": "{{ output.citations.length > 0 }}",
+					"message": "All claims must be grounded",
+					"severity": "error"
+				},
+				{
+					"name": "bias_check",
+					"check": "{{ output.perspectives >= 2 }}",
+					"message": "Consider multiple perspectives",
+					"severity": "warning"
+				}
+			],
+			"post_output": [
+				{
+					"name": "consistency",
+					"check": "{{ !output.contradicts_previous }}",
+					"message": "Output contradicts earlier findings",
+					"on_fail": "revise"
+				}
+			],
+			"invariants": [
+				{
+					"name": "token_budget",
+					"check": "{{ reasoning.tokens_used < reasoning.thinking_budget * 0.95 }}",
+					"message": "Approaching token limit",
+					"on_breach": "summarize_and_conclude"
+				}
+			],
+			"self_verification": {
+				"enabled": true,
+				"strategy": "checklist",
+				"checklist": [
+					"Output includes at least 3 sources",
+					"No unsupported speculative claims",
+					"Confidence score between 0 and 1"
+				]
+			}
+		}
+	}
 }

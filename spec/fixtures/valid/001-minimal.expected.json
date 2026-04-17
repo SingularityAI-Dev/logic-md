@@ -1,7 +1,7 @@
 {
-  "valid": true,
-  "parsed": {
-    "spec_version": "1.0",
-    "name": "minimal"
-  }
+	"valid": true,
+	"parsed": {
+		"spec_version": "1.0",
+		"name": "minimal"
+	}
 }

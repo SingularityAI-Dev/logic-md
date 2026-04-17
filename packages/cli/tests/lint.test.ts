@@ -1,7 +1,7 @@
-import { mkdtempSync, rmSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { join } from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { lintFile } from "../src/commands/lint.js";
 
 describe("lint command", () => {
@@ -115,8 +115,8 @@ steps:
 
 		// Check issues before fix
 		const { issues: issuesBeforeFix } = lintFile(filePath, false);
-		const descIssuesBeforeFix = issuesBeforeFix.filter((i) =>
-			i.rule === "missing-description" || i.rule === "missing-step-description"
+		const descIssuesBeforeFix = issuesBeforeFix.filter(
+			(i) => i.rule === "missing-description" || i.rule === "missing-step-description",
 		);
 
 		// Apply fix
@@ -130,8 +130,8 @@ steps:
 
 		// Re-lint to see if descriptions were added
 		const { issues: issuesAfterFix } = lintFile(filePath, false);
-		const descIssuesAfterFix = issuesAfterFix.filter((i) =>
-			i.rule === "missing-description" || i.rule === "missing-step-description"
+		const descIssuesAfterFix = issuesAfterFix.filter(
+			(i) => i.rule === "missing-description" || i.rule === "missing-step-description",
 		);
 		// After fix, description issues should be gone
 		expect(descIssuesAfterFix.length).toBeLessThan(descIssuesBeforeFix.length);

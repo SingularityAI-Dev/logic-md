@@ -1,74 +1,74 @@
 {
-  "name": "logic-md-vscode",
-  "displayName": "LOGIC.md",
-  "description": "Syntax highlighting and validation for LOGIC.md reasoning specifications",
-  "version": "0.1.0",
-  "publisher": "singlesourcestudios",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/singlesourcestudios/logic-md"
-  },
-  "engines": {
-    "vscode": "^1.80.0"
-  },
-  "categories": [
-    "Programming Languages",
-    "Linters"
-  ],
-  "keywords": [
-    "logic-md",
-    "LOGIC.md",
-    "reasoning",
-    "AI",
-    "agent",
-    "workflow",
-    "specification"
-  ],
-  "activationEvents": [
-    "onLanguage:logic-md"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "languages": [
-      {
-        "id": "logic-md",
-        "aliases": [
-          "LOGIC.md",
-          "logic-md"
-        ],
-        "extensions": [
-          ".logic.md"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "logic-md",
-        "scopeName": "text.logic-md",
-        "path": "./syntaxes/logic-md.tmLanguage.json"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "logic-md",
-        "path": "./snippets/logic-md.json"
-      }
-    ]
-  },
-  "devDependencies": {
-    "@types/vscode": "^1.80.0",
-    "@types/node": "^18.0.0",
-    "typescript": "^5.0.0",
-    "vsce": "^2.15.0"
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "package": "vsce package",
-    "publish": "vsce publish"
-  }
+	"name": "logic-md-vscode",
+	"displayName": "LOGIC.md",
+	"description": "Syntax highlighting and validation for LOGIC.md reasoning specifications",
+	"version": "0.1.0",
+	"publisher": "singlesourcestudios",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/singlesourcestudios/logic-md"
+	},
+	"engines": {
+		"vscode": "^1.80.0"
+	},
+	"categories": [
+		"Programming Languages",
+		"Linters"
+	],
+	"keywords": [
+		"logic-md",
+		"LOGIC.md",
+		"reasoning",
+		"AI",
+		"agent",
+		"workflow",
+		"specification"
+	],
+	"activationEvents": [
+		"onLanguage:logic-md"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"languages": [
+			{
+				"id": "logic-md",
+				"aliases": [
+					"LOGIC.md",
+					"logic-md"
+				],
+				"extensions": [
+					".logic.md"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "logic-md",
+				"scopeName": "text.logic-md",
+				"path": "./syntaxes/logic-md.tmLanguage.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": "logic-md",
+				"path": "./snippets/logic-md.json"
+			}
+		]
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.80.0",
+		"@types/node": "^18.0.0",
+		"typescript": "^5.0.0",
+		"vsce": "^2.15.0"
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"package": "vsce package",
+		"publish": "vsce publish"
+	}
 }
