@@ -17,10 +17,14 @@ npm install
 
 ## Pull Requests
 
-1. Fork the repo and create a branch from `develop`
+1. Fork the repo and create a feature branch from `main`
 2. Make your changes
-3. Ensure `npm test`, `npm run lint`, and `npm run typecheck` all pass
-4. Submit a PR to `develop`
+3. Ensure `npm test`, `npm run lint`, `npm run typecheck`, and `node spec/fixtures/run-fixtures.mjs` all pass
+4. Submit a PR to `main`
+
+## Community standards
+
+Please see [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) for the standards of behaviour expected in this project. Security vulnerabilities should be reported via [`SECURITY.md`](./SECURITY.md), not public issues.
 
 ## License
 
