@@ -33,7 +33,7 @@ function authMiddleware(req, res, next) {
 app.use(authMiddleware);
 
 // File: config.js (modified)
-export const API_KEY = "sk_live_51JLbBJFkK3F9q0q7p2m3n4o5p6q7r8s9";
+export const API_KEY = "sk_test_EXAMPLE_NOT_A_REAL_KEY_1111111";
 export const DB_CONNECTION = {
 	host: "localhost",
 	port: 5432,

@@ -8,7 +8,7 @@ class PaymentProcessor {
 	constructor() {
 		// Private key stored in code - SECURITY RISK
 		this.privateKey = fs.readFileSync("./keys/private.pem", "utf8");
-		this.apiKey = "sk_live_4j2k5l8m9n0p1q2r3s4t5u6v7w8x9y0";
+		this.apiKey = "sk_test_EXAMPLE_NOT_A_REAL_KEY_0000000";
 	}
 
 	processPayment(cardNumber, expiry, cvv, amount) {
