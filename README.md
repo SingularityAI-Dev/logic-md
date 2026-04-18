@@ -355,6 +355,8 @@ The logic-md ecosystem spans packages, SDKs, adapters, editor support, and CI/CD
 
 - **LangGraph** (experimental) — Converts specs to `StateGraph` definitions — [`adapters/langgraph/`](adapters/langgraph/)
 
+The LangGraph adapter is a Phase 1 proof-of-concept. It produces a graph *definition* rather than an executable `StateGraph` instance, and does not wire branching, quality-gate enforcement, retry loops, or parallel execution — `branches[]` is parsed but not connected to edges, quality gates are captured in metadata but not enforced, and parallel groups execute sequentially. See [adapters/langgraph/STATUS.md](adapters/langgraph/STATUS.md) for the full Phase 1 scope list before building on it.
+
 ### Editor Support
 
 - **VSCode extension** — Syntax highlighting + snippets — [`editors/vscode/`](editors/vscode/)
@@ -422,7 +424,7 @@ If you have API credits and want to co-run the benchmark, [open an issue](https:
 - Cross-model benchmark suite on frontier models (Claude Sonnet, GPT-4o)
 - VSCode marketplace publish
 - Python SDK feature parity — compiler + dry-run executor matching TypeScript
-- LangGraph adapter Phase 2 — branch support, quality-gate enforcement, parallel execution
+- LangGraph adapter Phase 2 — branch support, quality-gate enforcement, parallel execution — timeline TBD, pending frontier-model benchmark results
 - Documentation site at logic-md.org
 
 **Medium term**
