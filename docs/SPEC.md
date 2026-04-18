@@ -62,6 +62,13 @@ imports:
     as: message_contract
 ```
 
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `ref` | string | YES | File path or URI to the external LOGIC.md file |
+| `as` | string | YES | Namespace prefix for imported values |
+
+Both `ref` and `as` are required on every import entry; omitting either fails schema validation.
+
 **Resolution order** (most specific wins):
 1. Current file values
 2. Imported values (later imports override earlier)
