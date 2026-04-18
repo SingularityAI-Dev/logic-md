@@ -182,7 +182,7 @@ steps:
     # Post-step verification
     verification:
       check: "{{ output.findings.length >= 3 && output.confidence >= 0.6 }}"
-      on_fail: retry          # retry | escalate | skip | abort
+      on_fail: retry          # retry | escalate | skip | abort | revise
       on_fail_message: "Insufficient findings or low confidence"
     
     # Timeout
@@ -194,6 +194,24 @@ steps:
     # Tools this step must NOT use
     denied_tools: [code_execution]
 ```
+
+### 4.1.1 Verification Properties
+
+Step-level `verification` runs after the step executes and validates the output against a boolean `check` expression.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `check` | string (expression) | yes | A `{{ }}` expression evaluating to a boolean. The verification passes when the expression is truthy. |
+| `on_fail` | enum | no (defaults to `retry`) | The action to take when `check` evaluates falsy. One of `retry`, `escalate`, `skip`, `abort`, `revise`. |
+| `on_fail_message` | string | no | Human-readable reason surfaced when `check` fails. Also supplied as feedback when `on_fail: revise`. |
+
+`on_fail` semantics:
+
+- `retry` — re-run the step using the same inputs, subject to the step's `retry` policy.
+- `escalate` — hand off to the configured `fallback` chain (supervisor / human / alternative step).
+- `skip` — continue downstream without this step's output. Downstream steps that `needs` it must tolerate absence.
+- `abort` — fail the workflow and surface the verification error to the caller.
+- `revise` — re-prompt the model with the failure captured as feedback (typically `on_fail_message`) so it can correct its own output.
 
 ### 4.2 Expression Syntax
 

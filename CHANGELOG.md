@@ -2,6 +2,11 @@
 
 > Rolling log of last 20 notable changes. Full history in git.
 
+## [Unreleased]
+
+### Fixed
+- Docs: SPEC.md §4.1 `Verification.on_fail` inline comment now documents all five schema-permitted values (`retry`, `escalate`, `skip`, `abort`, `revise`); added §4.1.1 Verification Properties table with per-value semantics; added conformance fixture `009-verification-revise` covering step-level `on_fail: revise` (#16).
+
 ## [1.4.0] - 2026-04-09
 
 ### Added
