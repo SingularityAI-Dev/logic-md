@@ -2,12 +2,12 @@
 	"name": "logic-md-vscode",
 	"displayName": "LOGIC.md",
 	"description": "Syntax highlighting and validation for LOGIC.md reasoning specifications",
-	"version": "0.1.0",
-	"publisher": "singlesourcestudios",
+	"version": "0.1.1",
+	"publisher": "singlesourceai",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/singlesourcestudios/logic-md"
+		"url": "https://github.com/SingularityAI-Dev/logic-md"
 	},
 	"engines": {
 		"vscode": "^1.80.0"
@@ -59,9 +59,10 @@
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.80.0",
-		"@types/node": "^18.0.0",
-		"typescript": "^5.0.0",
-		"vsce": "^2.15.0"
+		"@types/node": "^22.0.0",
+		"@vscode/vsce": "^3.2.0",
+		"esbuild": "^0.24.0",
+		"typescript": "^5.0.0"
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
