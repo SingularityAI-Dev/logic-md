@@ -1,0 +1,10 @@
+{
+	"valid": false,
+	"errors": [
+		{
+			"path": "/visual/inspector/0",
+			"keyword": "required",
+			"message": "must have required property 'key'"
+		}
+	]
+}
