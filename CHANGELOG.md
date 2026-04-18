@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Documentation
+- docs(spec): clarify Import.as required (#25)
+
 ### Changed
 - chore: bump TypeScript to 6.0.3 (from `~5.8.0`) across root + `@logic-md/cli` + `@logic-md/mcp`. No source edits required; full build, test, and conformance suites green on 6.0.3.
 
