@@ -8,6 +8,7 @@
 - docs(spec): clarify Import.as required (#25)
 
 ### Changed
+- chore(deps): align toolchain on Node 22 LTS (#24) — CI runner bumped from Node 20 → 22; `@types/node` downgraded from `^24.12.2` → `^22.19.17` across root + `@logic-md/cli` + `@logic-md/mcp`; root `engines.node` declared as `>=22.0.0`. Closes the runtime/types gap introduced by PR #23.
 - chore: bump TypeScript to 6.0.3 (from `~5.8.0`) across root + `@logic-md/cli` + `@logic-md/mcp`. No source edits required; full build, test, and conformance suites green on 6.0.3.
 
 ### Fixed

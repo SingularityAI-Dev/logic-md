@@ -16,12 +16,15 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "~2.4.12",
-		"@types/node": "^24.12.2",
+		"@types/node": "^22.19.17",
 		"@vitest/coverage-v8": "^4.1.4",
 		"typescript": "^6.0.3",
 		"vitest": "~4.1.0"
 	},
 	"optionalDependencies": {
 		"@biomejs/cli-darwin-arm64": "^2.4.12"
+	},
+	"engines": {
+		"node": ">=22.0.0"
 	}
 }

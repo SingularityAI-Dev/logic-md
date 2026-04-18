@@ -30,7 +30,7 @@
 		"tinyglobby": "^0.2.16"
 	},
 	"devDependencies": {
-		"@types/node": "^24.12.2",
+		"@types/node": "^22.19.17",
 		"tsup": "^8.0.0",
 		"typescript": "^6.0.3",
 		"vitest": "~4.1.0"
