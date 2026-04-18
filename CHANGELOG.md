@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Changed
+- chore: bump TypeScript to 6.0.3 (from `~5.8.0`) across root + `@logic-md/cli` + `@logic-md/mcp`. No source edits required; full build, test, and conformance suites green on 6.0.3.
+
 ### Fixed
 - Docs: SPEC.md §4.1 `Verification.on_fail` inline comment now documents all five schema-permitted values (`retry`, `escalate`, `skip`, `abort`, `revise`); added §4.1.1 Verification Properties table with per-value semantics; added conformance fixture `009-verification-revise` covering step-level `on_fail: revise` (#16).
 
