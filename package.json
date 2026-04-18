@@ -18,10 +18,10 @@
 		"@biomejs/biome": "~2.4.0",
 		"@types/node": "^22.0.0",
 		"@vitest/coverage-v8": "^4.1.2",
-		"typescript": "~5.8.0",
+		"typescript": "^6.0.3",
 		"vitest": "~4.1.0"
 	},
 	"optionalDependencies": {
-		"@biomejs/cli-darwin-arm64": "^2.4.10"
+		"@biomejs/cli-darwin-arm64": "^2.4.12"
 	}
 }
