@@ -27,9 +27,9 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@types/node": "^22.0.0",
+		"@types/node": "^24.12.2",
 		"tsup": "^8.0.0",
-		"typescript": "~5.8.0"
+		"typescript": "~5.9.3"
 	},
 	"publishConfig": {
 		"access": "public"
