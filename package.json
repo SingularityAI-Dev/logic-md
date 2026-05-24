@@ -8,6 +8,7 @@
 	],
 	"scripts": {
 		"test": "vitest run",
+		"bench": "vitest run --config packages/core/vitest.perf.config.ts",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --build tsconfig.build.json",
