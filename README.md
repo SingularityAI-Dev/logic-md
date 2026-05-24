@@ -1,8 +1,8 @@
 # LOGIC.md
 
-**The declarative reasoning layer for AI agents.**
+**The audit and governance layer for AI agent reasoning.**
 
-A portable, framework-agnostic file format for specifying *how* an agent thinks: strategy, step DAGs, contracts, quality gates, and fallback policies: declared in YAML rather than hardcoded in Python.
+A portable, framework-agnostic file format for declaring agent reasoning as structured contracts: step DAGs, output schemas, tool permissions, and quality gates. Contracts are validated at compile time, executed deterministically, and produce auditable event traces by default. Where prose prompts give you behaviour, LOGIC.md gives you accountability.
 
 [![npm](https://img.shields.io/npm/v/@logic-md/core?color=7c6fe0&label=%40logic-md%2Fcore)](https://www.npmjs.com/package/@logic-md/core)
 [![npm](https://img.shields.io/npm/v/@logic-md/cli?color=2db88a&label=%40logic-md%2Fcli)](https://www.npmjs.com/package/@logic-md/cli)
@@ -11,7 +11,7 @@ A portable, framework-agnostic file format for specifying *how* an agent thinks:
 [![Tests](https://img.shields.io/badge/tests-307%20core%20%2F%2018%20mcp-brightgreen)](packages/core)
 [![Coverage](https://img.shields.io/badge/coverage-95.9%25%20branch-brightgreen)](packages/core)
 
-Developed alongside and validated through [Modular9](https://github.com/SingleSourceStudios/modular9), a visual node-based agent builder by the same author, where it addressed a common agent pipeline failure mode that ad-hoc prompt engineering could not reliably solve at scale.
+Developed alongside and validated in production through [Modular9](https://github.com/SingleSourceStudios/modular9), a visual node-based agent builder by the same author, where the contract-enforcement architecture was first proven at scale. Independently evaluated against [Archon](https://github.com/coleam00/Archon) in a 60-trial controlled experiment ([logic-md-archon-eval](https://github.com/SingularityAI-Dev/logic-md-archon-eval)).
 
 <p align="center">
   <img src="docs/assets/hero-layers.svg" alt="LOGIC.md sits between agent identity (CLAUDE.md), capability (SKILL.md), and protocols (MCP, A2A) as the missing declarative reasoning layer." width="100%"/>
@@ -21,23 +21,17 @@ Developed alongside and validated through [Modular9](https://github.com/SingleSo
 
 ## The problem
 
-Your agent describes what it would do instead of doing it.
+Your agent reasoning is locked inside prose prompts. That has three consequences:
 
-```
-"As a Security Auditor, I would perform an OWASP Top 10 review
-and map findings to CWE IDs. I would then scan for injection
-vulnerabilities..."
-```
+**You cannot audit it.** When a regulator, security team, or user asks "why did the agent take that action?", the answer is buried in the model's hidden reasoning trace. Replaying the exact same input rarely produces the exact same output. The audit trail is whatever logs you remembered to add.
 
-The next node in your pipeline receives an intent description, not data. Your workflow becomes a chain of *I would do X* statements that never produce real artifacts.
+**You cannot modify it safely.** Updating a multi-step workflow means editing prose. There are no contracts, no types, no `validate()`. A six-word change can quietly break four downstream consumers. The diff doesn't tell you what changed semantically.
 
-<p align="center">
-  <img src="docs/assets/describing-vs-doing.svg" alt="Before and after LOGIC.md: agents that describe intent versus agents that emit structured artifacts that flow to the next step." width="100%"/>
-</p>
+**You cannot trust the consistency.** Two runs of the same workflow on the same input produce different structured outputs at non-trivial rates. On reasoning tasks where the model has multiple plausible paths, prose prompts under-constrain the output enough that the variance becomes a real problem for downstream consumers.
 
-This is not a prompt engineering problem. It is a missing contracts problem.
+This is not a prompt-engineering problem you can fix by writing better prompts. It is a missing-contracts problem.
 
-Every agent framework gives you identity (`CLAUDE.md`), tools (`SKILL.md`), and memory. None of them give you a portable, framework-agnostic file format for declaring reasoning contracts: step dependencies, quality gates, and multi-agent handoffs: that travels with your code and survives framework changes.
+Every agent framework gives you identity (`CLAUDE.md`), tools (`SKILL.md`), and memory. None of them give you a portable, framework-agnostic file format for declaring reasoning contracts that travel with your code, validate at compile time, execute deterministically, and produce structured audit trails.
 
 **LOGIC.md fills that gap.**
 
@@ -65,11 +59,9 @@ steps:
           action: retry
 ```
 
-When a node has output contracts, the runtime injects:
+When a node has output contracts, the runtime compiles a structured prompt segment with a `## Required Output` section listing every field the agent must produce, with type and description, and emits the resulting compiled prompt + schema as part of the workflow event trace.
 
-> *You MUST produce a concrete artifact. Your output IS the deliverable.*
-
-Agents stop describing. They start doing.
+The contract is enforceable, diffable, and auditable. The compiled prompt is deterministic given the spec.
 
 ---
 
@@ -99,44 +91,72 @@ Agents stop describing. They start doing.
 
 ---
 
-## Case study: the describing-vs-doing fix
+## Case study: structural consistency under LOGIC.md
 
-This was validated during the Modular9 integration.
+This was validated in May 2026 against [Archon](https://github.com/coleam00/Archon), an open-source AI workflow engine, in a 60-trial controlled experiment. Full repo: [logic-md-archon-eval](https://github.com/SingularityAI-Dev/logic-md-archon-eval).
 
-Before LOGIC.md, running a Modular9 workflow produced output like *"As a Security Auditor, I would perform an OWASP Top 10 review..."* from every node: intent descriptions instead of artifacts. The next node in the chain received a summary of what the previous node would have done, not the thing itself. Pipelines never produced real deliverables end-to-end.
+**Setup.** Identical PR-review task. Two configurations on the same Archon node:
+- **Case A**: stock prose prompt with Zod output schema. No LOGIC.md.
+- **Case B**: same node, reasoning step delegated to LOGIC.md's MCP server (`@logic-md/mcp`) via Archon's existing `mcp:` field. The LOGIC.md spec defines 4 reasoning steps, output contracts, and a deterministic precedence rule for verdict aggregation.
 
-The root cause was two compounding gaps. Plugin identity prompts said *"You are a Security Auditor specialist"* but never said *"produce the actual artifact"*: role-descriptive, not action-directive. And the user prompt framing was vague enough that the LLM defaulted to a conversational summary instead of structured output.
+Same model, same fixtures, same harness. Zero patches to Archon. We measure verdict-agreement rate (do the same inputs produce the same verdicts across 10 runs?) and structural hash agreement (`sha256({verdict, critical_count, high_count})`).
 
-Three changes, all enabled by LOGIC.md contracts, solved it permanently:
+**Results across 3 fixtures × 2 cases × 10 runs (60 trials):**
 
-1. **Execution mandate**: every node's system prompt gains: *"You are a node in an automated pipeline. Your output IS the artifact."*
+| | Case A (prose) | Case B (LOGIC.md) |
+|---|---|---|
+| Verdict agreement (auth-sql-injection) | 5/10 different tuples | **10/10 identical** |
+| Structural hash agreement (overall) | 70% | **87%** |
+| Audit trail | Manual reconstruction | Workflow event JSONL out of the box |
+| Modifiability (add HIGH-blocks-PR rule) | 8-line prose edit, no validation | 9-line structured rule + `validate()` |
+| Runtime overhead | 1× | 2.6× |
 
-2. **Output contract injection**: when a node has `contracts.outputs`, the user prompt gains a structured `## Required Output` section listing every field the agent must produce with type and description.
+**The headline.** On the auth-sql-injection fixture, Case A produced 5 different `(verdict, critical_count, high_count)` tuples across 10 identical runs. The model's choice between e.g. "1 critical / 2 high" and "2 critical / 1 high" was essentially a coin flip. Case B produced 1 unique tuple — 10/10 identical structured output.
 
-3. **Input framing**: previous node output is labeled `## Input Data` with contract field descriptions, so the agent knows it is transforming structured data, not answering a question.
+LOGIC.md does not change the verdict (both cases reach `REQUEST_CHANGES`). It eliminates the structural variance in the supporting metadata that downstream consumers depend on.
 
-The result: each node now produces actual deliverables. Node A writes the audit report. Node B receives it as data and produces the threat model. Node C receives that and produces the Slack summary. The pipeline produces real artifacts end-to-end.
+**Audit and modifiability are properties of the runtime, not separately measured.** Every step's compiled prompt, output schema, and quality-gate result is emitted as a structured workflow event. Adding a new rule (e.g. "any HIGH-severity issue blocks the PR") is a 9-line YAML change with `@logic-md/cli validate` as the contract check. Without LOGIC.md, the equivalent is an 8-line prose edit with no enforcement and no signal that downstream consumers might break.
 
-The underlying techniques: execution mandates, output contract injection, structured input framing: are established patterns in prompt engineering. What made them hard to apply was doing it consistently across every node in a pipeline without framework-specific glue code. LOGIC.md provides a declarative, portable way to apply them systematically: **the fix travels with the spec rather than being buried in imperative code**.
+**The 2.6× runtime cost is real.** LOGIC.md is not free. The trade is consistency, auditability, and safe modifiability against execution speed. For regulated domains, multi-agent pipelines, or any workflow where agent decisions need to be defensible, the trade is worth making. For one-shot prototypes or fast classification gates, it is not.
+
+[Full report with methodology, traces, and per-fixture analysis](https://github.com/SingularityAI-Dev/logic-md-archon-eval/blob/main/REPORT.md).
 
 ---
 
 ## When to use it: and when not to
 
 **Use LOGIC.md when:**
-- You have multi-step agent pipelines where one agent's output feeds another
-- You need reproducible, auditable reasoning that survives model swaps
-- You're hitting the describing-vs-doing failure mode
-- You need per-step tool permissions, confidence thresholds, or structured fallback
-- You want reasoning configuration that is portable across LangGraph, CrewAI, AutoGen, or your own runtime
+- You need agent decisions to be auditable. Regulated domains, security teams, internal compliance.
+- You have multi-step pipelines where one agent's output feeds another and you need the contract to be enforceable.
+- You need consistent verdicts across runs. The same input should produce the same structured output, not a different paraphrase each time.
+- Your workflow needs to be safely modifiable by people who didn't author it. Structured contracts catch what prose review misses.
+- You need per-step tool permissions, confidence thresholds, or governed fallback policies.
+- You want reasoning configuration that is portable across LangGraph, CrewAI, AutoGen, or your own runtime.
 
 **You probably don't need LOGIC.md when:**
-- Your agent is a single LLM call with no downstream consumers
-- You're prototyping and don't yet know the shape of your reasoning steps
-- Your workflow is fully covered by a DSPy signature or a single LangGraph node
-- You have no quality gates, no contracts between stages, and no multi-agent handoffs
+- Your agent is a single LLM call with no downstream consumers.
+- You're prototyping and don't yet know the shape of your reasoning steps.
+- Your workflow is fully covered by a DSPy signature or a single LangGraph node.
+- You're optimising for raw output quality on a frontier model. LOGIC.md does not provide measurable quality lift on capable models; structured outputs add overhead.
+- You have no quality gates, no contracts between stages, and no multi-agent handoffs.
+
+**Honest disclosure on quality lift.** Cross-model benchmarks (Claude Sonnet 4.6 and Llama 3.1 70B at n=10 per condition) do not show measurable quality lift from LOGIC.md on these tasks. The value is structural — consistency, auditability, modifiability — not generative. Pitch and adopt accordingly. [Benchmark methodology and raw results](benchmarks/published/INDEX.md).
 
 LOGIC.md is a reasoning *contract* format. If you don't have anything to contract between, you don't need it yet.
+
+---
+
+## What LOGIC.md actually delivers
+
+Three properties that fall out of the runtime, not the model:
+
+**1. Structure as a contract.** A LOGIC.md spec compiles into a deterministic execution plan: a DAG with named steps, typed input/output schemas, and quality gates. The compiler is pure: same spec, same plan. The CLI's `validate()` catches contract violations before any LLM is called. Refactors are diffable as structure, not prose.
+
+**2. Audit trail as a default artifact.** Every compiled step's prompt, schema, and gate evaluation is emitted as a structured workflow event (JSONL). The trail is a property of the runtime, not an instrumentation library you remembered to add. When someone asks "what did the agent do?", you have a structured record, not a screen scrape.
+
+**3. Modifications as structured diffs.** Changing a workflow is a YAML edit, validated against the spec. Adding a new rule, tool restriction, or quality gate produces a reviewable diff with type-checked semantics. Adding the equivalent to a prose prompt produces an English edit with no enforcement.
+
+These properties matter most where agent decisions are consequential, replayable, and questioned: regulated industries, security review, compliance workflows, internal governance. They matter least where prompts are throwaway and outputs are not audited.
 
 ---
 
@@ -400,15 +420,35 @@ For building implementations in other languages, see [`docs/IMPLEMENTER-GUIDE.md
 
 ---
 
-## Benchmarks
+## Benchmarks and honest disclosure
 
-LOGIC.md's thesis: that declarative contracts + quality gates measurably improve multi-step reasoning reliability: is internally validated (Modular9 integration) but not yet benchmarked across model families.
+LOGIC.md's value proposition is structural — consistency, auditability, modifiability — not generative quality lift. The benchmarks below substantiate that distinction.
 
-**Preliminary (Llama 3.1 70B, April 2026):** single-model artifact-rate comparison between freeform prompting and LOGIC.md-compiled prompts. Deltas were within variance. Conclusion: inconclusive on weaker open-weight models; a meaningful signal likely requires frontier models where instruction-following is tight enough to expose the contract effect. See [`benchmarks/`](benchmarks/) for the harness and raw runs.
+**Quality lift: no measurable signal on these tasks (2026-05-07).** Cross-model sweep at n=10 per condition:
 
-**Next:** cross-model sweep on Claude Sonnet and GPT-4o class models, same harness, measuring (a) artifact-rate: does the step produce the declared output shape, (b) handoff fidelity: does the next step receive usable data, and (c) latency-adjusted reliability under a fixed retry budget.
+| Model | Tasks | Result |
+|---|---|---|
+| Claude Sonnet 4.6 | code-review | Control 99/100, treatment 100/100. Ceiling effect. |
+| Llama 3.1 70B (Nvidia NIM) | code-review, research-synthesis, security-audit | Flat to slightly negative after excluding 7 infrastructure-failure runs. |
 
-If you have API credits and want to co-run the benchmark, [open an issue](https://github.com/SingularityAI-Dev/logic-md/issues): the harness is reproducible and raw outputs will be published regardless of outcome.
+Raw results, per-trial JSON, and analysis: [`benchmarks/published/`](benchmarks/published/INDEX.md).
+
+The honest reading: on capable models with reasonable prose prompts on these tasks, LOGIC.md does not produce measurable quality lift. Treat any positioning that claims otherwise with scepticism, including older versions of this README. **Use LOGIC.md for structure and governance, not for quality.**
+
+Open methodology questions are catalogued in `benchmarks/published/INDEX.md` (rigid scoring rubric, strict enum validation, n=10 too small, fixtures may be too easy). Re-runs at higher n on a paid tier are queued.
+
+**Structural consistency: clean positive signal (2026-05-06).** A separate 60-trial integration test against [Archon](https://github.com/coleam00/Archon) measured verdict-agreement and structural-hash agreement under stock prose vs LOGIC.md compiled prompts on the same node:
+
+| | Case A (prose) | Case B (LOGIC.md) |
+|---|---|---|
+| Hash agreement (overall) | 70% | **87%** |
+| auth-sql-injection fixture | 5/10 different `(verdict, critical, high)` tuples | **10/10 identical** |
+
+Full repo with methodology, raw traces, and report: [logic-md-archon-eval](https://github.com/SingularityAI-Dev/logic-md-archon-eval).
+
+**Why the two findings don't conflict.** Quality lift measures whether outputs are *better*. Structural consistency measures whether outputs are *the same across runs*. LOGIC.md doesn't appear to make individual outputs better — it makes the distribution across runs tighter, which is what audit, replay, and downstream-pipeline contracts actually need.
+
+**Reproducing.** The cross-model harness is at [`benchmarks/`](benchmarks/) and runs against any Anthropic, OpenAI, or Nvidia NIM endpoint. The Archon eval harness is in the [eval repo](https://github.com/SingularityAI-Dev/logic-md-archon-eval). All raw outputs are published. If you have credits and want to co-run at higher n or on additional models, [open an issue](https://github.com/SingularityAI-Dev/logic-md/issues).
 
 ---
 
@@ -421,10 +461,11 @@ If you have API credits and want to co-run the benchmark, [open an issue](https:
 - 325 tests · 95.9% branch coverage on compiler · 18 conformance fixtures · canonical JSON Schema
 
 **Near term**
-- Cross-model benchmark suite on frontier models (Claude Sonnet, GPT-4o)
+- Cross-model benchmark expansion: re-run at n=30 on a paid tier (eliminate Nvidia connection-drop noise), add Haiku 4.5 within-vendor comparison, add DeepSeek V3 / Qwen 2.5 as current open-model data points
+- Benchmark scoring system audit: investigate the rigid penalty thresholds surfaced in 2026-05-07 results
 - VSCode marketplace publish
 - Python SDK feature parity: compiler + dry-run executor matching TypeScript
-- LangGraph adapter Phase 2: branch support, quality-gate enforcement, parallel execution: timeline TBD, pending frontier-model benchmark results
+- LangGraph adapter Phase 2: branch support, quality-gate enforcement, parallel execution
 - Documentation site at logic-md.org
 
 **Medium term**

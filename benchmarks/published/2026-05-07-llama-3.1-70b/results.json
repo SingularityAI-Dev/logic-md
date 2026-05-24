@@ -1,0 +1,1534 @@
+{
+  "results": [
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 1,
+      "timestamp": "2026-05-07T07:23:30.798Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 65197,
+      "tokens": {
+        "input": 803,
+        "output": 439
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1991
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 2,
+      "timestamp": "2026-05-07T07:24:47.591Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 76785,
+      "tokens": {
+        "input": 803,
+        "output": 367
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1619
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 3,
+      "timestamp": "2026-05-07T07:28:41.132Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 6,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 98,
+      "executionTime": 233539,
+      "tokens": {
+        "input": 803,
+        "output": 418
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1881
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 4,
+      "timestamp": "2026-05-07T07:29:40.918Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 18,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 94,
+      "executionTime": 59775,
+      "tokens": {
+        "input": 803,
+        "output": 393
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1757
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 5,
+      "timestamp": "2026-05-07T07:29:58.158Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 9,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 97,
+      "executionTime": 17232,
+      "tokens": {
+        "input": 803,
+        "output": 401
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1693
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 6,
+      "timestamp": "2026-05-07T07:30:25.643Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 17,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 94,
+      "executionTime": 27478,
+      "tokens": {
+        "input": 803,
+        "output": 425
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1861
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 7,
+      "timestamp": "2026-05-07T07:31:22.558Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 56908,
+      "tokens": {
+        "input": 803,
+        "output": 342
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1421
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 8,
+      "timestamp": "2026-05-07T07:32:00.496Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 37936,
+      "tokens": {
+        "input": 803,
+        "output": 434
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1854
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 9,
+      "timestamp": "2026-05-07T07:32:26.046Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 25544,
+      "tokens": {
+        "input": 803,
+        "output": 358
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1543
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 10,
+      "timestamp": "2026-05-07T07:32:54.833Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 28785,
+      "tokens": {
+        "input": 803,
+        "output": 364
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1590
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 1,
+      "timestamp": "2026-05-07T07:34:46.237Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 111399,
+      "tokens": {
+        "input": 1508,
+        "output": 390
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1608
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 2,
+      "timestamp": "2026-05-07T07:36:44.204Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 8,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 98,
+      "executionTime": 117964,
+      "tokens": {
+        "input": 1508,
+        "output": 483
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 2076
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 3,
+      "timestamp": "2026-05-07T07:38:32.983Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 108777,
+      "tokens": {
+        "input": 1508,
+        "output": 397
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1663
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 4,
+      "timestamp": "2026-05-07T07:40:56.814Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 143829,
+      "tokens": {
+        "input": 1508,
+        "output": 397
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1638
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 5,
+      "timestamp": "2026-05-07T07:41:35.173Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 38355,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 6,
+      "timestamp": "2026-05-07T07:53:00.168Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 18,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 95,
+      "executionTime": 684992,
+      "tokens": {
+        "input": 1508,
+        "output": 430
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1816
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 7,
+      "timestamp": "2026-05-07T07:56:00.560Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 10,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 97,
+      "executionTime": 180391,
+      "tokens": {
+        "input": 1508,
+        "output": 402
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1749
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 8,
+      "timestamp": "2026-05-07T07:56:37.353Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 36791,
+      "tokens": {
+        "input": 1508,
+        "output": 434
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1939
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 9,
+      "timestamp": "2026-05-07T07:57:19.384Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 42028,
+      "tokens": {
+        "input": 1508,
+        "output": 354
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1461
+    },
+    {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 10,
+      "timestamp": "2026-05-07T07:57:48.719Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 29333,
+      "tokens": {
+        "input": 1508,
+        "output": 416
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 1812
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 1,
+      "timestamp": "2026-05-07T08:01:29.302Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 4,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 88,
+      "executionTime": 220549,
+      "tokens": {
+        "input": 777,
+        "output": 1061
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/3/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 4540
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 2,
+      "timestamp": "2026-05-07T08:06:47.444Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 8,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 97,
+      "executionTime": 318141,
+      "tokens": {
+        "input": 777,
+        "output": 1147
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 4850
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 3,
+      "timestamp": "2026-05-07T08:10:53.434Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 245985,
+      "tokens": {
+        "input": 777,
+        "output": 1459
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 5988
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 4,
+      "timestamp": "2026-05-07T08:12:14.691Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 81252,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 5,
+      "timestamp": "2026-05-07T08:13:51.648Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 96954,
+      "tokens": {
+        "input": 777,
+        "output": 1430
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 6206
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 6,
+      "timestamp": "2026-05-07T08:17:46.103Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 234443,
+      "tokens": {
+        "input": 777,
+        "output": 1442
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/8/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 5896
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 7,
+      "timestamp": "2026-05-07T08:19:07.347Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 81243,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 8,
+      "timestamp": "2026-05-07T08:23:09.927Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 4,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 88,
+      "executionTime": 242575,
+      "tokens": {
+        "input": 777,
+        "output": 847
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/3/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 3690
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 9,
+      "timestamp": "2026-05-07T08:26:45.109Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 100,
+      "executionTime": 215179,
+      "tokens": {
+        "input": 777,
+        "output": 1395
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 5804
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 10,
+      "timestamp": "2026-05-07T08:33:07.287Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 382176,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 1,
+      "timestamp": "2026-05-07T08:34:25.877Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 78583,
+      "tokens": {
+        "input": 1552,
+        "output": 935
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 3966
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 2,
+      "timestamp": "2026-05-07T08:37:19.329Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 173445,
+      "tokens": {
+        "input": 1552,
+        "output": 1248
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 5434
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 3,
+      "timestamp": "2026-05-07T08:39:25.421Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 4,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 89,
+      "executionTime": 126086,
+      "tokens": {
+        "input": 1552,
+        "output": 1013
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/0/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 4405
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 4,
+      "timestamp": "2026-05-07T08:42:35.511Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 190082,
+      "tokens": {
+        "input": 1552,
+        "output": 943
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/0/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 4092
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 5,
+      "timestamp": "2026-05-07T08:47:21.335Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 8,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 88,
+      "executionTime": 285814,
+      "tokens": {
+        "input": 1552,
+        "output": 929
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/2/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 3986
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 6,
+      "timestamp": "2026-05-07T08:49:22.241Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 120901,
+      "tokens": {
+        "input": 1552,
+        "output": 885
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 3796
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 7,
+      "timestamp": "2026-05-07T08:52:12.362Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 170114,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 8,
+      "timestamp": "2026-05-07T08:54:25.820Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 133455,
+      "tokens": {
+        "input": 1552,
+        "output": 1032
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/0/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 4317
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 9,
+      "timestamp": "2026-05-07T08:57:53.407Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 207585,
+      "tokens": {
+        "input": 1552,
+        "output": 1019
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/sources/0/type: must be equal to one of the allowed values"
+      ],
+      "outputLength": 4297
+    },
+    {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 10,
+      "timestamp": "2026-05-07T09:01:47.020Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 3,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 99,
+      "executionTime": 233610,
+      "tokens": {
+        "input": 1552,
+        "output": 1226
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 5245
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 1,
+      "timestamp": "2026-05-07T09:06:21.964Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 274911,
+      "tokens": {
+        "input": 1124,
+        "output": 1268
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5123
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 2,
+      "timestamp": "2026-05-07T09:09:12.149Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 170173,
+      "tokens": {
+        "input": 1124,
+        "output": 1151
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4560
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 3,
+      "timestamp": "2026-05-07T09:11:38.172Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 146015,
+      "tokens": {
+        "input": 1124,
+        "output": 1069
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4271
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 4,
+      "timestamp": "2026-05-07T09:14:12.250Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 154065,
+      "tokens": {
+        "input": 1124,
+        "output": 1171
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4836
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 5,
+      "timestamp": "2026-05-07T09:15:58.275Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 106011,
+      "tokens": {
+        "input": 1124,
+        "output": 1088
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4249
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 6,
+      "timestamp": "2026-05-07T09:18:41.235Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 162936,
+      "tokens": {
+        "input": 1124,
+        "output": 1172
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4666
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 7,
+      "timestamp": "2026-05-07T09:20:04.655Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 83414,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 8,
+      "timestamp": "2026-05-07T09:21:50.463Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 105777,
+      "tokens": {
+        "input": 1124,
+        "output": 1337
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5374
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 9,
+      "timestamp": "2026-05-07T09:28:16.308Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 100,
+        "pipelineCompletion": 0,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 0,
+      "executionTime": 385839,
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "stopReason": "error",
+      "errors": [
+        "Connection error."
+      ],
+      "outputLength": 0
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "run": 10,
+      "timestamp": "2026-05-07T09:32:06.439Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": null
+      },
+      "aggregateScore": 89,
+      "executionTime": 230125,
+      "tokens": {
+        "input": 1124,
+        "output": 1263
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4936
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 1,
+      "timestamp": "2026-05-07T09:34:59.410Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 172964,
+      "tokens": {
+        "input": 2220,
+        "output": 1285
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5181
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 2,
+      "timestamp": "2026-05-07T09:38:03.706Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 184277,
+      "tokens": {
+        "input": 2220,
+        "output": 1386
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/remediation_plan/5/priority: must be <= 5"
+      ],
+      "outputLength": 5755
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 3,
+      "timestamp": "2026-05-07T09:39:58.110Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 114400,
+      "tokens": {
+        "input": 2220,
+        "output": 1397
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5476
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 4,
+      "timestamp": "2026-05-07T09:41:58.893Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 120774,
+      "tokens": {
+        "input": 2220,
+        "output": 1096
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4289
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 5,
+      "timestamp": "2026-05-07T09:44:08.774Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 129878,
+      "tokens": {
+        "input": 2220,
+        "output": 1436
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5878
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 6,
+      "timestamp": "2026-05-07T09:45:41.243Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 92464,
+      "tokens": {
+        "input": 2220,
+        "output": 1079
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 4240
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 7,
+      "timestamp": "2026-05-07T09:50:54.192Z",
+      "metrics": {
+        "structuredCompliance": 75,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 90,
+      "executionTime": 312945,
+      "tokens": {
+        "input": 2220,
+        "output": 1267
+      },
+      "stopReason": "stop",
+      "errors": [
+        "/vulnerabilities/0/id: must match pattern \"^[A-Z0-9]+$\""
+      ],
+      "outputLength": 5136
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 8,
+      "timestamp": "2026-05-07T09:53:38.447Z",
+      "metrics": {
+        "structuredCompliance": 100,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 100
+      },
+      "aggregateScore": 100,
+      "executionTime": 164246,
+      "tokens": {
+        "input": 2220,
+        "output": 1097
+      },
+      "stopReason": "stop",
+      "errors": [],
+      "outputLength": 4340
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 9,
+      "timestamp": "2026-05-07T09:55:26.829Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 0
+      },
+      "aggregateScore": 50,
+      "executionTime": 108373,
+      "tokens": {
+        "input": 2220,
+        "output": 1118
+      },
+      "stopReason": "stop",
+      "errors": [
+        "root: must have required property 'vulnerabilities'"
+      ],
+      "outputLength": 4806
+    },
+    {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "run": 10,
+      "timestamp": "2026-05-07T09:58:06.640Z",
+      "metrics": {
+        "structuredCompliance": 0,
+        "describingVsDoing": 0,
+        "pipelineCompletion": 100,
+        "qualityGateCompliance": 0
+      },
+      "aggregateScore": 50,
+      "executionTime": 159801,
+      "tokens": {
+        "input": 2220,
+        "output": 1099
+      },
+      "stopReason": "stop",
+      "errors": [
+        "root: must have required property 'vulnerabilities'"
+      ],
+      "outputLength": 4798
+    }
+  ],
+  "stats": {
+    "code-review:meta/llama-3.1-70b-instruct:control": {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 98,
+        "stddev": 2,
+        "min": 94,
+        "max": 100
+      },
+      "structuredCompliance": {
+        "mean": 100,
+        "stddev": 0
+      },
+      "describingVsDoing": {
+        "mean": 5,
+        "stddev": 7
+      },
+      "pipelineCompletion": {
+        "mean": 100,
+        "stddev": 0
+      }
+    },
+    "code-review:meta/llama-3.1-70b-instruct:treatment": {
+      "task": "code-review",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 89,
+        "stddev": 30,
+        "min": 0,
+        "max": 100
+      },
+      "structuredCompliance": {
+        "mean": 90,
+        "stddev": 30
+      },
+      "describingVsDoing": {
+        "mean": 14,
+        "stddev": 29
+      },
+      "pipelineCompletion": {
+        "mean": 90,
+        "stddev": 30
+      }
+    },
+    "research-synthesis:meta/llama-3.1-70b-instruct:control": {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 66,
+        "stddev": 44,
+        "min": 0,
+        "max": 100
+      },
+      "structuredCompliance": {
+        "mean": 63,
+        "stddev": 42
+      },
+      "describingVsDoing": {
+        "mean": 32,
+        "stddev": 45
+      },
+      "pipelineCompletion": {
+        "mean": 70,
+        "stddev": 46
+      }
+    },
+    "research-synthesis:meta/llama-3.1-70b-instruct:treatment": {
+      "task": "research-synthesis",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 85,
+        "stddev": 29,
+        "min": 0,
+        "max": 100
+      },
+      "structuredCompliance": {
+        "mean": 78,
+        "stddev": 28
+      },
+      "describingVsDoing": {
+        "mean": 12,
+        "stddev": 30
+      },
+      "pipelineCompletion": {
+        "mean": 90,
+        "stddev": 30
+      }
+    },
+    "security-audit:meta/llama-3.1-70b-instruct:control": {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "control",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 71,
+        "stddev": 36,
+        "min": 0,
+        "max": 89
+      },
+      "structuredCompliance": {
+        "mean": 60,
+        "stddev": 30
+      },
+      "describingVsDoing": {
+        "mean": 20,
+        "stddev": 40
+      },
+      "pipelineCompletion": {
+        "mean": 80,
+        "stddev": 40
+      }
+    },
+    "security-audit:meta/llama-3.1-70b-instruct:treatment": {
+      "task": "security-audit",
+      "model": "meta/llama-3.1-70b-instruct",
+      "condition": "treatment",
+      "runs": 10,
+      "aggregateScore": {
+        "mean": 83,
+        "stddev": 17,
+        "min": 50,
+        "max": 100
+      },
+      "structuredCompliance": {
+        "mean": 63,
+        "stddev": 32
+      },
+      "describingVsDoing": {
+        "mean": 0,
+        "stddev": 0
+      },
+      "pipelineCompletion": {
+        "mean": 100,
+        "stddev": 0
+      }
+    }
+  }
+}

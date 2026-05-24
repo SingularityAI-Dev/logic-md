@@ -3,10 +3,8 @@ node_modules/
 package-lock.json
 yarn.lock
 
-# Results
+# Ephemeral run output (committed runs live in published/)
 results/
-results.json
-results.md
 
 # Logs
 *.log

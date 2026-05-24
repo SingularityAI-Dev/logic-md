@@ -2,6 +2,16 @@
 
 All notable changes to the LOGIC.md VSCode extension will be documented in this file.
 
+## [0.1.4] - 2026-05-15
+
+### Fixed
+- Align `@types/node` with the VSCode extension host runtime (#44).
+
+### Changed
+- chore(deps-dev): bump `@types/vscode` (#40).
+- chore(deps-dev): bump TypeScript 5.9.3 → 6.0.3 (#33).
+- chore(deps-dev): bump esbuild 0.25.12 → 0.28.0 (#34) and rebaseline to `^0.25.0` (#32); dependabot ignores `@types/node` majors going forward (#32).
+
 ## [0.1.0] - 2026-04-10
 
 ### Added

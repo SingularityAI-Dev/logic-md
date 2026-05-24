@@ -1,6 +1,6 @@
 {
 	"name": "@logic-md/mcp",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"description": "MCP server exposing LOGIC.md tools for parsing, validating, linting, and compiling reasoning specifications",
 	"type": "module",
 	"bin": {

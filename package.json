@@ -1,6 +1,6 @@
 {
 	"name": "logic-md",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"private": true,
 	"type": "module",
 	"workspaces": [
@@ -8,6 +8,7 @@
 	],
 	"scripts": {
 		"test": "vitest run",
+		"bench": "vitest run --config packages/core/vitest.perf.config.ts",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --build tsconfig.build.json",
