@@ -1,6 +1,6 @@
 {
 	"name": "@logic-md/core",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"description": "Parser, validator, expression engine, DAG resolver, and reasoning compiler for the LOGIC.md specification",
 	"type": "module",
 	"main": "./dist/index.js",
