@@ -617,8 +617,51 @@ export type ValidationResult = ValidationSuccess | ValidationFailure;
 // Compiler Types (v1.1)
 // -----------------------------------------------------------------------------
 
+/**
+ * A step's verification compiled into the execution plan (Section 4.1).
+ *
+ * Mirrors the authored `step.verification`: the check expression, the recovery
+ * action to take when it fails, and an optional human-readable message. Carried
+ * on `CompiledStep.verification` so a runtime can act on a failed check without
+ * reaching back into the un-compiled spec.
+ */
+export interface CompiledVerification {
+	/** Expression evaluated after the step completes */
+	check: Expression;
+	/** Recovery action authored on the step, surfaced when the check fails */
+	onFail: OnFailAction;
+	/** Human-readable reason surfaced when the check fails */
+	message?: string;
+}
+
+/** Result of running a compiled quality gate (v1.1 Compiler) */
+export interface QualityGateResult {
+	/** Whether the check passed */
+	passed: boolean;
+	/** Human-readable reason surfaced when the check fails */
+	message?: string;
+}
+
 /** Runtime quality gate validator function (v1.1 Compiler) */
-export type QualityGateValidator = (output: unknown) => { passed: boolean; message?: string };
+export type QualityGateValidator = (output: unknown) => QualityGateResult;
+
+/**
+ * A step's parallel execution structure compiled into the execution plan (Section 4.3).
+ *
+ * Mirrors the authored execution fields so a runtime can reconstruct the fan-out
+ * and fan-in from the compiled artifact without reaching back into the un-compiled
+ * spec. Carried on `CompiledStep.executionPlan`, sibling to `CompiledStep.verification`.
+ */
+export interface ExecutionPlan {
+	/** Execution mode; defaults to "sequential" when the step omits it */
+	mode: ExecutionMode;
+	/** Fan-out: the set of steps to run in parallel; empty when none are authored */
+	parallelSteps: string[];
+	/** Fan-in: how parallel results are joined */
+	join?: JoinMode;
+	/** Duration string to wait on the join before timing out (for example "60s") */
+	joinTimeout?: string;
+}
 
 /** Retry policy derived from Temporal patterns (v1.1 Compiler) */
 export interface RetryPolicy {
@@ -651,6 +694,8 @@ export interface CompiledStep {
 	systemPromptSegment: string;
 	outputSchema: object | null;
 	qualityGates: QualityGateValidator[];
+	verification: CompiledVerification | null;
+	executionPlan: ExecutionPlan | null;
 	selfReflection: { prompt: string; minimumScore: number } | null;
 	retryPolicy: RetryPolicy | null;
 	metadata: {
