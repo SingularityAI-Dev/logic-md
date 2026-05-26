@@ -1,10 +1,14 @@
 import { strict as assert } from "node:assert";
 import { symlinkSync, unlinkSync } from "node:fs";
+import { createServer as createHttpServer, request as httpRequest } from "node:http";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createServer } from "../dist/server.js";
+// Imported from source: exercises the real request listener with an injected
+// transport. Node strips the TypeScript types on import (>=22.18 default).
+import { createRequestListener } from "../src/transport/http.ts";
 
 // Ensure templates directory is resolved relative to this test file so
 // list_templates works regardless of the cwd when tests are invoked.
@@ -368,5 +372,80 @@ describe("MCP server integration", () => {
 				} catch {}
 			}
 		});
+	});
+});
+
+// -----------------------------------------------------------------------------
+// Issue #66: HTTP transport must respond on handler error, not hang
+// -----------------------------------------------------------------------------
+
+/**
+ * POST a payload and resolve with {status, contentType, body}. Rejects if no
+ * response arrives within timeoutMs, which is how a hung connection (the bug)
+ * surfaces as a test failure rather than waiting on a socket-level timeout.
+ */
+function postWithTimeout(port, payload, timeoutMs) {
+	return new Promise((resolve, reject) => {
+		const req = httpRequest(
+			{
+				host: "127.0.0.1",
+				port,
+				method: "POST",
+				path: "/",
+				headers: {
+					"Content-Type": "application/json",
+					"Content-Length": Buffer.byteLength(payload),
+				},
+			},
+			(res) => {
+				let data = "";
+				res.on("data", (chunk) => {
+					data += chunk;
+				});
+				res.on("end", () => {
+					resolve({
+						status: res.statusCode,
+						contentType: res.headers["content-type"],
+						body: data,
+					});
+				});
+			},
+		);
+		req.setTimeout(timeoutMs, () => {
+			req.destroy(new Error(`request timed out after ${timeoutMs}ms (hung connection)`));
+		});
+		req.on("error", reject);
+		req.write(payload);
+		req.end();
+	});
+}
+
+describe("HTTP transport error response (issue #66)", () => {
+	it("responds 500 with a structured JSON body when handleRequest rejects", async () => {
+		// Stub transport whose handleRequest rejects, simulating the failure
+		// path. Before the fix the listener only logs to stderr and never ends
+		// the response, so the client hangs until its socket timeout.
+		const rejectingTransport = {
+			async handleRequest() {
+				throw new Error("simulated handler failure");
+			},
+		};
+		const httpServer = createHttpServer(createRequestListener(rejectingTransport));
+		await new Promise((resolve) => httpServer.listen(0, "127.0.0.1", resolve));
+		const { port } = httpServer.address();
+
+		try {
+			const res = await postWithTimeout(port, '{"jsonrpc":"2.0","method":"x","id":1}', 2000);
+			assert.strictEqual(res.status, 500, `expected status 500, got ${res.status}`);
+			assert.ok(
+				res.contentType?.includes("application/json"),
+				`expected application/json content-type, got: ${res.contentType}`,
+			);
+			const parsed = JSON.parse(res.body);
+			assert.ok(parsed.error, `expected an error field in body, got: ${res.body}`);
+			assert.ok("detail" in parsed, `expected a detail field in body, got: ${res.body}`);
+		} finally {
+			await new Promise((resolve) => httpServer.close(resolve));
+		}
 	});
 });
