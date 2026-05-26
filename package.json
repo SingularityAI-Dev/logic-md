@@ -23,7 +23,7 @@
 		"vitest": "~4.1.0"
 	},
 	"optionalDependencies": {
-		"@biomejs/cli-darwin-arm64": "^2.4.12"
+		"@biomejs/cli-darwin-arm64": "^2.4.15"
 	},
 	"engines": {
 		"node": ">=22.0.0"
