@@ -617,13 +617,24 @@ export type ValidationResult = ValidationSuccess | ValidationFailure;
 // Compiler Types (v1.1)
 // -----------------------------------------------------------------------------
 
-/** Runtime quality gate validator function (v1.1 Compiler) */
-export type QualityGateValidator = (output: unknown) => {
+/**
+ * Result of a compiled quality gate or step verification check (v1.1 Compiler).
+ *
+ * Carries the pass/fail outcome and, for step verifications, the authored
+ * recovery action so a runtime can act on a failed check without reaching
+ * back into the un-compiled spec (Section 4.1).
+ */
+export interface CompiledVerification {
+	/** Whether the check passed */
 	passed: boolean;
+	/** Human-readable reason surfaced when the check fails */
 	message?: string;
 	/** Recovery action authored on a step's verification, surfaced on failure (Section 4.1) */
 	onFail?: OnFailAction;
-};
+}
+
+/** Runtime quality gate validator function (v1.1 Compiler) */
+export type QualityGateValidator = (output: unknown) => CompiledVerification;
 
 /** Retry policy derived from Temporal patterns (v1.1 Compiler) */
 export interface RetryPolicy {
