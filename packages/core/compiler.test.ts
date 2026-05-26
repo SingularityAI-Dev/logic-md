@@ -360,6 +360,54 @@ describe("compiled step output fields", () => {
 });
 
 // =============================================================================
+// Verification on_fail survives compilation (issue #64)
+// =============================================================================
+
+describe("verification on_fail in compiled qualityGates", () => {
+	it("passes on_fail action through to the compiled gate on failure", () => {
+		const spec = makeSpec({
+			validate_artefact: {
+				description: "Validate the produced artefact",
+				verification: {
+					check: "{{ output.valid == true }}",
+					on_fail: "abort",
+					on_fail_message: "Artefact failed structural validation",
+				},
+			},
+		});
+		const result = compileStep(spec, "validate_artefact", makeCtx());
+
+		expect(result.qualityGates).toHaveLength(1);
+		const gate = result.qualityGates[0];
+		if (!gate) throw new Error("expected a compiled verification gate");
+
+		const failed = gate({ valid: false });
+		expect(failed).toEqual({
+			passed: false,
+			message: "Artefact failed structural validation",
+			onFail: "abort",
+		});
+	});
+
+	it("omits onFail from the result when the check passes", () => {
+		const spec = makeSpec({
+			validate_artefact: {
+				description: "Validate the produced artefact",
+				verification: {
+					check: "{{ output.valid == true }}",
+					on_fail: "revise",
+				},
+			},
+		});
+		const result = compileStep(spec, "validate_artefact", makeCtx());
+		const gate = result.qualityGates[0];
+		if (!gate) throw new Error("expected a compiled verification gate");
+
+		expect(gate({ valid: true })).toEqual({ passed: true });
+	});
+});
+
+// =============================================================================
 // Output Format in systemPromptSegment
 // =============================================================================
 
@@ -851,6 +899,7 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ valid: false })).toEqual({
 			passed: false,
 			message: "Output not valid",
+			onFail: "retry",
 		});
 	});
 
@@ -908,6 +957,7 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ valid: false })).toEqual({
 			passed: false,
 			message: "Not valid",
+			onFail: "retry",
 		});
 		// Spec pre_output second
 		expect(result.qualityGates[1]!({ formatted: true })).toEqual({ passed: true });
@@ -957,6 +1007,7 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ items: [] })).toEqual({
 			passed: false,
 			message: "Items must not be empty",
+			onFail: "retry",
 		});
 	});
 });

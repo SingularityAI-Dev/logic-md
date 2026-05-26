@@ -618,7 +618,12 @@ export type ValidationResult = ValidationSuccess | ValidationFailure;
 // -----------------------------------------------------------------------------
 
 /** Runtime quality gate validator function (v1.1 Compiler) */
-export type QualityGateValidator = (output: unknown) => { passed: boolean; message?: string };
+export type QualityGateValidator = (output: unknown) => {
+	passed: boolean;
+	message?: string;
+	/** Recovery action authored on a step's verification, surfaced on failure (Section 4.1) */
+	onFail?: OnFailAction;
+};
 
 /** Retry policy derived from Temporal patterns (v1.1 Compiler) */
 export interface RetryPolicy {

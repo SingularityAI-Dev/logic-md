@@ -13,6 +13,7 @@ import type {
 	ExecutionContext,
 	JsonSchemaObject,
 	LogicSpec,
+	OnFailAction,
 	QualityGateValidator,
 	Reasoning,
 	RetryConfig,
@@ -252,14 +253,22 @@ function compileSelfReflection(
  * Compile a gate check expression into a QualityGateValidator function.
  * Uses the expression engine's evaluate() to evaluate the check expression
  * with the step output injected as `{ output }` in the expression context.
+ *
+ * `onFail` carries a step verification's recovery action through to the
+ * compiled output so a runtime can act on a failed check without reaching
+ * back into the un-compiled spec.
  */
-function compileGateValidator(checkExpression: string, message?: string): QualityGateValidator {
+function compileGateValidator(
+	checkExpression: string,
+	message?: string,
+	onFail?: OnFailAction,
+): QualityGateValidator {
 	return (output: unknown) => {
 		const result = evaluate(checkExpression, { output });
 		if (result) {
 			return { passed: true };
 		}
-		return { passed: false, ...(message ? { message } : {}) };
+		return { passed: false, ...(message ? { message } : {}), ...(onFail ? { onFail } : {}) };
 	};
 }
 
@@ -348,7 +357,11 @@ export function compileStep(
 			const gates: QualityGateValidator[] = [];
 			if (step.verification) {
 				gates.push(
-					compileGateValidator(step.verification.check, step.verification.on_fail_message),
+					compileGateValidator(
+						step.verification.check,
+						step.verification.on_fail_message,
+						step.verification.on_fail,
+					),
 				);
 			}
 			if (spec.quality_gates?.pre_output) {
