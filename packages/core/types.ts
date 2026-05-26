@@ -645,6 +645,24 @@ export interface QualityGateResult {
 /** Runtime quality gate validator function (v1.1 Compiler) */
 export type QualityGateValidator = (output: unknown) => QualityGateResult;
 
+/**
+ * A step's parallel execution structure compiled into the execution plan (Section 4.3).
+ *
+ * Mirrors the authored execution fields so a runtime can reconstruct the fan-out
+ * and fan-in from the compiled artifact without reaching back into the un-compiled
+ * spec. Carried on `CompiledStep.executionPlan`, sibling to `CompiledStep.verification`.
+ */
+export interface ExecutionPlan {
+	/** Execution mode; defaults to "sequential" when the step omits it */
+	mode: ExecutionMode;
+	/** Fan-out: the set of steps to run in parallel; empty when none are authored */
+	parallelSteps: string[];
+	/** Fan-in: how parallel results are joined */
+	join?: JoinMode;
+	/** Duration string to wait on the join before timing out (for example "60s") */
+	joinTimeout?: string;
+}
+
 /** Retry policy derived from Temporal patterns (v1.1 Compiler) */
 export interface RetryPolicy {
 	maxAttempts: number;
@@ -677,6 +695,7 @@ export interface CompiledStep {
 	outputSchema: object | null;
 	qualityGates: QualityGateValidator[];
 	verification: CompiledVerification | null;
+	executionPlan: ExecutionPlan | null;
 	selfReflection: { prompt: string; minimumScore: number } | null;
 	retryPolicy: RetryPolicy | null;
 	metadata: {

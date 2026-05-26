@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { CompilerError, compileStep, compileWorkflow, estimateTokens } from "./compiler.js";
-import type { ExecutionContext, LogicSpec, OnFailAction, Step, WorkflowContext } from "./types.js";
+import type {
+	ExecutionContext,
+	ExecutionMode,
+	JoinMode,
+	LogicSpec,
+	OnFailAction,
+	Step,
+	WorkflowContext,
+} from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -411,6 +419,117 @@ describe("CompiledStep.verification carries on_fail through compilation", () => 
 		const result = compileStep(spec, "plain_step", makeCtx());
 
 		expect(result.verification).toBeNull();
+	});
+});
+
+// =============================================================================
+// CompiledStep.executionPlan carries parallel execution through compilation (issue #65)
+// =============================================================================
+
+describe("CompiledStep.executionPlan carries parallel execution through compilation", () => {
+	const modes: ExecutionMode[] = ["sequential", "parallel", "conditional"];
+	const joins: JoinMode[] = ["all", "any", "majority"];
+
+	it.each(modes)("preserves execution mode: %s", (mode) => {
+		const spec = makeSpec({
+			fan_out: {
+				description: "A step that declares an execution mode",
+				execution: mode,
+			},
+		});
+		const result = compileStep(spec, "fan_out", makeCtx());
+
+		expect(result.executionPlan).toEqual({ mode, parallelSteps: [] });
+	});
+
+	it.each(joins)("preserves join strategy: %s", (join) => {
+		const spec = makeSpec({
+			fan_out: {
+				description: "A parallel step with a join strategy",
+				execution: "parallel",
+				parallel_steps: ["a", "b"],
+				join,
+			},
+		});
+		const result = compileStep(spec, "fan_out", makeCtx());
+
+		expect(result.executionPlan).toEqual({
+			mode: "parallel",
+			parallelSteps: ["a", "b"],
+			join,
+		});
+	});
+
+	it.each([
+		["two", ["search_web", "search_internal"]],
+		["three", ["search_web", "search_internal", "search_academic"]],
+	] as const)("preserves the parallel_steps fan-out set intact (%s steps)", (_label, steps) => {
+		const spec = makeSpec({
+			gather: {
+				description: "Fan out a set of searches",
+				execution: "parallel",
+				parallel_steps: [...steps],
+				join: "all",
+			},
+		});
+		const result = compileStep(spec, "gather", makeCtx());
+
+		expect(result.executionPlan?.parallelSteps).toEqual(steps);
+	});
+
+	it("carries join_timeout verbatim as a duration string when present", () => {
+		const spec = makeSpec({
+			gather: {
+				description: "Parallel gather with a join timeout",
+				execution: "parallel",
+				parallel_steps: ["a", "b", "c"],
+				join: "all",
+				join_timeout: "60s",
+			},
+		});
+		const result = compileStep(spec, "gather", makeCtx());
+
+		expect(result.executionPlan).toEqual({
+			mode: "parallel",
+			parallelSteps: ["a", "b", "c"],
+			join: "all",
+			joinTimeout: "60s",
+		});
+	});
+
+	it("omits joinTimeout when join_timeout is absent", () => {
+		const spec = makeSpec({
+			gather: {
+				description: "Parallel gather without a join timeout",
+				execution: "parallel",
+				parallel_steps: ["a", "b"],
+				join: "any",
+			},
+		});
+		const result = compileStep(spec, "gather", makeCtx());
+
+		expect(result.executionPlan).not.toHaveProperty("joinTimeout");
+	});
+
+	it("defaults mode to sequential when only parallel_steps is authored", () => {
+		const spec = makeSpec({
+			gather: {
+				description: "Declares parallel_steps without an explicit execution mode",
+				parallel_steps: ["a", "b"],
+			},
+		});
+		const result = compileStep(spec, "gather", makeCtx());
+
+		expect(result.executionPlan).toEqual({ mode: "sequential", parallelSteps: ["a", "b"] });
+	});
+
+	it("compiles to executionPlan: null when the step declares no execution structure", () => {
+		const spec = makeSpec({
+			plain_step: { description: "Step with no execution, parallel_steps, join, or join_timeout" },
+		});
+		const result = compileStep(spec, "plain_step", makeCtx());
+
+		expect(result.executionPlan).toBeNull();
 	});
 });
 
