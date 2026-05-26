@@ -2,6 +2,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { YAMLParseError } from "yaml";
 import { toCanonical } from "../src/commands/fmt.js";
 
 describe("fmt command", () => {
@@ -94,6 +95,38 @@ steps:
 		const content = "# Just markdown\n\nNo YAML frontmatter here.";
 		const canonical = toCanonical(content);
 		expect(canonical).toBeNull();
+	});
+
+	// Companion tests pinning the distinct failure modes of toCanonical (issue #69).
+	// The no-frontmatter test above asserts null; these pin what each malformed
+	// shape actually does today so a future refactor that collapses a throw into a
+	// silent null breaks a test instead of passing. toCanonical does not wrap
+	// parseYaml in a try/catch, so a malformed body surfaces the parser's throw.
+
+	it("throws (not returns null) on malformed YAML frontmatter with bad indentation", () => {
+		const content = "---\nkey: value\n  bad: indent\n---\n# body";
+		// Observed: yaml throws "Nested mappings are not allowed in compact mappings".
+		// The pin is that this is a thrown YAMLParseError, distinct from the null
+		// returned for missing frontmatter.
+		expect(() => toCanonical(content)).toThrow(YAMLParseError);
+	});
+
+	it("throws (not returns null) on frontmatter using tabs for indentation", () => {
+		const content = "---\nkey:\n\tbad: tab\n---\n# body";
+		// Observed: yaml throws "Tabs are not allowed as indentation". Distinct
+		// from the null path for missing frontmatter; same thrown error class as
+		// the bad-indentation case above, but a different parser cause.
+		expect(() => toCanonical(content)).toThrow(YAMLParseError);
+	});
+
+	it("returns null on unbalanced delimiters, identical to missing frontmatter today", () => {
+		// Opening --- with no closing ---. The frontmatter regex requires a closing
+		// delimiter, so there is no match and toCanonical returns null, observably
+		// identical to the no-frontmatter case above. This collapse is pinned here
+		// deliberately; it is a behaviour worth tightening later (see issue #69
+		// Option B, the discriminated-union return shape).
+		const content = "---\nkey: value\n# missing close";
+		expect(toCanonical(content)).toBeNull();
 	});
 
 	it("should reorder keys to canonical order", () => {
