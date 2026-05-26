@@ -98,9 +98,16 @@ function runCategory(category) {
 		files = readdirSync(dir)
 			.filter((f) => f.endsWith(".logic.md"))
 			.sort();
-	} catch {
-		console.log(`\n⚠ Skipping ${category}/ (directory not found)`);
-		return;
+	} catch (err) {
+		if (err.code === "ENOENT") {
+			console.log(`\n⚠ Skipping ${category}/ (directory not found)`);
+			return;
+		}
+		// Any other error (EACCES, ENOTDIR, EIO, EMFILE, ...) means the runner
+		// could not read a category it was meant to read. Fail loud with a
+		// distinct exit code so partial success is never reported as full success.
+		console.error(`\n✗ Failed to read ${category}/: ${err.message}`);
+		process.exit(2);
 	}
 
 	console.log(`\n${category}/`);
