@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- Core: preserve `verification.on_fail` through compilation (#64, PR #71). The recovery action (`retry`/`escalate`/`skip`/`abort`/`revise`) was silently dropped at the compile boundary. Now carried as a first-class `CompiledVerification` on a singular `CompiledStep.verification`; the gate-validator return shape got its own name `QualityGateResult`. Parametrised across all five `OnFailAction` values plus the null case.
+
 ## [1.5.0] - 2026-05-15
 
 ### Added
