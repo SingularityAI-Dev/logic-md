@@ -640,6 +640,8 @@ export interface QualityGateResult {
 	passed: boolean;
 	/** Human-readable reason surfaced when the check fails */
 	message?: string;
+	/** Recovery action authored on the gate, surfaced when the gate fails */
+	onFail?: OnFailAction;
 }
 
 /** Runtime quality gate validator function (v1.1 Compiler) */

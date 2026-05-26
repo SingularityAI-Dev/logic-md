@@ -15,6 +15,7 @@ import type {
 	ExecutionPlan,
 	JsonSchemaObject,
 	LogicSpec,
+	OnFailAction,
 	QualityGateValidator,
 	Reasoning,
 	RetryConfig,
@@ -255,14 +256,27 @@ function compileSelfReflection(
  * Compile a gate check expression into a QualityGateValidator function.
  * Uses the expression engine's evaluate() to evaluate the check expression
  * with the step output injected as `{ output }` in the expression context.
+ *
+ * When the gate carries an authored on_fail recovery action, it is forwarded
+ * onto the failing result so a runtime can recover what action a failed gate
+ * should trigger without reaching back into the un-compiled spec. Omitted when
+ * the author did not specify one (the source field is optional).
  */
-function compileGateValidator(checkExpression: string, message?: string): QualityGateValidator {
+function compileGateValidator(
+	checkExpression: string,
+	message?: string,
+	onFail?: OnFailAction,
+): QualityGateValidator {
 	return (output: unknown) => {
 		const result = evaluate(checkExpression, { output });
 		if (result) {
 			return { passed: true };
 		}
-		return { passed: false, ...(message ? { message } : {}) };
+		return {
+			passed: false,
+			...(message ? { message } : {}),
+			...(onFail !== undefined ? { onFail } : {}),
+		};
 	};
 }
 
@@ -398,7 +412,7 @@ export function compileStep(
 			}
 			if (spec.quality_gates?.pre_output) {
 				for (const gate of spec.quality_gates.pre_output) {
-					gates.push(compileGateValidator(gate.check, gate.message));
+					gates.push(compileGateValidator(gate.check, gate.message, gate.on_fail));
 				}
 			}
 			return gates;
@@ -463,7 +477,7 @@ export function compileWorkflow(spec: LogicSpec, context: WorkflowContext): Comp
 	const globalGates: QualityGateValidator[] = [];
 	if (spec.quality_gates?.pre_output) {
 		for (const gate of spec.quality_gates.pre_output) {
-			globalGates.push(compileGateValidator(gate.check, gate.message));
+			globalGates.push(compileGateValidator(gate.check, gate.message, gate.on_fail));
 		}
 	}
 
