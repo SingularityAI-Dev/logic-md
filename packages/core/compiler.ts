@@ -12,6 +12,7 @@ import type {
 	CompiledWorkflow,
 	ConfidenceConfig,
 	ExecutionContext,
+	ExecutionPlan,
 	JsonSchemaObject,
 	LogicSpec,
 	QualityGateValidator,
@@ -280,6 +281,33 @@ function compileVerification(verification: Verification): CompiledVerification {
 	};
 }
 
+/**
+ * Compile a step's parallel execution structure into the execution plan.
+ *
+ * Returns null when the step declares no execution structure. When any of
+ * execution, parallel_steps, join, or join_timeout is authored, carries the
+ * fan-out and fan-in so a runtime can reconstruct the parallel plan from the
+ * compiled artifact. The mode defaults to "sequential" (the SPEC default) and
+ * join_timeout is carried verbatim as a duration string, consistent with how
+ * RetryPolicy carries its intervals.
+ */
+function compileExecutionPlan(step: Step): ExecutionPlan | null {
+	const hasExecutionStructure =
+		step.execution !== undefined ||
+		step.parallel_steps !== undefined ||
+		step.join !== undefined ||
+		step.join_timeout !== undefined;
+	if (!hasExecutionStructure) {
+		return null;
+	}
+	return {
+		mode: step.execution ?? "sequential",
+		parallelSteps: step.parallel_steps ?? [],
+		...(step.join !== undefined ? { join: step.join } : {}),
+		...(step.join_timeout !== undefined ? { joinTimeout: step.join_timeout } : {}),
+	};
+}
+
 // =============================================================================
 // Public API
 // =============================================================================
@@ -376,6 +404,7 @@ export function compileStep(
 			return gates;
 		})(),
 		verification: step.verification ? compileVerification(step.verification) : null,
+		executionPlan: compileExecutionPlan(step),
 		selfReflection: spec.quality_gates?.self_verification
 			? compileSelfReflection(spec.quality_gates.self_verification)
 			: null,
