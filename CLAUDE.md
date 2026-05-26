@@ -37,6 +37,6 @@ npm run build        # core -> cli -> mcp (sequential)
 ## File Conventions
 
 - `.planning/ROADMAP.md` is the GSD workflow tracker with phase history. Do not edit manually.
-- Root `ROADMAP.md` is the user-facing forward roadmap.
+- Root `STATUS.md` is the user-facing status snapshot (current state, recent moves, and what is next).
 - Root `CHANGELOG.md` is a rolling last-20-entries log.
 - `docs/SPEC.md` is the LOGIC.md format specification.

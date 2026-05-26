@@ -16,6 +16,7 @@ docs/html/
 docs/outreach/
 docs/oss/
 docs/*.pdf
+docs/contributors/*.pdf
 docs/*.docx
 PROGRESS.md
 LOGIC-MD-STRATEGIC-PLAN.md
