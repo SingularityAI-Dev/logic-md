@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CompilerError, compileStep, compileWorkflow, estimateTokens } from "./compiler.js";
-import type { ExecutionContext, LogicSpec, Step, WorkflowContext } from "./types.js";
+import type { ExecutionContext, LogicSpec, OnFailAction, Step, WorkflowContext } from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -363,33 +363,30 @@ describe("compiled step output fields", () => {
 // Verification on_fail survives compilation (issue #64)
 // =============================================================================
 
-describe("verification on_fail in compiled qualityGates", () => {
-	it("passes on_fail action through to the compiled gate on failure", () => {
+describe("CompiledStep.verification carries on_fail through compilation", () => {
+	const actions: OnFailAction[] = ["retry", "escalate", "skip", "abort", "revise"];
+
+	it.each(actions)("preserves on_fail: %s on the compiled verification", (onFail) => {
 		const spec = makeSpec({
 			validate_artefact: {
 				description: "Validate the produced artefact",
 				verification: {
 					check: "{{ output.valid == true }}",
-					on_fail: "abort",
+					on_fail: onFail,
 					on_fail_message: "Artefact failed structural validation",
 				},
 			},
 		});
 		const result = compileStep(spec, "validate_artefact", makeCtx());
 
-		expect(result.qualityGates).toHaveLength(1);
-		const gate = result.qualityGates[0];
-		if (!gate) throw new Error("expected a compiled verification gate");
-
-		const failed = gate({ valid: false });
-		expect(failed).toEqual({
-			passed: false,
+		expect(result.verification).toEqual({
+			check: "{{ output.valid == true }}",
+			onFail,
 			message: "Artefact failed structural validation",
-			onFail: "abort",
 		});
 	});
 
-	it("omits onFail from the result when the check passes", () => {
+	it("compiles verification with no on_fail_message and omits message", () => {
 		const spec = makeSpec({
 			validate_artefact: {
 				description: "Validate the produced artefact",
@@ -400,10 +397,20 @@ describe("verification on_fail in compiled qualityGates", () => {
 			},
 		});
 		const result = compileStep(spec, "validate_artefact", makeCtx());
-		const gate = result.qualityGates[0];
-		if (!gate) throw new Error("expected a compiled verification gate");
 
-		expect(gate({ valid: true })).toEqual({ passed: true });
+		expect(result.verification).toEqual({
+			check: "{{ output.valid == true }}",
+			onFail: "revise",
+		});
+	});
+
+	it("compiles to verification: null when the step has no verification", () => {
+		const spec = makeSpec({
+			plain_step: { description: "Step without verification" },
+		});
+		const result = compileStep(spec, "plain_step", makeCtx());
+
+		expect(result.verification).toBeNull();
 	});
 });
 
@@ -899,7 +906,6 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ valid: false })).toEqual({
 			passed: false,
 			message: "Output not valid",
-			onFail: "retry",
 		});
 	});
 
@@ -957,7 +963,6 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ valid: false })).toEqual({
 			passed: false,
 			message: "Not valid",
-			onFail: "retry",
 		});
 		// Spec pre_output second
 		expect(result.qualityGates[1]!({ formatted: true })).toEqual({ passed: true });
@@ -1007,7 +1012,6 @@ describe("compileStep: qualityGates", () => {
 		expect(result.qualityGates[0]!({ items: [] })).toEqual({
 			passed: false,
 			message: "Items must not be empty",
-			onFail: "retry",
 		});
 	});
 });

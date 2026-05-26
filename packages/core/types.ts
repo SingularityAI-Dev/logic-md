@@ -618,23 +618,32 @@ export type ValidationResult = ValidationSuccess | ValidationFailure;
 // -----------------------------------------------------------------------------
 
 /**
- * Result of a compiled quality gate or step verification check (v1.1 Compiler).
+ * A step's verification compiled into the execution plan (Section 4.1).
  *
- * Carries the pass/fail outcome and, for step verifications, the authored
- * recovery action so a runtime can act on a failed check without reaching
- * back into the un-compiled spec (Section 4.1).
+ * Mirrors the authored `step.verification`: the check expression, the recovery
+ * action to take when it fails, and an optional human-readable message. Carried
+ * on `CompiledStep.verification` so a runtime can act on a failed check without
+ * reaching back into the un-compiled spec.
  */
 export interface CompiledVerification {
+	/** Expression evaluated after the step completes */
+	check: Expression;
+	/** Recovery action authored on the step, surfaced when the check fails */
+	onFail: OnFailAction;
+	/** Human-readable reason surfaced when the check fails */
+	message?: string;
+}
+
+/** Result of running a compiled quality gate (v1.1 Compiler) */
+export interface QualityGateResult {
 	/** Whether the check passed */
 	passed: boolean;
 	/** Human-readable reason surfaced when the check fails */
 	message?: string;
-	/** Recovery action authored on a step's verification, surfaced on failure (Section 4.1) */
-	onFail?: OnFailAction;
 }
 
 /** Runtime quality gate validator function (v1.1 Compiler) */
-export type QualityGateValidator = (output: unknown) => CompiledVerification;
+export type QualityGateValidator = (output: unknown) => QualityGateResult;
 
 /** Retry policy derived from Temporal patterns (v1.1 Compiler) */
 export interface RetryPolicy {
@@ -667,6 +676,7 @@ export interface CompiledStep {
 	systemPromptSegment: string;
 	outputSchema: object | null;
 	qualityGates: QualityGateValidator[];
+	verification: CompiledVerification | null;
 	selfReflection: { prompt: string; minimumScore: number } | null;
 	retryPolicy: RetryPolicy | null;
 	metadata: {

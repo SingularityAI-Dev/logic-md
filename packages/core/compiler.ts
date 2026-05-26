@@ -8,18 +8,19 @@ import { resolve } from "./dag.js";
 import { evaluate } from "./expression.js";
 import type {
 	CompiledStep,
+	CompiledVerification,
 	CompiledWorkflow,
 	ConfidenceConfig,
 	ExecutionContext,
 	JsonSchemaObject,
 	LogicSpec,
-	OnFailAction,
 	QualityGateValidator,
 	Reasoning,
 	RetryConfig,
 	RetryPolicy,
 	SelfVerification,
 	Step,
+	Verification,
 	WorkflowContext,
 } from "./types.js";
 
@@ -253,22 +254,29 @@ function compileSelfReflection(
  * Compile a gate check expression into a QualityGateValidator function.
  * Uses the expression engine's evaluate() to evaluate the check expression
  * with the step output injected as `{ output }` in the expression context.
- *
- * `onFail` carries a step verification's recovery action through to the
- * compiled output so a runtime can act on a failed check without reaching
- * back into the un-compiled spec.
  */
-function compileGateValidator(
-	checkExpression: string,
-	message?: string,
-	onFail?: OnFailAction,
-): QualityGateValidator {
+function compileGateValidator(checkExpression: string, message?: string): QualityGateValidator {
 	return (output: unknown) => {
 		const result = evaluate(checkExpression, { output });
 		if (result) {
 			return { passed: true };
 		}
-		return { passed: false, ...(message ? { message } : {}), ...(onFail ? { onFail } : {}) };
+		return { passed: false, ...(message ? { message } : {}) };
+	};
+}
+
+/**
+ * Compile a step's verification into the execution plan.
+ *
+ * Carries the check expression, the recovery action, and the optional message
+ * so a runtime can act on a failed check without reaching back into the
+ * un-compiled spec.
+ */
+function compileVerification(verification: Verification): CompiledVerification {
+	return {
+		check: verification.check,
+		onFail: verification.on_fail,
+		...(verification.on_fail_message ? { message: verification.on_fail_message } : {}),
 	};
 }
 
@@ -357,11 +365,7 @@ export function compileStep(
 			const gates: QualityGateValidator[] = [];
 			if (step.verification) {
 				gates.push(
-					compileGateValidator(
-						step.verification.check,
-						step.verification.on_fail_message,
-						step.verification.on_fail,
-					),
+					compileGateValidator(step.verification.check, step.verification.on_fail_message),
 				);
 			}
 			if (spec.quality_gates?.pre_output) {
@@ -371,6 +375,7 @@ export function compileStep(
 			}
 			return gates;
 		})(),
+		verification: step.verification ? compileVerification(step.verification) : null,
 		selfReflection: spec.quality_gates?.self_verification
 			? compileSelfReflection(spec.quality_gates.self_verification)
 			: null,
