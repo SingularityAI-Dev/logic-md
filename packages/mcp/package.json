@@ -15,7 +15,7 @@
 	],
 	"scripts": {
 		"build": "tsup",
-		"postbuild": "chmod +x dist/index.js && cp ../core/schema.json dist/schema.json 2>/dev/null || cp ../core/dist/schema.json dist/schema.json 2>/dev/null || true",
+		"postbuild": "chmod +x dist/index.js && cp ../core/dist/schema.json dist/schema.json",
 		"dev": "tsup --watch",
 		"test": "node --test tests/server.test.mjs",
 		"typecheck": "tsc --noEmit",
