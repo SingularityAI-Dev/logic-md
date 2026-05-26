@@ -511,6 +511,26 @@ describe("CompiledStep.executionPlan carries parallel execution through compilat
 		expect(result.executionPlan).not.toHaveProperty("joinTimeout");
 	});
 
+	it("carries an authored empty-string join_timeout verbatim rather than dropping it", () => {
+		const spec = makeSpec({
+			gather: {
+				description: "Parallel gather with an authored empty join timeout",
+				execution: "parallel",
+				parallel_steps: ["a", "b"],
+				join: "all",
+				join_timeout: "",
+			},
+		});
+		const result = compileStep(spec, "gather", makeCtx());
+
+		expect(result.executionPlan).toEqual({
+			mode: "parallel",
+			parallelSteps: ["a", "b"],
+			join: "all",
+			joinTimeout: "",
+		});
+	});
+
 	it("defaults mode to sequential when only parallel_steps is authored", () => {
 		const spec = makeSpec({
 			gather: {

@@ -303,8 +303,8 @@ function compileExecutionPlan(step: Step): ExecutionPlan | null {
 	return {
 		mode: step.execution ?? "sequential",
 		parallelSteps: step.parallel_steps ?? [],
-		...(step.join ? { join: step.join } : {}),
-		...(step.join_timeout ? { joinTimeout: step.join_timeout } : {}),
+		...(step.join !== undefined ? { join: step.join } : {}),
+		...(step.join_timeout !== undefined ? { joinTimeout: step.join_timeout } : {}),
 	};
 }
 
