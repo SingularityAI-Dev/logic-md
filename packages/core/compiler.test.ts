@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CompilerError, compileStep, compileWorkflow, estimateTokens } from "./compiler.js";
-import type { ExecutionContext, LogicSpec, Step, WorkflowContext } from "./types.js";
+import type { ExecutionContext, LogicSpec, OnFailAction, Step, WorkflowContext } from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -356,6 +356,61 @@ describe("compiled step output fields", () => {
 		const spec = researchSpec();
 		const result = compileStep(spec, "evaluate_credibility", makeCtx());
 		expect(result.retryPolicy).toBeNull();
+	});
+});
+
+// =============================================================================
+// Verification on_fail survives compilation (issue #64)
+// =============================================================================
+
+describe("CompiledStep.verification carries on_fail through compilation", () => {
+	const actions: OnFailAction[] = ["retry", "escalate", "skip", "abort", "revise"];
+
+	it.each(actions)("preserves on_fail: %s on the compiled verification", (onFail) => {
+		const spec = makeSpec({
+			validate_artefact: {
+				description: "Validate the produced artefact",
+				verification: {
+					check: "{{ output.valid == true }}",
+					on_fail: onFail,
+					on_fail_message: "Artefact failed structural validation",
+				},
+			},
+		});
+		const result = compileStep(spec, "validate_artefact", makeCtx());
+
+		expect(result.verification).toEqual({
+			check: "{{ output.valid == true }}",
+			onFail,
+			message: "Artefact failed structural validation",
+		});
+	});
+
+	it("compiles verification with no on_fail_message and omits message", () => {
+		const spec = makeSpec({
+			validate_artefact: {
+				description: "Validate the produced artefact",
+				verification: {
+					check: "{{ output.valid == true }}",
+					on_fail: "revise",
+				},
+			},
+		});
+		const result = compileStep(spec, "validate_artefact", makeCtx());
+
+		expect(result.verification).toEqual({
+			check: "{{ output.valid == true }}",
+			onFail: "revise",
+		});
+	});
+
+	it("compiles to verification: null when the step has no verification", () => {
+		const spec = makeSpec({
+			plain_step: { description: "Step without verification" },
+		});
+		const result = compileStep(spec, "plain_step", makeCtx());
+
+		expect(result.verification).toBeNull();
 	});
 });
 

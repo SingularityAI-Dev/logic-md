@@ -8,6 +8,7 @@ import { resolve } from "./dag.js";
 import { evaluate } from "./expression.js";
 import type {
 	CompiledStep,
+	CompiledVerification,
 	CompiledWorkflow,
 	ConfidenceConfig,
 	ExecutionContext,
@@ -19,6 +20,7 @@ import type {
 	RetryPolicy,
 	SelfVerification,
 	Step,
+	Verification,
 	WorkflowContext,
 } from "./types.js";
 
@@ -263,6 +265,21 @@ function compileGateValidator(checkExpression: string, message?: string): Qualit
 	};
 }
 
+/**
+ * Compile a step's verification into the execution plan.
+ *
+ * Carries the check expression, the recovery action, and the optional message
+ * so a runtime can act on a failed check without reaching back into the
+ * un-compiled spec.
+ */
+function compileVerification(verification: Verification): CompiledVerification {
+	return {
+		check: verification.check,
+		onFail: verification.on_fail,
+		...(verification.on_fail_message ? { message: verification.on_fail_message } : {}),
+	};
+}
+
 // =============================================================================
 // Public API
 // =============================================================================
@@ -358,6 +375,7 @@ export function compileStep(
 			}
 			return gates;
 		})(),
+		verification: step.verification ? compileVerification(step.verification) : null,
 		selfReflection: spec.quality_gates?.self_verification
 			? compileSelfReflection(spec.quality_gates.self_verification)
 			: null,
