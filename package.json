@@ -25,6 +25,10 @@
 	"optionalDependencies": {
 		"@biomejs/cli-darwin-arm64": "^2.4.15"
 	},
+	"overrides": {
+		"fast-uri": "^3.1.2",
+		"qs": "^6.15.2"
+	},
 	"engines": {
 		"node": ">=22.0.0"
 	}
