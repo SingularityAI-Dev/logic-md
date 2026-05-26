@@ -65,6 +65,10 @@
 		"esbuild": "^0.28.0",
 		"typescript": "^6.0.3"
 	},
+	"overrides": {
+		"fast-uri": "^3.1.2",
+		"qs": "^6.15.2"
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
