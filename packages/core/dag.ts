@@ -116,15 +116,22 @@ export function resolve(steps: Record<string, Step>): DagResult {
 		}
 	}
 
+	// The initial queue is seeded from `names` (already sorted) in step above, so
+	// it starts in alphabetical order. Walk it with a FIFO index pointer instead
+	// of re-sorting on every pop. The output (levels and order) is derived from
+	// the depth map and the per-level alphabetical sort below, both independent
+	// of dequeue order, so this yields byte-identical output (issue #46,
+	// Candidate 3). depth is the longest path from a root and is order-invariant:
+	// a node is dequeued only after every predecessor has been processed, so its
+	// depth is final when read.
 	const sorted: string[] = [];
-
-	while (queue.length > 0) {
-		queue.sort();
-		const current = queue.shift()!;
+	let head = 0;
+	while (head < queue.length) {
+		const current = queue[head++]!;
 		sorted.push(current);
 		const d = depth.get(current)!;
 
-		for (const dep of dependents.get(current)!.slice().sort()) {
+		for (const dep of dependents.get(current)!) {
 			const newDeg = inDegree.get(dep)! - 1;
 			inDegree.set(dep, newDeg);
 			depth.set(dep, Math.max(depth.get(dep) ?? 0, d + 1));
@@ -168,11 +175,16 @@ export function resolve(steps: Record<string, Step>): DagResult {
 
 	if (errors.length > 0) return { ok: false, errors };
 
-	// 5. Group by depth level
-	const maxDepth = Math.max(...sorted.map((n) => depth.get(n)!), -1);
+	// 5. Group by depth level. Iterating the pre-sorted `names` drops each node
+	// into its depth bucket in alphabetical order, reproducing the per-level sort
+	// in a single O(V) pass instead of an O(V*D) filter-and-sort per level.
+	const maxDepth = Math.max(...names.map((n) => depth.get(n)!), -1);
 	const levels: string[][] = [];
 	for (let d = 0; d <= maxDepth; d++) {
-		levels.push(sorted.filter((n) => depth.get(n) === d).sort());
+		levels.push([]);
+	}
+	for (const name of names) {
+		levels[depth.get(name)!]!.push(name);
 	}
 
 	return { ok: true, levels, order: levels.flat() };
