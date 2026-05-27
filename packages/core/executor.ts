@@ -7,7 +7,14 @@
 
 import { compileWorkflow, estimateTokens } from "./compiler.js";
 import { resolve } from "./dag.js";
-import type { CompiledWorkflow, LogicSpec, RetryPolicy, Step, WorkflowContext } from "./types.js";
+import type {
+	CompiledWorkflow,
+	ExecutionPlan,
+	LogicSpec,
+	RetryPolicy,
+	Step,
+	WorkflowContext,
+} from "./types.js";
 
 // =============================================================================
 // Public Types
@@ -41,6 +48,8 @@ export interface StepTrace {
 	contractViolations: string[];
 	/** Retry policy for this step, or null if not configured */
 	retryPolicy: RetryPolicy | null;
+	/** Parallel execution plan reflected from the compiled step, or null if none */
+	executionPlan: ExecutionPlan | null;
 	/** Estimated token count for this step */
 	tokenEstimate: number;
 }
@@ -248,6 +257,10 @@ export function dryRun(spec: LogicSpec, options: DryRunOptions = {}): DryRunResu
 			qualityGateResults: [],
 			contractViolations: [],
 			retryPolicy: compiledStep.retryPolicy,
+			// Reflect the parallel plan from the compiled artifact, not the
+			// un-compiled spec, so the trace exposes fan-out and fan-in without
+			// the runtime reaching back into the source (issue #75).
+			executionPlan: compiledStep.executionPlan,
 			tokenEstimate,
 		};
 
