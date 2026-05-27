@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { dryRun } from "./executor.js";
-import type { LogicSpec, OnFailAction, Step } from "./types.js";
+import type { ExecutionMode, JoinMode, LogicSpec, OnFailAction, Step } from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -243,6 +243,68 @@ describe("dryRun", () => {
 			mockOutputs: { step1: { ok: true } },
 		});
 		expect(result.steps[0]?.qualityGateResults).toHaveLength(0);
+	});
+
+	// =============================================================================
+	// Step trace reflects CompiledStep.executionPlan (issue #75)
+	//
+	// The dry-run executor does not build a concurrent scheduler; it reflects the
+	// compiled parallel plan (mode / parallelSteps / join / joinTimeout) onto each
+	// step trace so a consumer can see the fan-out and fan-in without reaching back
+	// into the un-compiled spec. These pin the reflection across every ExecutionMode
+	// and JoinMode plus the absent case.
+	// =============================================================================
+	const executionModes: ExecutionMode[] = ["sequential", "parallel", "conditional"];
+	const joinModes: JoinMode[] = ["all", "any", "majority"];
+
+	it.each(executionModes)("reflects execution mode %s on the step trace", (mode) => {
+		const spec = makeSpec({
+			coordinator: {
+				description: "Coordinator",
+				execution: mode,
+				parallel_steps: ["childA", "childB"],
+				join: "all",
+			},
+			childA: { description: "Child A" },
+			childB: { description: "Child B" },
+		});
+		const result = dryRun(spec);
+		const trace = result.steps.find((s) => s.stepName === "coordinator");
+		expect(trace?.executionPlan).toEqual({
+			mode,
+			parallelSteps: ["childA", "childB"],
+			join: "all",
+		});
+	});
+
+	it.each(joinModes)("reflects join mode %s on the step trace", (join) => {
+		const spec = makeSpec({
+			coordinator: {
+				description: "Coordinator",
+				execution: "parallel",
+				parallel_steps: ["childA", "childB"],
+				join,
+				join_timeout: "60s",
+			},
+			childA: { description: "Child A" },
+			childB: { description: "Child B" },
+		});
+		const result = dryRun(spec);
+		const trace = result.steps.find((s) => s.stepName === "coordinator");
+		expect(trace?.executionPlan).toEqual({
+			mode: "parallel",
+			parallelSteps: ["childA", "childB"],
+			join,
+			joinTimeout: "60s",
+		});
+	});
+
+	it("reflects a null execution plan when the step declares no parallel structure", () => {
+		const spec = makeSpec({
+			step1: { description: "Step" },
+		});
+		const result = dryRun(spec);
+		expect(result.steps[0]?.executionPlan).toBeNull();
 	});
 
 	it("handles missing mock output without validateGates", () => {
