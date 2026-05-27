@@ -13,6 +13,8 @@
  * Edges represent data flow dependencies between steps.
  */
 
+import type { ExecutionPlan } from "@logic-md/core";
+
 /**
  * A single node in the state graph, representing a compiled step.
  */
@@ -58,6 +60,9 @@ export interface StateGraphNode {
 			maximumInterval: string;
 			nonRetryableErrors: string[];
 		};
+
+		/** Parallel execution plan (fan-out/fan-in) reflected from the compiled step */
+		executionPlan?: ExecutionPlan;
 	};
 }
 
