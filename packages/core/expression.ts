@@ -600,9 +600,70 @@ function evaluateNode(node: ASTNode, context: ExpressionContext): unknown {
 // Public API
 // -----------------------------------------------------------------------------
 
-export function evaluate(template: string, context: ExpressionContext): unknown {
+/**
+ * Soft cap on the number of cached ASTs. When exceeded, the least-recently-used
+ * entry is evicted. Templates are reused verbatim rarely enough that a workflow
+ * never approaches this; the cap only bounds memory for pathological callers.
+ */
+const AST_CACHE_CAP = 1000;
+
+/**
+ * Module-level cache of parsed ASTs keyed on the raw template string.
+ *
+ * The expression engine is pure (no eval/Function, and evaluateNode never
+ * mutates the AST), so a parsed AST is valid forever and safe to share across
+ * calls and contexts. Map insertion order gives us LRU for free: a cache hit
+ * re-inserts the key (now most-recently-used), and eviction removes the first
+ * (oldest) key.
+ */
+const astCache = new Map<string, ASTNode>();
+
+/**
+ * Resolve the AST for a template, parsing and caching on a miss. Only
+ * successful parses are cached; a malformed template re-throws on every call,
+ * identical to the uncached behaviour.
+ */
+function getCachedAst(template: string): ASTNode {
+	const cached = astCache.get(template);
+	if (cached !== undefined) {
+		// Mark as most-recently-used.
+		astCache.delete(template);
+		astCache.set(template, cached);
+		return cached;
+	}
+
 	const expr = extractExpression(template);
 	const tokens = tokenize(expr);
 	const ast = parse(tokens);
-	return evaluateNode(ast, context);
+
+	if (astCache.size >= AST_CACHE_CAP) {
+		const oldest = astCache.keys().next().value;
+		if (oldest !== undefined) {
+			astCache.delete(oldest);
+		}
+	}
+	astCache.set(template, ast);
+	return ast;
+}
+
+/** Clear the AST cache. Primarily for tests and memory-sensitive callers. */
+export function clearExpressionCache(): void {
+	astCache.clear();
+}
+
+/** Current number of cached ASTs. Primarily for tests and diagnostics. */
+export function expressionCacheSize(): number {
+	return astCache.size;
+}
+
+/**
+ * Whether a template's AST is currently cached. Does not affect LRU recency
+ * (a pure read). Primarily for tests and diagnostics.
+ */
+export function expressionCacheHas(template: string): boolean {
+	return astCache.has(template);
+}
+
+export function evaluate(template: string, context: ExpressionContext): unknown {
+	return evaluateNode(getCachedAst(template), context);
 }
