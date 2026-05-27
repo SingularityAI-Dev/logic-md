@@ -12,7 +12,7 @@ All compile-fidelity fixes from the audit (Ant Newman's silent-failure review se
 - 2026-05-16: v1.5.0 shipped across all six channels.
 
 ## Next
-- Close #70 (resolved by #64/#65 canaries) and address #73, the last open audit sibling.
+- Land the executor-consumption follow-ups: #73 (executor reads CompiledStep.verification) and #75 (executor + LangGraph adapter consume CompiledStep.executionPlan), plus #46 (perf scaling assertions).
 - Wire the executor to consume `CompiledStep.verification`, `CompiledStep.executionPlan`, and the gate `onFail` instead of reaching into the un-compiled spec (closes the "compiled output is the execution plan" loop). The executor (`executor.ts:263`) still reads verification from the un-compiled spec.
 - Update the LangGraph adapter to honour `executionPlan` fan-out and fan-in.
 - Cut the next release once the audit series is fully merged (CHANGELOG [Unreleased] has the batch).
