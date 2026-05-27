@@ -206,6 +206,13 @@ function buildGraphDefinition(
 					options?.includeMetadata !== false && compiledStep.retryPolicy
 						? compiledStep.retryPolicy
 						: undefined,
+				// Fan-out/fan-in read from the compiled artifact, not the
+				// un-compiled spec, so the graph carries the parallel plan
+				// without reaching back into the source (issue #75).
+				executionPlan:
+					options?.includeMetadata !== false && compiledStep.executionPlan
+						? compiledStep.executionPlan
+						: undefined,
 			},
 		};
 	});
