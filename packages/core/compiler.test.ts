@@ -554,6 +554,48 @@ describe("CompiledStep.executionPlan carries parallel execution through compilat
 });
 
 // =============================================================================
+// pre_output gate on_fail survives compilation (issue #72)
+// =============================================================================
+
+describe("pre_output gate carries on_fail through compilation", () => {
+	const actions: OnFailAction[] = ["retry", "escalate", "skip", "abort", "revise"];
+
+	// A step with no verification, so qualityGates[0] is the pre_output gate.
+	function specWithGate(onFail?: OnFailAction): LogicSpec {
+		return {
+			...makeSpec({ scored: { description: "Scored step" } }),
+			quality_gates: {
+				pre_output: [
+					{
+						name: "confidence-check",
+						check: "{{ output.score >= 0.8 }}",
+						message: "Score too low",
+						...(onFail !== undefined ? { on_fail: onFail } : {}),
+					},
+				],
+			},
+		};
+	}
+
+	it.each(actions)("forwards on_fail: %s onto the failing pre_output gate result", (onFail) => {
+		const result = compileStep(specWithGate(onFail), "scored", makeCtx());
+		expect(result.qualityGates).toHaveLength(1);
+		expect(result.qualityGates[0]!({ score: 0.5 })).toEqual({
+			passed: false,
+			message: "Score too low",
+			onFail,
+		});
+	});
+
+	it("omits onFail when the pre_output gate has no authored on_fail", () => {
+		const result = compileStep(specWithGate(), "scored", makeCtx());
+		const failed = result.qualityGates[0]!({ score: 0.5 });
+		expect(failed).toEqual({ passed: false, message: "Score too low" });
+		expect(failed).not.toHaveProperty("onFail");
+	});
+});
+
+// =============================================================================
 // Output Format in systemPromptSegment
 // =============================================================================
 
