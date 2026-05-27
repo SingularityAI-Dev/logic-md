@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { dryRun } from "./executor.js";
-import type { LogicSpec, Step } from "./types.js";
+import type { LogicSpec, OnFailAction, Step } from "./types.js";
 
 // =============================================================================
 // Helpers
@@ -196,6 +196,53 @@ describe("dryRun", () => {
 		const result = dryRun(spec);
 		const warnings = result.warnings.filter((w) => w.includes("step1"));
 		expect(warnings.length).toBeGreaterThan(0);
+	});
+
+	// =============================================================================
+	// Step verification feeds quality-gate evaluation (issue #73)
+	//
+	// Characterizes the observable effect of a step's verification in the dry-run
+	// executor: it contributes one quality-gate result carrying the verification's
+	// failure message. The recovery action (on_fail) is not acted on by the
+	// dry-run executor, so the message is the observable surface. These pin that
+	// behaviour across every OnFailAction value plus the absent case, so switching
+	// the read source from the un-compiled spec to CompiledStep.verification must
+	// preserve it.
+	// =============================================================================
+	const onFailActions: OnFailAction[] = ["retry", "escalate", "skip", "abort", "revise"];
+
+	it.each(
+		onFailActions,
+	)("surfaces the verification message as a quality gate result (on_fail: %s)", (onFail) => {
+		const spec = makeSpec({
+			step1: {
+				description: "Step",
+				verification: {
+					check: "{{ output.ok }}",
+					on_fail: onFail,
+					on_fail_message: "Verification failed",
+				},
+			},
+		});
+		const result = dryRun(spec, {
+			validateGates: true,
+			mockOutputs: { step1: { ok: true } },
+		});
+		expect(result.steps[0]?.qualityGateResults).toContainEqual({
+			passed: true,
+			message: "Verification failed",
+		});
+	});
+
+	it("produces no verification gate result when the step has no verification", () => {
+		const spec = makeSpec({
+			step1: { description: "Step" },
+		});
+		const result = dryRun(spec, {
+			validateGates: true,
+			mockOutputs: { step1: { ok: true } },
+		});
+		expect(result.steps[0]?.qualityGateResults).toHaveLength(0);
 	});
 
 	it("handles missing mock output without validateGates", () => {

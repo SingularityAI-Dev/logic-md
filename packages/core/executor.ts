@@ -260,10 +260,13 @@ export function dryRun(spec: LogicSpec, options: DryRunOptions = {}): DryRunResu
 			// Execute quality gate checks
 			const gateDefinitions: Array<{ check: string; message?: string }> = [];
 
-			if (originalStep.verification) {
+			// Read the step's verification from the compiled artifact, not the
+			// un-compiled spec, so the runtime never reaches back into the source
+			// (issue #73). compileVerification maps on_fail_message -> message.
+			if (compiledStep.verification) {
 				gateDefinitions.push({
-					check: originalStep.verification.check,
-					message: originalStep.verification.on_fail_message,
+					check: compiledStep.verification.check,
+					message: compiledStep.verification.message,
 				});
 			}
 
