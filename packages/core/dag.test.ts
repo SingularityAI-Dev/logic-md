@@ -309,3 +309,133 @@ describe("deterministic output", () => {
 		expect(r1).toEqual(r2);
 	});
 });
+
+// =============================================================================
+// Determinism baseline (issue #46, Candidate 3)
+//
+// resolve() output (levels + order, and error shapes) must be byte-identical
+// before and after the sort-tightening optimisation. These are golden-master
+// snapshots captured from the pre-optimisation implementation on main across
+// varied DAG shapes; the optimised resolve() must reproduce them exactly.
+// =============================================================================
+
+describe("determinism baseline: resolve output is byte-identical across shapes", () => {
+	const cases: Array<{ name: string; input: Record<string, string[]>; expected: unknown }> = [
+		{ name: "empty", input: {}, expected: { ok: true, levels: [], order: [] } },
+		{ name: "single", input: { a: [] }, expected: { ok: true, levels: [["a"]], order: ["a"] } },
+		{
+			name: "linear5",
+			input: { a: [], b: ["a"], c: ["b"], d: ["c"], e: ["d"] },
+			expected: {
+				ok: true,
+				levels: [["a"], ["b"], ["c"], ["d"], ["e"]],
+				order: ["a", "b", "c", "d", "e"],
+			},
+		},
+		{
+			name: "diamond",
+			input: { a: [], b: ["a"], c: ["a"], d: ["b", "c"] },
+			expected: { ok: true, levels: [["a"], ["b", "c"], ["d"]], order: ["a", "b", "c", "d"] },
+		},
+		{
+			name: "wideFanout",
+			input: { r: [], c1: ["r"], c2: ["r"], c3: ["r"], c4: ["r"], c5: ["r"] },
+			expected: {
+				ok: true,
+				levels: [["r"], ["c1", "c2", "c3", "c4", "c5"]],
+				order: ["r", "c1", "c2", "c3", "c4", "c5"],
+			},
+		},
+		{
+			name: "multiRoot",
+			input: { r2: [], r1: [], j: ["r1", "r2"], solo: [] },
+			expected: {
+				ok: true,
+				levels: [["r1", "r2", "solo"], ["j"]],
+				order: ["r1", "r2", "solo", "j"],
+			},
+		},
+		{
+			name: "disconnected",
+			input: { a: [], b: ["a"], x: [], y: ["x"] },
+			expected: {
+				ok: true,
+				levels: [
+					["a", "x"],
+					["b", "y"],
+				],
+				order: ["a", "x", "b", "y"],
+			},
+		},
+		{
+			name: "crossLevel",
+			input: { a: [], b: ["a"], c: ["a", "b"] },
+			expected: { ok: true, levels: [["a"], ["b"], ["c"]], order: ["a", "b", "c"] },
+		},
+		{
+			name: "reverseNames",
+			input: { z: [], y: ["z"], x: ["y"] },
+			expected: { ok: true, levels: [["z"], ["y"], ["x"]], order: ["z", "y", "x"] },
+		},
+		{
+			// Alphabetical order (a, b, c) deliberately conflicts with topological
+			// order: b is the root, and c depends on both a and b so it sits two
+			// levels deep. Locks that ordering follows depth, not global sort.
+			name: "alphaTopoConflict",
+			input: { b: [], a: ["b"], c: ["a", "b"] },
+			expected: { ok: true, levels: [["b"], ["a"], ["c"]], order: ["b", "a", "c"] },
+		},
+		{
+			name: "cycle",
+			input: { a: ["b"], b: ["a"] },
+			expected: {
+				ok: false,
+				errors: [
+					{
+						type: "cycle",
+						message: "Circular dependency detected: a -> b -> a",
+						nodes: ["a", "b"],
+					},
+				],
+			},
+		},
+		{
+			name: "selfDep",
+			input: { a: ["a"] },
+			expected: {
+				ok: false,
+				errors: [{ type: "cycle", message: 'Step "a" depends on itself', nodes: ["a"] }],
+			},
+		},
+		{
+			name: "missingDep",
+			input: { a: ["ghost"] },
+			expected: {
+				ok: false,
+				errors: [
+					{
+						type: "missing_dependency",
+						message: 'Step "a" depends on "ghost" which does not exist',
+						nodes: ["a", "ghost"],
+					},
+				],
+			},
+		},
+	];
+
+	it.each(cases)("reproduces the baseline for $name", ({ input, expected }) => {
+		expect(resolve(steps(input))).toEqual(expected);
+	});
+
+	it("preserves alphabetical ordering within a level on a wide chain", () => {
+		// 26 siblings under one root: the level must be alphabetically sorted,
+		// the property the per-level sort guaranteed before optimisation.
+		const input: Record<string, string[]> = { root: [] };
+		const letters = "abcdefghijklmnopqrstuvwxyz".split("");
+		for (const ch of letters) input[`n_${ch}`] = ["root"];
+		const result = resolve(steps(input));
+		if (!result.ok) throw new Error("expected ok");
+		expect(result.levels[0]).toEqual(["root"]);
+		expect(result.levels[1]).toEqual(letters.map((c) => `n_${c}`));
+	});
+});
