@@ -4,8 +4,25 @@
 
 ## [Unreleased]
 
+> Silent-failure / compile-boundary fidelity audit (Ant Newman review series).
+
+### Added
+- Core: carry parallel execution through compilation via a first-class `ExecutionPlan` on a singular `CompiledStep.executionPlan` (#65, PR #74). `execution`, `parallel_steps`, `join`, and `join_timeout` were dropped at the compile boundary; `join_timeout` is kept as a duration string (matching `RetryPolicy`). Parametrised across each `ExecutionMode` and `JoinMode` plus the null case.
+
 ### Fixed
 - Core: preserve `verification.on_fail` through compilation (#64, PR #71). The recovery action (`retry`/`escalate`/`skip`/`abort`/`revise`) was silently dropped at the compile boundary. Now carried as a first-class `CompiledVerification` on a singular `CompiledStep.verification`; the gate-validator return shape got its own name `QualityGateResult`. Parametrised across all five `OnFailAction` values plus the null case.
+- MCP: HTTP transport responds with a structured 500 on handler error instead of hanging until socket timeout (#66, PR #79). `headersSent`/`writableEnded` guards prevent a double-write.
+- Build: cli/mcp `postbuild` schema copy now fails loud instead of `|| true` swallowing both copy attempts (#67, PR #78). The bundled core validator reads its own `dist/schema.json` at runtime, so the copy is required.
+- Fixtures: `run-fixtures.mjs` fails loud (exit 2) on non-ENOENT `readdir` errors instead of treating every error as "directory not found" and reporting partial success as full success (#68, PR #80).
+
+### Security
+- Deps: patch `fast-uri` (2 High), `qs` (Moderate), `uuid` (Moderate) to close 7 Dependabot alerts via npm `overrides` (#76). `uuid` resolved by a transitive `@azure/msal-node` bump.
+
+### Changed
+- Docs: replace stale `ROADMAP.md` with `STATUS.md` as the user-facing status doc; ignore contributor PDFs (#77).
+
+### Tests
+- CLI: pin `toCanonical` failure modes for malformed frontmatter, distinguishing throw (malformed / tab YAML) from null (unbalanced delimiters, no frontmatter) (#69, PR #81).
 
 ## [1.5.0] - 2026-05-15
 

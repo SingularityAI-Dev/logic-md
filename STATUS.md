@@ -1,21 +1,20 @@
 # Status
 
-> Updated: 2026-05-26
+> Updated: 2026-05-27
 
 ## Where we are
-Post-v1.5.0, working a compile-boundary fidelity audit (Ant Newman's review series): the compiler accepts authored spec fields and silently drops them from compiled output, so a runtime cannot execute from the compiled artifact alone. #64 (verification.on_fail) is fixed and merged to main (PR #71). #65 (parallel execution: execution, parallel_steps, join, join_timeout) is fixed and in review (PR #74, not merged). Sibling findings #66, #72, #73 remain open in the same class. 472 core tests passing.
+The compile-boundary fidelity audit (Ant Newman's silent-failure review series) is nearly fully landed. Merged to main: #64 verification.on_fail (PR #71), #65 ExecutionPlan (PR #74), #66 MCP HTTP 500 (PR #79), #67 postbuild fail-loud (PR #78), #68 fixtures runner loud (PR #80), #69 fmt failure-mode tests (PR #81), plus #76 Dependabot security patch and #77 docs (ROADMAP replaced by STATUS). #72 pre_output gate on_fail is in review (PR #82, not merged). 476 core tests on main, 482 with #72.
 
 ## Recent
-- 2026-05-26: #65 PR #74 opened. First-class `ExecutionPlan` on a singular `CompiledStep.executionPlan`; `join_timeout` carried as a duration string (matching RetryPolicy), not parsed to ms. Design doc at `docs/superpowers/specs/2026-05-26-execution-plan-design.md`.
-- 2026-05-26: #64 merged (PR #71). `CompiledVerification` plus `QualityGateResult` plus a singular `CompiledStep.verification`.
-- 2026-05-16: v1.5.0 shipped across all six channels (npm core/cli/mcp, VS Code 0.1.4, PyPI 0.1.1, GitHub release).
-- 2026-04-09: v1.4.0 milestone, M4+M5+M6 merge from Modular9 (9-command CLI, 16 templates, MCP 7 tools, Claude Code plugin).
+- 2026-05-27: #72 PR #82 opened. `pre_output` gate `on_fail` now forwarded onto `QualityGateResult.onFail`; mirrors #64. Parametrised across all five `OnFailAction` values plus the absent case.
+- 2026-05-26: six PRs merged (#76 deps security, #77 docs, #78 postbuild, #79 mcp http 500, #80 fixtures loud, #81 fmt tests); #65 ExecutionPlan merged (PR #74).
+- 2026-05-26: #70 assessed as already covered by the #64/#65 canaries; recommended close, no code (close-comment drafted, awaiting post).
+- 2026-05-16: v1.5.0 shipped across all six channels.
 
 ## Next
-- Merge #65 (PR #74) after review.
-- Triage remaining audit siblings #66, #72, #73; apply the same pattern (first-class typed field on CompiledStep, mirror the source, null absent case, parametrised canary test).
-- Wire the executor to consume `CompiledStep.verification` and `CompiledStep.executionPlan` instead of reaching into the un-compiled spec (closes the "compiled output is the execution plan" loop).
+- Merge #72 (PR #82) and #82's CodeRabbit thread once reviewed.
+- Close #70 (resolved by #64/#65 canaries) and address #73, the last open audit sibling.
+- Wire the executor to consume `CompiledStep.verification`, `CompiledStep.executionPlan`, and the gate `onFail` instead of reaching into the un-compiled spec (closes the "compiled output is the execution plan" loop). The executor (`executor.ts:263`) still reads verification from the un-compiled spec.
 - Update the LangGraph adapter to honour `executionPlan` fan-out and fan-in.
-- Runtime execution engine: execute compiled workflows with real LLM calls (dry-run executor landed in Phase 2; live execution still to build).
-- MCP server HTTP transport: testing and documentation.
-- Watch mode, LSP, visual editor/playground, template registry, multi-agent orchestration (longer horizon).
+- Cut the next release once the audit series is fully merged (CHANGELOG [Unreleased] has the batch).
+- Longer horizon: runtime execution engine (live LLM calls), MCP HTTP transport docs, watch mode, LSP, visual editor/playground, template registry, multi-agent orchestration.
