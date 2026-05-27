@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CompilerError, compileStep, compileWorkflow, estimateTokens } from "./compiler.js";
+import type { DagResult } from "./dag.js";
+import { resolve } from "./dag.js";
 import type {
 	ExecutionContext,
 	ExecutionMode,
@@ -1780,5 +1782,72 @@ describe("compileWorkflow: missing optional fields", () => {
 		const spec = makeSpec({ empty: {} });
 		const result = compileWorkflow(spec, makeWorkflowCtx());
 		expect(result.steps[0]!.qualityGates).toEqual([]);
+	});
+});
+
+// =============================================================================
+// compileStep reuses a pre-computed DAG resolution (issue #46, Candidate 1)
+//
+// compileWorkflow resolves the DAG once for iteration order, then calls
+// compileStep N times; each compileStep re-resolved the whole DAG to find its
+// own dagLevel. compileStep now accepts an optional pre-computed dagResult so
+// the workflow can resolve once and pass it down. The optimisation must be
+// behaviour-preserving: compiled output is byte-identical whether or not the
+// genuine dagResult is passed.
+// =============================================================================
+
+describe("compileStep reuses a passed DAG resolution", () => {
+	/** Diamond: a -> b, a -> c, (b, c) -> d. Multiple non-trivial dag levels. */
+	function diamondSpec(): LogicSpec {
+		return makeSpec({
+			a: { description: "root" },
+			b: { description: "left", needs: ["a"] },
+			c: { description: "right", needs: ["a"] },
+			d: { description: "join", needs: ["b", "c"] },
+		});
+	}
+
+	it("yields byte-identical output with and without the genuine dagResult", () => {
+		const spec = diamondSpec();
+		const dagResult = resolve(spec.steps as Record<string, Step>);
+		for (const stepName of ["a", "b", "c", "d"]) {
+			const without = compileStep(spec, stepName, makeCtx({ currentStep: stepName }));
+			const withDag = compileStep(spec, stepName, makeCtx({ currentStep: stepName }), dagResult);
+			// JSON drops the gate-validator closures consistently on both sides,
+			// so this compares every serialisable field, including metadata.dagLevel.
+			expect(JSON.stringify(withDag)).toBe(JSON.stringify(without));
+		}
+	});
+
+	it("derives dagLevel from the passed dagResult, not a fresh resolve", () => {
+		const spec = makeSpec({ solo: { description: "only step" } });
+		// A genuine resolve places `solo` at level 0. Pass a divergent plan that
+		// places it at level 1; a consumer that honours the passed dagResult must
+		// report dagLevel 1, while one that re-resolves would report 0.
+		const divergent: DagResult = {
+			ok: true,
+			levels: [["phantom"], ["solo"]],
+			order: ["phantom", "solo"],
+		};
+		const result = compileStep(spec, "solo", makeCtx({ currentStep: "solo" }), divergent);
+		expect(result.metadata.dagLevel).toBe(1);
+	});
+
+	it("compileWorkflow output matches the per-step path on a representative spec", () => {
+		// Exercises the integration: compileWorkflow resolves once and passes the
+		// result down. Each compiled step must equal what the standalone per-step
+		// path (no passed dagResult) produces, including dagLevel.
+		const spec = diamondSpec();
+		const workflow = compileWorkflow(spec, makeWorkflowCtx());
+		for (const compiled of workflow.steps) {
+			const standalone = compileStep(
+				spec,
+				compiled.metadata.stepName,
+				makeCtx({ currentStep: compiled.metadata.stepName }),
+			);
+			expect(JSON.stringify(compiled)).toBe(JSON.stringify(standalone));
+		}
+		// Sanity-check the representative spec actually spans multiple levels.
+		expect(workflow.metadata.totalLevels).toBe(3);
 	});
 });

@@ -4,6 +4,7 @@
 // Pure functions only: no side effects, no I/O, no LLM calls, model-agnostic.
 // =============================================================================
 
+import type { DagResult } from "./dag.js";
 import { resolve } from "./dag.js";
 import { evaluate } from "./expression.js";
 import type {
@@ -335,6 +336,7 @@ export function compileStep(
 	spec: LogicSpec,
 	stepName: string,
 	context: ExecutionContext,
+	dagResult?: DagResult,
 ): CompiledStep {
 	const steps = spec.steps;
 
@@ -347,12 +349,14 @@ export function compileStep(
 		throw new CompilerError(`Step "${stepName}" not found in spec "${spec.name}"`);
 	}
 
-	// Resolve DAG to compute depth levels
-	const dagResult = resolve(steps);
+	// Resolve the DAG to compute depth levels. compileWorkflow resolves once and
+	// passes the result down so we do not recompute the same DAG once per step
+	// (issue #46, Candidate 1); resolve here only when no result was provided.
+	const resolved = dagResult ?? resolve(steps);
 	let dagLevel = 0;
-	if (dagResult.ok) {
-		for (let level = 0; level < dagResult.levels.length; level++) {
-			const levelSteps = dagResult.levels[level];
+	if (resolved.ok) {
+		for (let level = 0; level < resolved.levels.length; level++) {
+			const levelSteps = resolved.levels[level];
 			if (levelSteps?.includes(stepName)) {
 				dagLevel = level;
 				break;
@@ -470,7 +474,7 @@ export function compileWorkflow(spec: LogicSpec, context: WorkflowContext): Comp
 			branchReason: context.branchReason,
 			previousFailureReason: context.previousFailureReason,
 		};
-		compiledSteps.push(compileStep(spec, stepName, ctx));
+		compiledSteps.push(compileStep(spec, stepName, ctx, dagResult));
 	}
 
 	// Compile global quality gates
