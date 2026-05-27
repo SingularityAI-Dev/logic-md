@@ -2,8 +2,11 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
 	type ASTNode,
+	clearExpressionCache,
 	ExpressionError,
 	evaluate,
+	expressionCacheHas,
+	expressionCacheSize,
 	parse,
 	TokenType,
 	tokenize,
@@ -687,5 +690,93 @@ describe("security -- no eval or Function constructor", () => {
 		const stripped = source.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
 		expect(stripped).not.toMatch(/\beval\s*\(/);
 		expect(stripped).not.toMatch(/new\s+Function\s*\(/);
+	});
+});
+
+// =============================================================================
+// AST cache (issue #46, Candidate 2)
+//
+// evaluate() caches the tokenize/parse result per raw template string so the
+// hot path skips re-parsing. The cache must be transparent: a cached evaluation
+// is identical to an uncached one, distinct templates never collide, and
+// eviction at the soft cap never corrupts a result. evaluateNode still runs per
+// call against the live context.
+// =============================================================================
+
+describe("expression AST cache", () => {
+	const EXPRESSION_CACHE_CAP = 1000;
+
+	it("caches the parsed AST: re-evaluating a template does not grow the cache", () => {
+		clearExpressionCache();
+		const tmpl = "{{ output.score > 0.5 }}";
+		evaluate(tmpl, { output: { score: 0.9 } });
+		evaluate(tmpl, { output: { score: 0.1 } });
+		evaluate(tmpl, { output: { score: 0.7 } });
+		expect(expressionCacheSize()).toBe(1);
+	});
+
+	it("returns correct per-context results for a cached template", () => {
+		clearExpressionCache();
+		const tmpl = "{{ output.score > 0.5 }}";
+		// First call populates the cache; subsequent calls hit it.
+		expect(evaluate(tmpl, { output: { score: 0.9 } })).toBe(true);
+		expect(evaluate(tmpl, { output: { score: 0.1 } })).toBe(false);
+		expect(evaluate(tmpl, { output: { score: 0.5 } })).toBe(false);
+		expect(evaluate(tmpl, { output: { score: 0.51 } })).toBe(true);
+	});
+
+	it("does not collide across distinct templates", () => {
+		clearExpressionCache();
+		const ctx = { output: { score: 0.4, count: 10 } };
+		// Interleave two distinct templates; each must keep its own AST.
+		expect(evaluate("{{ output.score > 0.5 }}", ctx)).toBe(false);
+		expect(evaluate("{{ output.count > 5 }}", ctx)).toBe(true);
+		expect(evaluate("{{ output.score > 0.5 }}", ctx)).toBe(false);
+		expect(evaluate("{{ output.count > 5 }}", ctx)).toBe(true);
+		expect(expressionCacheSize()).toBe(2);
+	});
+
+	it("evicts at the soft cap without exceeding it", () => {
+		clearExpressionCache();
+		for (let i = 0; i < EXPRESSION_CACHE_CAP + 50; i++) {
+			evaluate(`{{ output.v == ${i} }}`, { output: { v: i } });
+		}
+		expect(expressionCacheSize()).toBe(EXPRESSION_CACHE_CAP);
+	});
+
+	it("re-evaluates an evicted template correctly", () => {
+		clearExpressionCache();
+		const firstTmpl = "{{ output.v == 0 }}";
+		// Prime, then overflow the cap so the first template is evicted (LRU).
+		evaluate(firstTmpl, { output: { v: 0 } });
+		for (let i = 1; i <= EXPRESSION_CACHE_CAP + 10; i++) {
+			evaluate(`{{ output.v == ${i} }}`, { output: { v: i } });
+		}
+		// Evicted: must re-parse and still produce correct per-context results.
+		expect(evaluate(firstTmpl, { output: { v: 0 } })).toBe(true);
+		expect(evaluate(firstTmpl, { output: { v: 9 } })).toBe(false);
+	});
+
+	it("evicts the least-recently-used entry, not the oldest-inserted (LRU not FIFO)", () => {
+		clearExpressionCache();
+		const hot = "{{ output.v == 0 }}"; // inserted first
+		const firstFiller = "{{ output.v == 1 }}"; // inserted second
+		evaluate(hot, { output: { v: 0 } });
+		// Fill to exactly the cap with distinct templates, touching `hot` after
+		// each so it stays most-recently-used while `firstFiller` ages out.
+		for (let i = 1; i < EXPRESSION_CACHE_CAP; i++) {
+			evaluate(`{{ output.v == ${i} }}`, { output: { v: i } });
+			evaluate(hot, { output: { v: 0 } });
+		}
+		expect(expressionCacheSize()).toBe(EXPRESSION_CACHE_CAP);
+
+		// One more distinct template forces a single eviction. Under LRU the
+		// victim is `firstFiller` (least recently used) and `hot` survives; under
+		// FIFO the victim would be `hot` (oldest inserted). Membership, not value,
+		// is what distinguishes the two policies (a re-parse yields the same value).
+		evaluate(`{{ output.v == ${EXPRESSION_CACHE_CAP} }}`, { output: { v: EXPRESSION_CACHE_CAP } });
+		expect(expressionCacheSize()).toBe(EXPRESSION_CACHE_CAP);
+		expect(expressionCacheHas(hot)).toBe(true);
+		expect(expressionCacheHas(firstFiller)).toBe(false);
 	});
 });
