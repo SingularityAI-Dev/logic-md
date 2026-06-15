@@ -16,8 +16,8 @@
 		"build:core": "tsc --build tsconfig.build.json && cp packages/core/schema.json packages/core/dist/schema.json"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "~2.4.16",
-		"@types/node": "^22.19.20",
+		"@biomejs/biome": "~2.5.0",
+		"@types/node": "^22.19.21",
 		"@vitest/coverage-v8": "^4.1.8",
 		"typescript": "^6.0.3",
 		"vitest": "~4.1.0"
