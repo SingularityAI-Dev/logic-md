@@ -6,13 +6,10 @@
 // and maps ajv error paths back to YAML source line numbers.
 // =============================================================================
 
-import { createRequire } from "node:module";
+import matter from "gray-matter";
 import { type Document, LineCounter, type Node, parseDocument } from "yaml";
 import { createValidator } from "./schema.js";
 import type { LogicSpec, ValidationError, ValidationResult } from "./types.js";
-
-const require = createRequire(import.meta.url);
-const matter = require("gray-matter") as typeof import("gray-matter");
 
 /**
  * Offset added to YAML line numbers to account for the opening `---`

@@ -7,11 +7,8 @@
 // only extracts and casts.
 // =============================================================================
 
-import { createRequire } from "node:module";
+import matter from "gray-matter";
 import type { LogicSpec } from "./types.js";
-
-const require = createRequire(import.meta.url);
-const matter = require("gray-matter") as typeof import("gray-matter");
 
 // -----------------------------------------------------------------------------
 // Result Types

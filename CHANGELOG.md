@@ -11,6 +11,7 @@
 
 ### Fixed
 - Core: preserve `verification.on_fail` through compilation (#64, PR #71). The recovery action (`retry`/`escalate`/`skip`/`abort`/`revise`) was silently dropped at the compile boundary. Now carried as a first-class `CompiledVerification` on a singular `CompiledStep.verification`; the gate-validator return shape got its own name `QualityGateResult`. Parametrised across all five `OnFailAction` values plus the null case.
+- Core: forward `quality_gates.pre_output[].on_fail` into compiled output via `QualityGateResult.onFail` (#72, PR #82). The pre_output gate recovery action was dropped at the compile boundary; now surfaced on the failing result and omitted when the author omits it. Parametrised across all five `OnFailAction` values plus the absent case.
 - MCP: HTTP transport responds with a structured 500 on handler error instead of hanging until socket timeout (#66, PR #79). `headersSent`/`writableEnded` guards prevent a double-write.
 - Build: cli/mcp `postbuild` schema copy now fails loud instead of `|| true` swallowing both copy attempts (#67, PR #78). The bundled core validator reads its own `dist/schema.json` at runtime, so the copy is required.
 - Fixtures: `run-fixtures.mjs` fails loud (exit 2) on non-ENOENT `readdir` errors instead of treating every error as "directory not found" and reporting partial success as full success (#68, PR #80).
@@ -20,9 +21,16 @@
 
 ### Changed
 - Docs: replace stale `ROADMAP.md` with `STATUS.md` as the user-facing status doc; ignore contributor PDFs (#77).
+- Core: the dry-run executor now reads a step's verification from `CompiledStep.verification` instead of the un-compiled spec (#73, PR #84). Consumer side of #64; behaviour preserved (the compiler maps `on_fail_message` to `message`).
+- Core/LangGraph: the executor reflects `CompiledStep.executionPlan` onto `StepTrace.executionPlan`, and the LangGraph adapter reflects it onto `StateGraphNode.metadata.executionPlan` (#75, PRs #85 and #86). Consumer side of #65; consume-and-reflect only, no concurrent scheduler.
 
 ### Tests
 - CLI: pin `toCanonical` failure modes for malformed frontmatter, distinguishing throw (malformed / tab YAML) from null (unbalanced delimiters, no frontmatter) (#69, PR #81).
+
+## [1.5.1] - 2026-07-24
+
+### Fixed
+- Core: `schema.ts`, `parser.ts`, `validator.ts` load `gray-matter`/`ajv-formats`/`schema.json` via static ESM imports instead of `createRequire`/`readFileSync`. The `createRequire` path broke under single-file bundlers (bun `--compile`); consumers were carrying this as a local patch. Matches the fix already shipped in `@marchese-md/core`.
 
 ## [1.5.0] - 2026-05-15
 
