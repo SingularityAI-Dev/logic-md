@@ -5,32 +5,23 @@
 // ValidateFunction for runtime validation of LogicSpec objects.
 // =============================================================================
 
-import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { Ajv, type ValidateFunction } from "ajv";
+import addFormatsMod from "ajv-formats";
+import schemaJson from "./schema.json" with { type: "json" };
 import type { LogicSpec } from "./types.js";
 
-const require = createRequire(import.meta.url);
-// ajv-formats is a CJS module with `export default` that doesn't resolve
-// correctly under verbatimModuleSyntax + nodenext. Use createRequire instead.
-const addFormats = require("ajv-formats") as {
-	default: (ajv: Ajv) => Ajv;
-};
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// ajv-formats is CJS; unwrap the interop default so this works under both
+// Node ESM and single-file bundlers.
+const addFormats = ((addFormatsMod as { default?: unknown }).default ?? addFormatsMod) as (
+	ajv: Ajv,
+) => Ajv;
 
 /**
- * Reads and parses the embedded JSON Schema from disk.
- * Uses `import.meta.url` for path resolution so it works regardless
- * of the caller's working directory.
+ * Returns the embedded JSON Schema (statically imported so it survives
+ * bundling into single-file executables).
  */
 export function getSchema(): Record<string, unknown> {
-	const schemaPath = join(__dirname, "schema.json");
-	const raw = readFileSync(schemaPath, "utf8");
-	return JSON.parse(raw) as Record<string, unknown>;
+	return structuredClone(schemaJson) as Record<string, unknown>;
 }
 
 /** Cached validator instance (module-level singleton) */
@@ -52,8 +43,7 @@ export function createValidator(): ValidateFunction<LogicSpec> {
 	}
 
 	const ajv = new Ajv({ allErrors: true, strict: true });
-	const applyFormats = addFormats.default ?? addFormats;
-	(applyFormats as (ajv: Ajv) => Ajv)(ajv);
+	addFormats(ajv);
 
 	const schema = getSchema();
 	cachedValidator = ajv.compile<LogicSpec>(schema);
